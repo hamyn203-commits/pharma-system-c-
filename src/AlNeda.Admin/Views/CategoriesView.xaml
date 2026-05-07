@@ -1,0 +1,89 @@
+<UserControl x:Class="AlNeda.Admin.Views.CategoriesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <Grid Margin="24,20,10,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.RowSpan="2" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Panel.ZIndex="100">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" Width="200" Height="4"
+                             Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
+                <TextBlock Text="جاري التحميل..." Foreground="#FF8B949E"
+                           HorizontalAlignment="Center" Margin="0,12,0,0" />
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="التصنيفات" FontSize="22" FontWeight="Bold" Foreground="#FF55D66B" VerticalAlignment="Center" />
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <TextBox Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource ModernTextBox}" Width="250" Height="40"
+                         VerticalContentAlignment="Center" />
+                <Button Content="+ إضافة" Command="{Binding AddCommand}" Height="40"
+                        Style="{StaticResource PrimaryButtonStyle}" Margin="10,0,0,0" Padding="20,0" />
+            </StackPanel>
+        </Grid>
+
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Background="#FF3D1A1A" CornerRadius="8" Padding="12,8" Margin="16,16,16,0"
+                        Visibility="{Binding ValidationMessage, Converter={StaticResource StringToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <TextBlock Text="{Binding ValidationMessage}" Foreground="#FFFF5C5C" FontSize="12" />
+                </Border>
+
+                <ListBox Grid.Row="1" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"
+                         Background="Transparent" BorderThickness="0" Margin="0,8,0,0">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="Padding" Value="8" />
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FF21262D" />
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#FF316DCA" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding Name}" FontSize="14" Foreground="#FFADBAC7" VerticalAlignment="Center" />
+                                <Button Grid.Column="1" Content="حذف"
+                                        Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"
+                                        Style="{StaticResource DangerButtonStyle}" Height="32" Padding="16,0" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

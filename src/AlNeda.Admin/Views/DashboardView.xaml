@@ -1,0 +1,288 @@
+<UserControl x:Class="AlNeda.Admin.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <Grid>
+        <!-- Loading Overlay -->
+        <Border Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Panel.ZIndex="100">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" Width="200" Height="4"
+                             Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
+                <TextBlock Text="جاري تحميل البيانات..." Foreground="#FF8B949E"
+                           HorizontalAlignment="Center" Margin="0,12,0,0" FontSize="13" />
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,10,0">
+        <Grid Margin="24,20,10,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,24">
+                <TextBlock Text="لوحة التحكم الرئيسية" Style="{StaticResource PageTitle}" />
+                <TextBlock Text="{Binding CurrentDate, StringFormat={}{0:dddd، dd MMMM yyyy}}"
+                           FontSize="13" Foreground="#FF8B949E" Margin="0,6,0,0" />
+            </StackPanel>
+
+            <!-- KPI Cards Row -->
+            <Grid Grid.Row="1" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Products Card -->
+                <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,12,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#FF1C2128" Offset="0" />
+                            <GradientStop Color="#FF1A2530" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" HorizontalAlignment="Left">
+                            <Ellipse Width="44" Height="44" Fill="#FF1F3B2A" />
+                            <TextBlock Text="📦" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                        <TextBlock Grid.Row="1" Text="المنتجات" Style="{StaticResource CardTitle}" Margin="0,14,0,4" />
+                        <TextBlock Grid.Row="2" Text="{Binding ProductCount}" Style="{StaticResource CardValue}" />
+                        <TextBlock Grid.Row="2" Text="منتج مسجل" FontSize="11" Foreground="#FF8B949E"
+                                   VerticalAlignment="Bottom" Margin="0,0,0,4" />
+                    </Grid>
+                </Border>
+
+                <!-- Pharmacies Card -->
+                <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="6,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#FF1C2128" Offset="0" />
+                            <GradientStop Color="#FF1A1D30" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" HorizontalAlignment="Left">
+                            <Ellipse Width="44" Height="44" Fill="#FF1A253B" />
+                            <TextBlock Text="🏥" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                        <TextBlock Grid.Row="1" Text="الصيدليات" Style="{StaticResource CardTitle}" Margin="0,14,0,4" />
+                        <TextBlock Grid.Row="2" Text="{Binding PharmacyCount}" Style="{StaticResource CardValue}" />
+                        <TextBlock Grid.Row="2" Text="صيدلية مسجلة" FontSize="11" Foreground="#FF8B949E"
+                                   VerticalAlignment="Bottom" Margin="0,0,0,4" />
+                    </Grid>
+                </Border>
+
+                <!-- Active Orders Card -->
+                <Border Grid.Column="2" Style="{StaticResource CardStyle}" Margin="6,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#FF1C2128" Offset="0" />
+                            <GradientStop Color="#FF2A1F15" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" HorizontalAlignment="Left">
+                            <Ellipse Width="44" Height="44" Fill="#FF3B2D1A" />
+                            <TextBlock Text="🛒" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                        <TextBlock Grid.Row="1" Text="الطلبات النشطة" Style="{StaticResource CardTitle}" Margin="0,14,0,4" />
+                        <TextBlock Grid.Row="2" Text="{Binding ActiveOrderCount}" Style="{StaticResource CardValue}" Foreground="#FFD28A2D" />
+                        <TextBlock Grid.Row="2" Text="طلب قيد التنفيذ" FontSize="11" Foreground="#FF8B949E"
+                                   VerticalAlignment="Bottom" Margin="0,0,0,4" />
+                    </Grid>
+                </Border>
+
+                <!-- Total Balance Card -->
+                <Border Grid.Column="3" Style="{StaticResource CardStyle}" Margin="12,0,0,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#FF1C2128" Offset="0" />
+                            <GradientStop Color="#FF2A1515" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" HorizontalAlignment="Left">
+                            <Ellipse Width="44" Height="44" Fill="#FF3D1A1A" />
+                            <TextBlock Text="💵" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                        <TextBlock Grid.Row="1" Text="إجمالي المستحقات" Style="{StaticResource CardTitle}" Margin="0,14,0,4" />
+                        <TextBlock Grid.Row="2" Text="{Binding TotalBalance, StringFormat={}{0:N2}}"
+                                   Style="{StaticResource CardValue}" Foreground="#FFFF5C5C" FontSize="22" />
+                        <TextBlock Grid.Row="2" Text="جنيه" FontSize="11" Foreground="#FF8B949E"
+                                   VerticalAlignment="Bottom" Margin="0,0,0,4" />
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Sales & Stats Row -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Sales Overview -->
+                <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,12,0">
+                    <StackPanel>
+                        <TextBlock Text="نظرة عامة على المبيعات" FontSize="16" FontWeight="SemiBold"
+                                   Foreground="#FFFFFFFF" Margin="0,0,0,20" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Today -->
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="مبيعات اليوم" FontSize="12" Foreground="#FF8B949E" />
+                                <TextBlock Text="{Binding TodaySales, StringFormat={}{0:N2}}"
+                                           FontSize="28" FontWeight="Bold" Foreground="#FF55D66B"
+                                           Margin="0,8,0,4" />
+                                <TextBlock Text="جنيه مصري" FontSize="11" Foreground="#FF484F58" />
+                                <!-- Mini sparkline bar -->
+                                <Grid Height="40" Margin="0,10,0,0">
+                                    <Rectangle Fill="#FF21262D" RadiusX="4" RadiusY="4" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="4">
+                                        <Rectangle Width="6" Height="12" Fill="#FF55D66B" RadiusX="2" Margin="1" Opacity="0.5" />
+                                        <Rectangle Width="6" Height="20" Fill="#FF55D66B" RadiusX="2" Margin="1" Opacity="0.6" />
+                                        <Rectangle Width="6" Height="8" Fill="#FF55D66B" RadiusX="2" Margin="1" Opacity="0.4" />
+                                        <Rectangle Width="6" Height="28" Fill="#FF55D66B" RadiusX="2" Margin="1" Opacity="0.8" />
+                                        <Rectangle Width="6" Height="16" Fill="#FF55D66B" RadiusX="2" Margin="1" Opacity="0.6" />
+                                        <Rectangle Width="6" Height="32" Fill="#FF55D66B" RadiusX="2" Margin="1" Opacity="1.0" />
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+
+                            <!-- Divider -->
+                            <Border Grid.Column="1" Width="1" Background="#FF30363D" Margin="20,0" />
+
+                            <!-- Monthly -->
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="مبيعات الشهر" FontSize="12" Foreground="#FF8B949E" />
+                                <TextBlock Text="{Binding MonthlySales, StringFormat={}{0:N2}}"
+                                           FontSize="28" FontWeight="Bold" Foreground="#FF316DCA"
+                                           Margin="0,8,0,4" />
+                                <TextBlock Text="جنيه مصري" FontSize="11" Foreground="#FF484F58" />
+                                <!-- Mini sparkline bar -->
+                                <Grid Height="40" Margin="0,10,0,0">
+                                    <Rectangle Fill="#FF21262D" RadiusX="4" RadiusY="4" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="4">
+                                        <Rectangle Width="6" Height="18" Fill="#FF316DCA" RadiusX="2" Margin="1" Opacity="0.5" />
+                                        <Rectangle Width="6" Height="24" Fill="#FF316DCA" RadiusX="2" Margin="1" Opacity="0.6" />
+                                        <Rectangle Width="6" Height="14" Fill="#FF316DCA" RadiusX="2" Margin="1" Opacity="0.4" />
+                                        <Rectangle Width="6" Height="30" Fill="#FF316DCA" RadiusX="2" Margin="1" Opacity="0.8" />
+                                        <Rectangle Width="6" Height="20" Fill="#FF316DCA" RadiusX="2" Margin="1" Opacity="0.6" />
+                                        <Rectangle Width="6" Height="36" Fill="#FF316DCA" RadiusX="2" Margin="1" Opacity="1.0" />
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Quick Stats Bar -->
+                        <Border Background="#FF161B22" CornerRadius="10" Padding="16,12" Margin="0,20,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="منتجات نشطة" FontSize="11" Foreground="#FF8B949E" />
+                                    <TextBlock Text="{Binding ActiveProducts}" FontSize="16" FontWeight="Bold" Foreground="#FF55D66B" />
+                                </StackPanel>
+                                <Border Grid.Column="1" Width="1" Background="#FF30363D" Margin="16,0" />
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="طلبات اليوم" FontSize="11" Foreground="#FF8B949E" />
+                                    <TextBlock Text="{Binding TodayOrders}" FontSize="16" FontWeight="Bold" Foreground="#FFD28A2D" />
+                                </StackPanel>
+                                <Border Grid.Column="3" Width="1" Background="#FF30363D" Margin="16,0" />
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="مستحقات معلقة" FontSize="11" Foreground="#FF8B949E" />
+                                    <TextBlock Text="{Binding PendingPayments}" FontSize="16" FontWeight="Bold" Foreground="#FFFF5C5C" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- System Status -->
+                <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="12,0,0,0">
+                    <StackPanel>
+                        <TextBlock Text="حالة النظام" FontSize="16" FontWeight="SemiBold"
+                                   Foreground="#FFFFFFFF" Margin="0,0,0,20" />
+
+                        <Border Background="#FF1F3B2A" CornerRadius="10" Padding="14,12" Margin="0,0,0,10">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="8" Height="8" Fill="#FF55D66B" VerticalAlignment="Center" />
+                                <TextBlock Text="قاعدة البيانات متصلة" Foreground="#FF55D66B"
+                                           FontSize="12" Margin="10,0,0,0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="#FF1F3B2A" CornerRadius="10" Padding="14,12" Margin="0,0,0,10">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="8" Height="8" Fill="#FF55D66B" VerticalAlignment="Center" />
+                                <TextBlock Text="النسخ الاحتياطي يعمل" Foreground="#FF55D66B"
+                                           FontSize="12" Margin="10,0,0,0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="#FF21262D" CornerRadius="10" Padding="14,12">
+                            <StackPanel>
+                                <TextBlock Text="آخر نسخة احتياطية" FontSize="11" Foreground="#FF8B949E" />
+                                <TextBlock Text="{Binding LastBackup, StringFormat={}{0:yyyy-MM-dd HH:mm}}"
+                                           FontSize="13" Foreground="#FFFFFFFF" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="#FF161B22" CornerRadius="10" Padding="14,12" Margin="0,20,0,0">
+                            <StackPanel>
+                                <TextBlock Text="سعة التخزين" FontSize="11" Foreground="#FF8B949E" />
+                                <ProgressBar Value="23" Maximum="100" Height="6"
+                                             Foreground="#FF316DCA" Background="#FF21262D"
+                                             Style="{StaticResource ModernProgressBar}"
+                                             Margin="0,8,0,4" />
+                                <TextBlock Text="23% مستخدمة" FontSize="11" Foreground="#FF8B949E" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+    </Grid>
+</UserControl>

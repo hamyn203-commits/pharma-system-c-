@@ -1,0 +1,397 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\New folder (3)\\src\\AlNeda.Admin\\AlNeda.Admin.csproj": {}
+  },
+  "projects": {
+    "D:\\New folder (3)\\src\\AlNeda.Admin\\AlNeda.Admin.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\New folder (3)\\src\\AlNeda.Admin\\AlNeda.Admin.csproj",
+        "projectName": "AlNeda.Admin",
+        "projectPath": "D:\\New folder (3)\\src\\AlNeda.Admin\\AlNeda.Admin.csproj",
+        "packagesPath": "C:\\Users\\H-Ossam\\.nuget\\packages\\",
+        "outputPath": "D:\\New folder (3)\\src\\AlNeda.Admin\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\H-Ossam\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0-windows"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0-windows7.0": {
+            "targetAlias": "net9.0-windows",
+            "projectReferences": {
+              "D:\\New folder (3)\\src\\AlNeda.Core\\AlNeda.Core.csproj": {
+                "projectPath": "D:\\New folder (3)\\src\\AlNeda.Core\\AlNeda.Core.csproj"
+              },
+              "D:\\New folder (3)\\src\\AlNeda.DomainLogic\\AlNeda.DomainLogic.fsproj": {
+                "projectPath": "D:\\New folder (3)\\src\\AlNeda.DomainLogic\\AlNeda.DomainLogic.fsproj"
+              },
+              "D:\\New folder (3)\\src\\AlNeda.Services\\AlNeda.Services.csproj": {
+                "projectPath": "D:\\New folder (3)\\src\\AlNeda.Services\\AlNeda.Services.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0-windows7.0": {
+          "targetAlias": "net9.0-windows",
+          "dependencies": {
+            "CommunityToolkit.Mvvm": {
+              "target": "Package",
+              "version": "[8.4.0, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Serilog.Sinks.Console": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Serilog.Sinks.File": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WPF": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\New folder (3)\\src\\AlNeda.Core\\AlNeda.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\New folder (3)\\src\\AlNeda.Core\\AlNeda.Core.csproj",
+        "projectName": "AlNeda.Core",
+        "projectPath": "D:\\New folder (3)\\src\\AlNeda.Core\\AlNeda.Core.csproj",
+        "packagesPath": "C:\\Users\\H-Ossam\\.nuget\\packages\\",
+        "outputPath": "D:\\New folder (3)\\src\\AlNeda.Core\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\H-Ossam\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\New folder (3)\\src\\AlNeda.Data\\AlNeda.Data.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\New folder (3)\\src\\AlNeda.Data\\AlNeda.Data.csproj",
+        "projectName": "AlNeda.Data",
+        "projectPath": "D:\\New folder (3)\\src\\AlNeda.Data\\AlNeda.Data.csproj",
+        "packagesPath": "C:\\Users\\H-Ossam\\.nuget\\packages\\",
+        "outputPath": "D:\\New folder (3)\\src\\AlNeda.Data\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\H-Ossam\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "D:\\New folder (3)\\src\\AlNeda.Core\\AlNeda.Core.csproj": {
+                "projectPath": "D:\\New folder (3)\\src\\AlNeda.Core\\AlNeda.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "System.Data.SQLite": {
+              "target": "Package",
+              "version": "[1.0.119, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\New folder (3)\\src\\AlNeda.DomainLogic\\AlNeda.DomainLogic.fsproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\New folder (3)\\src\\AlNeda.DomainLogic\\AlNeda.DomainLogic.fsproj",
+        "projectName": "AlNeda.DomainLogic",
+        "projectPath": "D:\\New folder (3)\\src\\AlNeda.DomainLogic\\AlNeda.DomainLogic.fsproj",
+        "packagesPath": "C:\\Users\\H-Ossam\\.nuget\\packages\\",
+        "outputPath": "D:\\New folder (3)\\src\\AlNeda.DomainLogic\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\H-Ossam\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files\\dotnet\\sdk\\9.0.313\\FSharp\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "D:\\New folder (3)\\src\\AlNeda.Core\\AlNeda.Core.csproj": {
+                "projectPath": "D:\\New folder (3)\\src\\AlNeda.Core\\AlNeda.Core.csproj"
+              }
+            }
+          }
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "FSharp.Core": {
+              "include": "Runtime, Compile, Build, Native, Analyzers, BuildTransitive",
+              "target": "Package",
+              "version": "[9.0.303, )",
+              "generatePathProperty": true
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\New folder (3)\\src\\AlNeda.Services\\AlNeda.Services.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\New folder (3)\\src\\AlNeda.Services\\AlNeda.Services.csproj",
+        "projectName": "AlNeda.Services",
+        "projectPath": "D:\\New folder (3)\\src\\AlNeda.Services\\AlNeda.Services.csproj",
+        "packagesPath": "C:\\Users\\H-Ossam\\.nuget\\packages\\",
+        "outputPath": "D:\\New folder (3)\\src\\AlNeda.Services\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\H-Ossam\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "D:\\New folder (3)\\src\\AlNeda.Core\\AlNeda.Core.csproj": {
+                "projectPath": "D:\\New folder (3)\\src\\AlNeda.Core\\AlNeda.Core.csproj"
+              },
+              "D:\\New folder (3)\\src\\AlNeda.Data\\AlNeda.Data.csproj": {
+                "projectPath": "D:\\New folder (3)\\src\\AlNeda.Data\\AlNeda.Data.csproj"
+              },
+              "D:\\New folder (3)\\src\\AlNeda.DomainLogic\\AlNeda.DomainLogic.fsproj": {
+                "projectPath": "D:\\New folder (3)\\src\\AlNeda.DomainLogic\\AlNeda.DomainLogic.fsproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

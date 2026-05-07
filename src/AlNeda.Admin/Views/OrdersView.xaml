@@ -1,0 +1,152 @@
+<UserControl x:Class="AlNeda.Admin.Views.OrdersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <Grid Margin="24,20,10,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.RowSpan="2" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Panel.ZIndex="100">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" Width="200" Height="4"
+                             Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
+                <TextBlock Text="جاري تحميل الطلبات..." Foreground="#FF8B949E"
+                           HorizontalAlignment="Center" Margin="0,12,0,0" />
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <ComboBox ItemsSource="{Binding StatusFilters}" SelectedItem="{Binding StatusFilter}"
+                          Width="160" Height="40" Style="{StaticResource ModernComboBox}" />
+                <Button Content="🔍 تصفية" Command="{Binding LoadCommand}" Height="40"
+                        Style="{StaticResource SecondaryButtonStyle}" Margin="10,0,0,0" Padding="20,0" />
+            </StackPanel>
+
+            <Button Grid.Column="1" Content="+ طلب جديد" Command="{Binding NewOrderCommand}"
+                    Style="{StaticResource PrimaryButtonStyle}" Height="40" Padding="20,0" />
+        </Grid>
+
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="0">
+            <DataGrid ItemsSource="{Binding Orders}" SelectedItem="{Binding SelectedOrder}"
+                      Style="{StaticResource ModernDataGrid}"
+                      CellStyle="{StaticResource ModernDataGridCell}"
+                      RowStyle="{StaticResource ModernDataGridRow}"
+                      ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}"
+                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#FF21262D"
+                      AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="رقم الطلب" Binding="{Binding OrderNumber}" Width="120" />
+                    <DataGridTextColumn Header="الصيدلية" Binding="{Binding Pharmacy.Name}" Width="*" />
+                    <DataGridTextColumn Header="الإجمالي" Binding="{Binding FinalTotal, StringFormat={}{0:N2}}" Width="90" />
+                    <DataGridTemplateColumn Header="الحالة" Width="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="6" Padding="8,3" HorizontalAlignment="Left">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status}" Value="completed">
+                                                    <Setter Property="Background" Value="#FF238636" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="pending">
+                                                    <Setter Property="Background" Value="#FFD29922" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="cancelled">
+                                                    <Setter Property="Background" Value="#FFDA3633" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="{Binding Status}" FontSize="12" FontWeight="SemiBold" Foreground="White" />
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="التاريخ" Binding="{Binding CreatedAt, StringFormat={}{0:yyyy-MM-dd}}" Width="90" />
+                    <DataGridTemplateColumn Header="إجراءات" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="عرض" FontSize="12" Padding="12,4"
+                                        Command="{Binding DataContext.ViewDetailCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"
+                                        Background="#FF21262D" Foreground="#FF8B949E" BorderThickness="0" Cursor="Hand">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="B" Background="{TemplateBinding Background}"
+                                                    CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="B" Property="Background" Value="#FF316DCA" />
+                                                    <Setter Property="Foreground" Value="White" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <Border Grid.RowSpan="2" Background="#E60D1117"
+                Visibility="{Binding ShowDetail, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Panel.ZIndex="200">
+            <Border Style="{StaticResource CardStyle}" Width="600"
+                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel>
+                    <TextBlock Text="تفاصيل الطلب" FontSize="20" FontWeight="Bold" Foreground="#FF55D66B" Margin="0,0,0,20" />
+
+                    <Border Background="#FF21262D" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,0,12">
+                                <TextBlock Text="رقم الطلب" FontSize="12" Foreground="#FF8B949E" />
+                                <TextBlock Text="{Binding SelectedOrder.OrderNumber}" FontSize="14" Foreground="#FFADBAC7" />
+                            </StackPanel>
+                            <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,0,0,12">
+                                <TextBlock Text="الصيدلية" FontSize="12" Foreground="#FF8B949E" />
+                                <TextBlock Text="{Binding SelectedOrder.Pharmacy.Name}" FontSize="14" Foreground="#FFADBAC7" />
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,0,12">
+                                <TextBlock Text="الإجمالي" FontSize="12" Foreground="#FF8B949E" />
+                                <TextBlock Text="{Binding SelectedOrder.FinalTotal, StringFormat={}{0:N2}}" FontSize="14" Foreground="#FF55D66B" />
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,0,12">
+                                <TextBlock Text="الحالة" FontSize="12" Foreground="#FF8B949E" />
+                                <TextBlock Text="{Binding SelectedOrder.Status}" FontSize="14" Foreground="#FFADBAC7" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Button Content="إغلاق" Command="{Binding CloseDetailCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}" Height="40" HorizontalAlignment="Right" Padding="24,0" />
+                </StackPanel>
+            </Border>
+        </Border>
+    </Grid>
+</UserControl>

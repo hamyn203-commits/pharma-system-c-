@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\AlNeda.Core\AlNeda.Core.csproj" />
+    <ProjectReference Include="..\AlNeda.Data\AlNeda.Data.csproj" />
+    <ProjectReference Include="..\AlNeda.DomainLogic\AlNeda.DomainLogic.fsproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

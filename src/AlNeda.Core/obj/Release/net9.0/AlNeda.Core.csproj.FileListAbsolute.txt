@@ -1,0 +1,11 @@
+D:\New folder (3)\src\AlNeda.Core\bin\Release\net9.0\AlNeda.Core.deps.json
+D:\New folder (3)\src\AlNeda.Core\bin\Release\net9.0\AlNeda.Core.dll
+D:\New folder (3)\src\AlNeda.Core\bin\Release\net9.0\AlNeda.Core.pdb
+D:\New folder (3)\src\AlNeda.Core\obj\Release\net9.0\AlNeda.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\New folder (3)\src\AlNeda.Core\obj\Release\net9.0\AlNeda.Core.AssemblyInfoInputs.cache
+D:\New folder (3)\src\AlNeda.Core\obj\Release\net9.0\AlNeda.Core.AssemblyInfo.cs
+D:\New folder (3)\src\AlNeda.Core\obj\Release\net9.0\AlNeda.Core.csproj.CoreCompileInputs.cache
+D:\New folder (3)\src\AlNeda.Core\obj\Release\net9.0\AlNeda.Core.dll
+D:\New folder (3)\src\AlNeda.Core\obj\Release\net9.0\refint\AlNeda.Core.dll
+D:\New folder (3)\src\AlNeda.Core\obj\Release\net9.0\AlNeda.Core.pdb
+D:\New folder (3)\src\AlNeda.Core\obj\Release\net9.0\ref\AlNeda.Core.dll

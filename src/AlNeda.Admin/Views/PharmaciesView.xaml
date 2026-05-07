@@ -1,0 +1,203 @@
+<UserControl x:Class="AlNeda.Admin.Views.PharmaciesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <Grid Margin="24,20,10,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.RowSpan="2" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Panel.ZIndex="100">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" Width="200" Height="4"
+                             Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
+                <TextBlock Text="جاري تحميل الصيدليات..." Foreground="#FF8B949E"
+                           HorizontalAlignment="Center" Margin="0,12,0,0" />
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource ModernTextBox}" Width="280" Height="40"
+                         VerticalContentAlignment="Center" />
+                <Button Content="🔍 بحث" Command="{Binding LoadCommand}" Height="40"
+                        Style="{StaticResource SecondaryButtonStyle}" Margin="10,0,0,0" Padding="20,0" />
+            </StackPanel>
+
+            <Button Grid.Column="1" Content="+ إضافة صيدلية جديدة" Command="{Binding NewPharmacyCommand}"
+                    Style="{StaticResource PrimaryButtonStyle}" Height="40" Padding="20,0" />
+        </Grid>
+
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="0">
+            <DataGrid ItemsSource="{Binding Pharmacies}" SelectedItem="{Binding SelectedPharmacy}"
+                      Style="{StaticResource ModernDataGrid}"
+                      CellStyle="{StaticResource ModernDataGridCell}"
+                      RowStyle="{StaticResource ModernDataGridRow}"
+                      ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}"
+                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#FF21262D"
+                      AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="الاسم" Binding="{Binding Name}" Width="*" />
+                    <DataGridTextColumn Header="الهاتف" Binding="{Binding Phone}" Width="120" />
+                    <DataGridTextColumn Header="العنوان" Binding="{Binding Address}" Width="150" />
+                    <DataGridTextColumn Header="الرصيد" Binding="{Binding Balance, StringFormat={}{0:N2}}" Width="90" />
+                    <DataGridTemplateColumn Header="الحالة" Width="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="6" Padding="8,3" HorizontalAlignment="Left">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AccountStatus}" Value="active">
+                                                    <Setter Property="Background" Value="#FF238636" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding AccountStatus}" Value="blocked">
+                                                    <Setter Property="Background" Value="#FFDA3633" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock FontSize="12" FontWeight="SemiBold">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding AccountStatus}" Value="active">
+                                                        <Setter Property="Text" Value="نشط" />
+                                                        <Setter Property="Foreground" Value="White" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding AccountStatus}" Value="blocked">
+                                                        <Setter Property="Text" Value="محظور" />
+                                                        <Setter Property="Foreground" Value="White" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="الإجراءات" Width="180">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="تفعيل" FontSize="11" Padding="8,4"
+                                            Command="{Binding DataContext.SetStatusCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="active"
+                                            Background="#FF21262D" Foreground="#FF8B949E" BorderThickness="0" Cursor="Hand">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="B" Background="{TemplateBinding Background}"
+                                                        CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="B" Property="Background" Value="#FF238636" />
+                                                        <Setter Property="Foreground" Value="White" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    <Button Content="حظر" FontSize="11" Padding="8,4" Margin="4,0,0,0"
+                                            Command="{Binding DataContext.SetStatusCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="blocked"
+                                            Background="#FF21262D" Foreground="#FF8B949E" BorderThickness="0" Cursor="Hand">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="B" Background="{TemplateBinding Background}"
+                                                        CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="B" Property="Background" Value="#FFDA3633" />
+                                                        <Setter Property="Foreground" Value="White" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    <Button Content="✏️" FontSize="12" Padding="8,4" Margin="4,0,0,0"
+                                            Command="{Binding DataContext.EditSelectedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            Background="#FF21262D" Foreground="#FF8B949E" BorderThickness="0" Cursor="Hand">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="B" Background="{TemplateBinding Background}"
+                                                        CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="B" Property="Background" Value="#FF316DCA" />
+                                                        <Setter Property="Foreground" Value="White" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <Border Grid.RowSpan="2" Background="#E60D1117"
+                Visibility="{Binding ShowEditor, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Panel.ZIndex="200">
+            <Border Style="{StaticResource CardStyle}" Width="520"
+                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel>
+                    <TextBlock Text="إضافة/تعديل صيدلية" FontSize="20" FontWeight="Bold" Foreground="#FF55D66B" Margin="0,0,0,20" />
+
+                    <Border Background="#FF3D1A1A" CornerRadius="8" Padding="12,8" Margin="0,0,0,12"
+                            Visibility="{Binding ValidationMessage, Converter={StaticResource StringToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <TextBlock Text="{Binding ValidationMessage}" Foreground="#FFFF5C5C" FontSize="12" />
+                    </Border>
+
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="الاسم *" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                        <TextBox Text="{Binding EditPharmacy.Name, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource ModernTextBox}" Height="44" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="الهاتف" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                        <TextBox Text="{Binding EditPharmacy.Phone}" Style="{StaticResource ModernTextBox}" Height="44" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,0,16">
+                        <TextBlock Text="العنوان" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                        <TextBox Text="{Binding EditPharmacy.Address}" Style="{StaticResource ModernTextBox}" Height="44" />
+                    </StackPanel>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="حفظ التغييرات" Command="{Binding SaveCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}" Height="48" />
+                        <Button Grid.Column="2" Content="إلغاء" Command="{Binding CancelEditCommand}"
+                                Style="{StaticResource DangerButtonStyle}" Height="48" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Border>
+    </Grid>
+</UserControl>
