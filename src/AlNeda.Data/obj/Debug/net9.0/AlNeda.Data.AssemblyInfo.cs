@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AlNeda.Data")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f2171d42a6856ff04e60d8ece311dc9a28bef901")]
 [assembly: System.Reflection.AssemblyProductAttribute("AlNeda.Data")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AlNeda.Data")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
