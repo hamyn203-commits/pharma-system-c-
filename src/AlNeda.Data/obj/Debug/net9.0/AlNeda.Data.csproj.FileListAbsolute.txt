@@ -9,10 +9,10 @@ D:\New folder (3)\src\AlNeda.Data\obj\Debug\net9.0\AlNeda.Data.GeneratedMSBuildE
 D:\New folder (3)\src\AlNeda.Data\obj\Debug\net9.0\AlNeda.Data.AssemblyInfoInputs.cache
 D:\New folder (3)\src\AlNeda.Data\obj\Debug\net9.0\AlNeda.Data.AssemblyInfo.cs
 D:\New folder (3)\src\AlNeda.Data\obj\Debug\net9.0\AlNeda.Data.csproj.CoreCompileInputs.cache
+D:\New folder (3)\src\AlNeda.Data\obj\Debug\net9.0\AlNeda.Data.sourcelink.json
 D:\New folder (3)\src\AlNeda.Data\obj\Debug\net9.0\AlNeda.D.BBF9C356.Up2Date
 D:\New folder (3)\src\AlNeda.Data\obj\Debug\net9.0\AlNeda.Data.dll
 D:\New folder (3)\src\AlNeda.Data\obj\Debug\net9.0\refint\AlNeda.Data.dll
 D:\New folder (3)\src\AlNeda.Data\obj\Debug\net9.0\AlNeda.Data.pdb
 D:\New folder (3)\src\AlNeda.Data\obj\Debug\net9.0\AlNeda.Data.genruntimeconfig.cache
 D:\New folder (3)\src\AlNeda.Data\obj\Debug\net9.0\ref\AlNeda.Data.dll
-D:\New folder (3)\src\AlNeda.Data\obj\Debug\net9.0\AlNeda.Data.sourcelink.json

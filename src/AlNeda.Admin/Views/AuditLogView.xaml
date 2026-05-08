@@ -21,8 +21,26 @@
             </StackPanel>
         </Border>
 
-        <TextBlock Grid.Row="0" Text="سجل العمليات" FontSize="22" FontWeight="Bold" Foreground="#FF55D66B" Margin="0,0,0,16" />
-
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="سجل العمليات" FontSize="22" FontWeight="Bold" Foreground="#FF55D66B" VerticalAlignment="Center" />
+            
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <TextBlock Text="المستخدم:" VerticalAlignment="Center" Foreground="#FF8B949E" Margin="0,0,8,0" />
+                <TextBox Text="{Binding SearchUsername, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Width="150" Height="40" Margin="0,0,16,0" />
+                
+                <TextBlock Text="من:" VerticalAlignment="Center" Foreground="#FF8B949E" Margin="0,0,8,0" />
+                <DatePicker SelectedDate="{Binding FromDate, UpdateSourceTrigger=PropertyChanged}" Width="130" Height="40" Margin="0,0,16,0" />
+                
+                <TextBlock Text="إلى:" VerticalAlignment="Center" Foreground="#FF8B949E" Margin="0,0,8,0" />
+                <DatePicker SelectedDate="{Binding ToDate, UpdateSourceTrigger=PropertyChanged}" Width="130" Height="40" Margin="0,0,16,0" />
+                
+                <Button Content="بحث 🔍" Command="{Binding LoadCommand}" Style="{StaticResource SecondaryButtonStyle}" Height="40" Padding="16,0" />
+            </StackPanel>
+        </Grid>
         <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="0">
             <DataGrid ItemsSource="{Binding Logs}"
                       Style="{StaticResource ModernDataGrid}"

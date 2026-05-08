@@ -14,3 +14,4 @@ D:\New folder (3)\src\AlNeda.DomainLogic\obj\Release\net9.0\refint\AlNeda.Domain
 D:\New folder (3)\src\AlNeda.DomainLogic\obj\Release\net9.0\AlNeda.DomainLogic.xml
 D:\New folder (3)\src\AlNeda.DomainLogic\obj\Release\net9.0\AlNeda.DomainLogic.pdb
 D:\New folder (3)\src\AlNeda.DomainLogic\obj\Release\net9.0\ref\AlNeda.DomainLogic.dll
+D:\New folder (3)\src\AlNeda.DomainLogic\obj\Release\net9.0\AlNeda.DomainLogic.sourcelink.json

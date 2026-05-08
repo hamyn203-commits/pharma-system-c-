@@ -2,12 +2,13 @@ using System.Collections.ObjectModel;
 using AlNeda.Admin.ViewModels;
 using AlNeda.Admin.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
+using AlNeda.Admin.Services;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AlNeda.Admin.ViewModels;
 
-public partial class MainViewModel : ObservableObject
+public partial class MainViewModel : ObservableObject, INavigationService
 {
     private readonly IServiceProvider _services;
 
@@ -95,9 +96,10 @@ public partial class MainViewModel : ObservableObject
         NavigateTo(tag);
     }
 
-    private void NavigateTo(string tag)
+    public void NavigateTo(string tag)
     {
-        CurrentPage = tag switch
+        var normalizedTag = tag.ToLowerInvariant();
+        CurrentPage = normalizedTag switch
         {
             "dashboard" => CreateWithViewModel<DashboardView, DashboardViewModel>(vm => vm.LoadCommand.Execute(null)),
             "products" => CreateWithViewModel<ProductsView, ProductsViewModel>(vm => vm.LoadCommand.Execute(null)),

@@ -1,0 +1,309 @@
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (101ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      PRAGMA journal_mode = 'wal';
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "AuditLogs" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_AuditLogs" PRIMARY KEY AUTOINCREMENT,
+          "Username" TEXT NOT NULL,
+          "Action" TEXT NOT NULL,
+          "Entity" TEXT NOT NULL,
+          "EntityId" TEXT NOT NULL,
+          "FieldName" TEXT NULL,
+          "OldValue" TEXT NULL,
+          "NewValue" TEXT NULL,
+          "Details" TEXT NOT NULL,
+          "CreatedAt" TEXT NOT NULL
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "Categories" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_Categories" PRIMARY KEY AUTOINCREMENT,
+          "Name" TEXT NOT NULL,
+          "Description" TEXT NULL,
+          "Icon" TEXT NULL,
+          "ColorCode" TEXT NULL,
+          "IsActive" INTEGER NOT NULL,
+          "IsDeleted" INTEGER NOT NULL,
+          "RemoteId" INTEGER NULL,
+          "IsSynced" INTEGER NOT NULL,
+          "DisplayOrder" INTEGER NOT NULL,
+          "CreatedAt" TEXT NOT NULL,
+          "UpdatedAt" TEXT NULL
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "Pharmacies" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_Pharmacies" PRIMARY KEY AUTOINCREMENT,
+          "Name" TEXT NOT NULL,
+          "Address" TEXT NOT NULL,
+          "Phone" TEXT NOT NULL,
+          "Balance" decimal(18,2) NOT NULL,
+          "CreatedAt" TEXT NOT NULL,
+          "AccountStatus" TEXT NOT NULL,
+          "ApprovedAt" TEXT NULL,
+          "BlockedAt" TEXT NULL,
+          "LastLoginAt" TEXT NULL,
+          "DeviceId" TEXT NULL
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "Suppliers" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_Suppliers" PRIMARY KEY AUTOINCREMENT,
+          "Name" TEXT NOT NULL,
+          "Phone" TEXT NOT NULL,
+          "Address" TEXT NOT NULL,
+          "Company" TEXT NOT NULL,
+          "Balance" decimal(18,2) NOT NULL,
+          "Notes" TEXT NOT NULL,
+          "CreatedAt" TEXT NOT NULL
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "Users" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_Users" PRIMARY KEY AUTOINCREMENT,
+          "Username" TEXT NOT NULL,
+          "Password" TEXT NOT NULL,
+          "PasswordSalt" TEXT NOT NULL,
+          "Role" TEXT NOT NULL,
+          "IsActive" INTEGER NOT NULL,
+          "CreatedAt" TEXT NOT NULL
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "Products" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_Products" PRIMARY KEY AUTOINCREMENT,
+          "Name" TEXT NOT NULL,
+          "Barcode" TEXT NULL,
+          "Category" TEXT NOT NULL,
+          "CategoryId" INTEGER NULL,
+          "Company" TEXT NOT NULL,
+          "Quantity" INTEGER NOT NULL,
+          "UnitPrice" decimal(18,2) NOT NULL,
+          "ExpiryDate" TEXT NULL,
+          "ImagePath" TEXT NULL,
+          "ImageUrl" TEXT NULL,
+          "ProductImagesJson" TEXT NOT NULL,
+          "Description" TEXT NOT NULL,
+          "IsActive" INTEGER NOT NULL,
+          "RemoteId" INTEGER NULL,
+          "IsSynced" INTEGER NOT NULL,
+          "CreatedAt" TEXT NOT NULL,
+          "UpdatedAt" TEXT NOT NULL,
+          CONSTRAINT "FK_Products_Categories_CategoryId" FOREIGN KEY ("CategoryId") REFERENCES "Categories" ("Id") ON DELETE SET NULL
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "Orders" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_Orders" PRIMARY KEY AUTOINCREMENT,
+          "OrderNumber" TEXT NOT NULL,
+          "PharmacyId" INTEGER NOT NULL,
+          "TotalAmount" decimal(18,2) NOT NULL,
+          "Discount" decimal(18,2) NOT NULL,
+          "DiscountType" TEXT NOT NULL,
+          "FinalTotal" decimal(18,2) NOT NULL,
+          "BalanceBefore" decimal(18,2) NOT NULL,
+          "BalanceAfter" decimal(18,2) NOT NULL,
+          "Status" TEXT NOT NULL,
+          "DeliveryPerson" TEXT NOT NULL,
+          "Notes" TEXT NOT NULL,
+          "LastStatusUpdate" TEXT NULL,
+          "ExpectedDeliveryNote" TEXT NOT NULL,
+          "PaymentStatus" TEXT NOT NULL,
+          "PaymentType" TEXT NOT NULL,
+          "AmountPaid" decimal(18,2) NOT NULL,
+          "RemainingAmount" decimal(18,2) NOT NULL,
+          "PaymentNotes" TEXT NOT NULL,
+          "CreatedAt" TEXT NOT NULL,
+          CONSTRAINT "FK_Orders_Pharmacies_PharmacyId" FOREIGN KEY ("PharmacyId") REFERENCES "Pharmacies" ("Id") ON DELETE CASCADE
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "Purchases" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_Purchases" PRIMARY KEY AUTOINCREMENT,
+          "InvoiceNumber" TEXT NOT NULL,
+          "SupplierId" INTEGER NOT NULL,
+          "TotalAmount" decimal(18,2) NOT NULL,
+          "AmountPaid" decimal(18,2) NOT NULL,
+          "RemainingAmount" decimal(18,2) NOT NULL,
+          "Status" TEXT NOT NULL,
+          "Notes" TEXT NOT NULL,
+          "CreatedAt" TEXT NOT NULL,
+          CONSTRAINT "FK_Purchases_Suppliers_SupplierId" FOREIGN KEY ("SupplierId") REFERENCES "Suppliers" ("Id") ON DELETE CASCADE
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "OrderItems" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_OrderItems" PRIMARY KEY AUTOINCREMENT,
+          "OrderId" INTEGER NOT NULL,
+          "ProductId" INTEGER NOT NULL,
+          "Quantity" INTEGER NOT NULL,
+          "UnitPrice" decimal(18,2) NOT NULL,
+          "TotalPrice" decimal(18,2) NOT NULL,
+          CONSTRAINT "FK_OrderItems_Orders_OrderId" FOREIGN KEY ("OrderId") REFERENCES "Orders" ("Id") ON DELETE CASCADE,
+          CONSTRAINT "FK_OrderItems_Products_ProductId" FOREIGN KEY ("ProductId") REFERENCES "Products" ("Id") ON DELETE CASCADE
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "OrderStatusHistories" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_OrderStatusHistories" PRIMARY KEY AUTOINCREMENT,
+          "OrderId" INTEGER NOT NULL,
+          "OldStatus" TEXT NOT NULL,
+          "NewStatus" TEXT NOT NULL,
+          "Note" TEXT NOT NULL,
+          "CreatedAt" TEXT NOT NULL,
+          CONSTRAINT "FK_OrderStatusHistories_Orders_OrderId" FOREIGN KEY ("OrderId") REFERENCES "Orders" ("Id") ON DELETE CASCADE
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "Payments" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_Payments" PRIMARY KEY AUTOINCREMENT,
+          "PharmacyId" INTEGER NOT NULL,
+          "OrderId" INTEGER NULL,
+          "Amount" decimal(18,2) NOT NULL,
+          "PaymentStatus" TEXT NOT NULL,
+          "PaymentType" TEXT NOT NULL,
+          "AmountPaid" decimal(18,2) NOT NULL,
+          "RemainingAmount" decimal(18,2) NOT NULL,
+          "PaymentNotes" TEXT NOT NULL,
+          "Date" TEXT NOT NULL,
+          CONSTRAINT "FK_Payments_Orders_OrderId" FOREIGN KEY ("OrderId") REFERENCES "Orders" ("Id"),
+          CONSTRAINT "FK_Payments_Pharmacies_PharmacyId" FOREIGN KEY ("PharmacyId") REFERENCES "Pharmacies" ("Id") ON DELETE CASCADE
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "Returns" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_Returns" PRIMARY KEY AUTOINCREMENT,
+          "ReturnNumber" TEXT NOT NULL,
+          "PharmacyId" INTEGER NOT NULL,
+          "OrderId" INTEGER NULL,
+          "TotalAmount" decimal(18,2) NOT NULL,
+          "Status" TEXT NOT NULL,
+          "ReturnType" TEXT NULL,
+          "Reason" TEXT NULL,
+          "Notes" TEXT NOT NULL,
+          "StockAdjusted" INTEGER NOT NULL,
+          "BalanceAdjusted" INTEGER NOT NULL,
+          "BalanceBefore" decimal(18,2) NOT NULL,
+          "BalanceAfter" decimal(18,2) NOT NULL,
+          "CreatedAt" TEXT NOT NULL,
+          CONSTRAINT "FK_Returns_Orders_OrderId" FOREIGN KEY ("OrderId") REFERENCES "Orders" ("Id"),
+          CONSTRAINT "FK_Returns_Pharmacies_PharmacyId" FOREIGN KEY ("PharmacyId") REFERENCES "Pharmacies" ("Id") ON DELETE CASCADE
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "PurchaseItems" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_PurchaseItems" PRIMARY KEY AUTOINCREMENT,
+          "PurchaseId" INTEGER NOT NULL,
+          "ProductId" INTEGER NOT NULL,
+          "Quantity" INTEGER NOT NULL,
+          "UnitCost" decimal(18,2) NOT NULL,
+          "TotalCost" decimal(18,2) NOT NULL,
+          CONSTRAINT "FK_PurchaseItems_Products_ProductId" FOREIGN KEY ("ProductId") REFERENCES "Products" ("Id") ON DELETE CASCADE,
+          CONSTRAINT "FK_PurchaseItems_Purchases_PurchaseId" FOREIGN KEY ("PurchaseId") REFERENCES "Purchases" ("Id") ON DELETE CASCADE
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "ReturnItems" (
+          "Id" INTEGER NOT NULL CONSTRAINT "PK_ReturnItems" PRIMARY KEY AUTOINCREMENT,
+          "ReturnId" INTEGER NOT NULL,
+          "ProductId" INTEGER NOT NULL,
+          "Quantity" INTEGER NOT NULL,
+          "UnitPrice" decimal(18,2) NOT NULL,
+          "TotalPrice" decimal(18,2) NOT NULL,
+          CONSTRAINT "FK_ReturnItems_Products_ProductId" FOREIGN KEY ("ProductId") REFERENCES "Products" ("Id") ON DELETE CASCADE,
+          CONSTRAINT "FK_ReturnItems_Returns_ReturnId" FOREIGN KEY ("ReturnId") REFERENCES "Returns" ("Id") ON DELETE CASCADE
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "Users" ("Id", "CreatedAt", "IsActive", "Password", "PasswordSalt", "Role", "Username")
+      VALUES (1, '2026-01-01 00:00:00', 1, 'admin', '', 'admin', 'admin');
+      SELECT changes();
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE UNIQUE INDEX "IX_Categories_Name" ON "Categories" ("Name");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_OrderItems_OrderId" ON "OrderItems" ("OrderId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_OrderItems_ProductId" ON "OrderItems" ("ProductId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_Orders_PharmacyId" ON "Orders" ("PharmacyId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_OrderStatusHistories_OrderId" ON "OrderStatusHistories" ("OrderId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_Payments_OrderId" ON "Payments" ("OrderId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_Payments_PharmacyId" ON "Payments" ("PharmacyId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE UNIQUE INDEX "IX_Products_Barcode" ON "Products" ("Barcode");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_Products_CategoryId" ON "Products" ("CategoryId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_PurchaseItems_ProductId" ON "PurchaseItems" ("ProductId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_PurchaseItems_PurchaseId" ON "PurchaseItems" ("PurchaseId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_Purchases_SupplierId" ON "Purchases" ("SupplierId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_ReturnItems_ProductId" ON "ReturnItems" ("ProductId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_ReturnItems_ReturnId" ON "ReturnItems" ("ReturnId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_Returns_OrderId" ON "Returns" ("OrderId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE INDEX "IX_Returns_PharmacyId" ON "Returns" ("PharmacyId");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE UNIQUE INDEX "IX_Users_Username" ON "Users" ("Username");
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM "Users" AS "u")
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5000
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\New folder (3)\src\AlNeda.API
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "u"."Id", "u"."CreatedAt", "u"."IsActive", "u"."Password", "u"."PasswordSalt", "u"."Role", "u"."Username"
+      FROM "Users" AS "u"
+      WHERE lower("u"."Username") = 'admin'
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (6ms) [Parameters=[@__ToLower_0='?' (Size = 5)], CommandType='Text', CommandTimeout='30']
+      SELECT "u"."Id", "u"."CreatedAt", "u"."IsActive", "u"."Password", "u"."PasswordSalt", "u"."Role", "u"."Username"
+      FROM "Users" AS "u"
+      WHERE lower("u"."Username") = @__ToLower_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "u"."Id", "u"."CreatedAt", "u"."IsActive", "u"."Password", "u"."PasswordSalt", "u"."Role", "u"."Username"
+      FROM "Users" AS "u"
+      WHERE lower("u"."Username") = 'admin'
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__ToLower_0='?' (Size = 5)], CommandType='Text', CommandTimeout='30']
+      SELECT "u"."Id", "u"."CreatedAt", "u"."IsActive", "u"."Password", "u"."PasswordSalt", "u"."Role", "u"."Username"
+      FROM "Users" AS "u"
+      WHERE lower("u"."Username") = @__ToLower_0
+      LIMIT 1

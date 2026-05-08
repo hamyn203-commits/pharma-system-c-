@@ -7,39 +7,87 @@
 
     <Grid Margin="24,20,10,20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" /> <!-- Header & Stats -->
+            <RowDefinition Height="Auto" /> <!-- Search & Actions -->
+            <RowDefinition Height="*" />    <!-- DataGrid -->
         </Grid.RowDefinitions>
 
-        <Border Grid.RowSpan="2" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+        <Border Grid.RowSpan="3" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="100">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="4"
                              Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
-                <TextBlock Text="جاري تحميل الصيدليات..." Foreground="#FF8B949E"
+                <TextBlock Text="جاري تحميل البيانات..." Foreground="#FF8B949E"
                            HorizontalAlignment="Center" Margin="0,12,0,0" />
             </StackPanel>
         </Border>
 
-        <Grid Grid.Row="0" Margin="0,0,0,16">
+        <!-- Stats Section -->
+        <Grid Grid.Row="0" Margin="0,0,0,24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Total Pharmacies -->
+            <Border Grid.Column="0" Margin="0,0,12,0" Style="{StaticResource CardStyle}" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="إجمالي الصيدليات" Foreground="#FF8B949E" FontSize="13" />
+                    <Grid Margin="0,8,0,0">
+                        <TextBlock Text="{Binding Pharmacies.Count}" FontSize="28" FontWeight="Bold" Foreground="White" />
+                        <TextBlock Text="🏥" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Active Pharmacies -->
+            <Border Grid.Column="1" Margin="6,0,6,0" Style="{StaticResource CardStyle}" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="الصيدليات النشطة" Foreground="#FF8B949E" FontSize="13" />
+                    <Grid Margin="0,8,0,0">
+                        <TextBlock Text="{Binding Pharmacies.Count}" FontSize="28" FontWeight="Bold" Foreground="#FF55D66B" />
+                        <TextBlock Text="✅" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Debtors -->
+            <Border Grid.Column="2" Margin="12,0,0,0" Style="{StaticResource CardStyle}" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="إجمالي المديونيات" Foreground="#FF8B949E" FontSize="13" />
+                    <Grid Margin="0,8,0,0">
+                        <TextBlock Text="125,400" FontSize="28" FontWeight="Bold" Foreground="#FFFF5C5C" />
+                        <TextBlock Text="💰" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Search & Actions -->
+        <Grid Grid.Row="1" Margin="0,0,0,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Orientation="Horizontal">
-                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource ModernTextBox}" Width="280" Height="40"
-                         VerticalContentAlignment="Center" />
-                <Button Content="🔍 بحث" Command="{Binding LoadCommand}" Height="40"
-                        Style="{StaticResource SecondaryButtonStyle}" Margin="10,0,0,0" Padding="20,0" />
+                <Grid Width="300" Height="44">
+                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource ModernTextBox}" Padding="35,0,12,0"
+                             VerticalContentAlignment="Center" Tag="ابحث باسم الصيدلية..."/>
+                    <TextBlock Text="🔍" Foreground="#FF8B949E" VerticalAlignment="Center" Margin="12,0,0,0" IsHitTestVisible="False" />
+                </Grid>
+                <Button Content="تحديث" Command="{Binding LoadCommand}" Height="44"
+                        Style="{StaticResource SecondaryButtonStyle}" Margin="12,0,0,0" Padding="20,0" />
             </StackPanel>
 
             <Button Grid.Column="1" Content="+ إضافة صيدلية جديدة" Command="{Binding NewPharmacyCommand}"
-                    Style="{StaticResource PrimaryButtonStyle}" Height="40" Padding="20,0" />
+                    Style="{StaticResource PrimaryButtonStyle}" Height="44" Padding="24,0" />
         </Grid>
 
-        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="0">
+        <!-- Data Grid -->
+        <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="0" ClipToBounds="True">
             <DataGrid ItemsSource="{Binding Pharmacies}" SelectedItem="{Binding SelectedPharmacy}"
                       Style="{StaticResource ModernDataGrid}"
                       CellStyle="{StaticResource ModernDataGridCell}"
@@ -48,37 +96,52 @@
                       GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#FF21262D"
                       AutoGenerateColumns="False" IsReadOnly="True">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="الاسم" Binding="{Binding Name}" Width="*" />
-                    <DataGridTextColumn Header="الهاتف" Binding="{Binding Phone}" Width="120" />
-                    <DataGridTextColumn Header="العنوان" Binding="{Binding Address}" Width="150" />
-                    <DataGridTextColumn Header="الرصيد" Binding="{Binding Balance, StringFormat={}{0:N2}}" Width="90" />
-                    <DataGridTemplateColumn Header="الحالة" Width="80">
+                    <DataGridTextColumn Header="اسم الصيدلية" Binding="{Binding Name}" Width="*" />
+                    <DataGridTextColumn Header="العنوان" Binding="{Binding Address}" Width="2*" />
+                    <DataGridTextColumn Header="الهاتف" Binding="{Binding Phone}" Width="150" />
+                    <DataGridTemplateColumn Header="الرصيد" Width="120">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Border CornerRadius="6" Padding="8,3" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding Balance, StringFormat={}{0:N2}}" 
+                                           Foreground="{Binding Balance, Converter={StaticResource BalanceColorConverter}}"
+                                           FontWeight="SemiBold" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,14,0" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="الحالة" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="12" Padding="8,4" HorizontalAlignment="Left" Margin="14,0,0,0">
                                     <Border.Style>
                                         <Style TargetType="Border">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding AccountStatus}" Value="active">
-                                                    <Setter Property="Background" Value="#FF238636" />
+                                                    <Setter Property="Background" Value="#FF1F3B2A" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding AccountStatus}" Value="blocked">
-                                                    <Setter Property="Background" Value="#FFDA3633" />
+                                                    <Setter Property="Background" Value="#FF3D1A1A" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding AccountStatus}" Value="pending">
+                                                    <Setter Property="Background" Value="#FF3B2D1A" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Border.Style>
-                                    <TextBlock FontSize="12" FontWeight="SemiBold">
+                                    <TextBlock FontSize="11" FontWeight="SemiBold">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding AccountStatus}" Value="active">
                                                         <Setter Property="Text" Value="نشط" />
-                                                        <Setter Property="Foreground" Value="White" />
+                                                        <Setter Property="Foreground" Value="#FF55D66B" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding AccountStatus}" Value="blocked">
                                                         <Setter Property="Text" Value="محظور" />
-                                                        <Setter Property="Foreground" Value="White" />
+                                                        <Setter Property="Foreground" Value="#FFFF5C5C" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding AccountStatus}" Value="pending">
+                                                        <Setter Property="Text" Value="قيد الانتظار" />
+                                                        <Setter Property="Foreground" Value="#FFD29922" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -88,66 +151,14 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="الإجراءات" Width="180">
+                    <DataGridTemplateColumn Header="الإجراءات" Width="120">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Button Content="تفعيل" FontSize="11" Padding="8,4"
-                                            Command="{Binding DataContext.SetStatusCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="active"
-                                            Background="#FF21262D" Foreground="#FF8B949E" BorderThickness="0" Cursor="Hand">
-                                        <Button.Template>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border x:Name="B" Background="{TemplateBinding Background}"
-                                                        CornerRadius="6" Padding="{TemplateBinding Padding}">
-                                                    <ContentPresenter />
-                                                </Border>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="B" Property="Background" Value="#FF238636" />
-                                                        <Setter Property="Foreground" Value="White" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Button.Template>
-                                    </Button>
-                                    <Button Content="حظر" FontSize="11" Padding="8,4" Margin="4,0,0,0"
-                                            Command="{Binding DataContext.SetStatusCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="blocked"
-                                            Background="#FF21262D" Foreground="#FF8B949E" BorderThickness="0" Cursor="Hand">
-                                        <Button.Template>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border x:Name="B" Background="{TemplateBinding Background}"
-                                                        CornerRadius="6" Padding="{TemplateBinding Padding}">
-                                                    <ContentPresenter />
-                                                </Border>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="B" Property="Background" Value="#FFDA3633" />
-                                                        <Setter Property="Foreground" Value="White" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Button.Template>
-                                    </Button>
-                                    <Button Content="✏️" FontSize="12" Padding="8,4" Margin="4,0,0,0"
-                                            Command="{Binding DataContext.EditSelectedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            Background="#FF21262D" Foreground="#FF8B949E" BorderThickness="0" Cursor="Hand">
-                                        <Button.Template>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border x:Name="B" Background="{TemplateBinding Background}"
-                                                        CornerRadius="6" Padding="{TemplateBinding Padding}">
-                                                    <ContentPresenter />
-                                                </Border>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="B" Property="Background" Value="#FF316DCA" />
-                                                        <Setter Property="Foreground" Value="White" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Button.Template>
-                                    </Button>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Content="✏️" Command="{Binding DataContext.EditSelectedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            Style="{StaticResource ActionButtonStyle}" ToolTip="تعديل" />
+                                    <Button Content="🚫" Command="{Binding DataContext.SetStatusAsyncCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="blocked" Style="{StaticResource ActionButtonStyle}" ToolTip="حظر" Margin="6,0,0,0" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -156,7 +167,7 @@
             </DataGrid>
         </Border>
 
-        <Border Grid.RowSpan="2" Background="#E60D1117"
+        <Border Grid.RowSpan="3" Background="#E60D1117"
                 Visibility="{Binding ShowEditor, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="200">
             <Border Style="{StaticResource CardStyle}" Width="520"

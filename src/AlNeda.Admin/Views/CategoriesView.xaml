@@ -1,88 +1,205 @@
 <UserControl x:Class="AlNeda.Admin.Views.CategoriesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1100">
+
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
 
-    <Grid Margin="24,20,10,20">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid Margin="32,24">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" /> <!-- Header -->
+            <RowDefinition Height="Auto" /> <!-- Toolbar -->
+            <RowDefinition Height="*" />    <!-- DataGrid -->
         </Grid.RowDefinitions>
 
-        <Border Grid.RowSpan="2" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
-                Panel.ZIndex="100">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <ProgressBar IsIndeterminate="True" Width="200" Height="4"
-                             Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
-                <TextBlock Text="جاري التحميل..." Foreground="#FF8B949E"
-                           HorizontalAlignment="Center" Margin="0,12,0,0" />
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- HEADER                                                      -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <Grid Grid.Row="0" Margin="0,0,0,32">
+            <StackPanel>
+                <TextBlock Text="إدارة التصنيفات" Style="{StaticResource PageTitle}" />
+                <TextBlock Text="تنظيم المنتجات حسب المجموعات الدوائية" Foreground="{StaticResource TextMutedBrush}" Margin="0,4,0,0" />
             </StackPanel>
-        </Border>
 
-        <Grid Grid.Row="0" Margin="0,0,0,16">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Column="0" Text="التصنيفات" FontSize="22" FontWeight="Bold" Foreground="#FF55D66B" VerticalAlignment="Center" />
-
-            <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <TextBox Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource ModernTextBox}" Width="250" Height="40"
-                         VerticalContentAlignment="Center" />
-                <Button Content="+ إضافة" Command="{Binding AddCommand}" Height="40"
-                        Style="{StaticResource PrimaryButtonStyle}" Margin="10,0,0,0" Padding="20,0" />
-            </StackPanel>
+            <Border HorizontalAlignment="Left" Background="{StaticResource CardBgBrush}" CornerRadius="16" Padding="20,12" BorderBrush="{StaticResource BorderMutedBrush}" BorderThickness="1">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel Margin="0,0,32,0">
+                        <TextBlock Text="إجمالي النشط" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding TotalActive}" Foreground="{StaticResource PrimaryGreenBrush}" FontSize="20" FontWeight="Bold"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,32,0">
+                        <TextBlock Text="إجمالي المنتجات" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding TotalProducts}" Foreground="{StaticResource PrimaryBlueLightBrush}" FontSize="20" FontWeight="Bold"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="الأكثر مبيعاً" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding TopCategory}" Foreground="{StaticResource WarningBrush}" FontSize="20" FontWeight="Bold"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
         </Grid>
 
-        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="0">
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- TOOLBAR & FILTERS                                           -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <Border Grid.Row="1" Background="{StaticResource CardBgBrush}" CornerRadius="16" Padding="20,16" Margin="0,0,0,16" BorderBrush="{StaticResource BorderMutedBrush}" BorderThickness="1">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-                <Border Grid.Row="0" Background="#FF3D1A1A" CornerRadius="8" Padding="12,8" Margin="16,16,16,0"
-                        Visibility="{Binding ValidationMessage, Converter={StaticResource StringToVisibilityConverter}, FallbackValue=Collapsed}">
-                    <TextBlock Text="{Binding ValidationMessage}" Foreground="#FFFF5C5C" FontSize="12" />
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <!-- Search -->
+                    <Grid Width="300" Margin="0,0,16,0">
+                        <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource ModernTextBox}" Height="40" VerticalContentAlignment="Center" Padding="35,0,12,0" />
+                        <TextBlock Text="🔍" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="12,0" Opacity="0.5" IsHitTestVisible="False"/>
+                        <TextBlock Text="بحث سريع..." Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="38,0" IsHitTestVisible="False"
+                                   Visibility="{Binding SearchText, Converter={StaticResource StringToVisibilityConverter}, ConverterParameter=Inverse}"/>
+                    </Grid>
+
+                    <!-- Filter Count -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,16,0">
+                        <TextBlock Text="الفلتر:" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="0,0,8,0" FontSize="12"/>
+                        <ComboBox SelectedValue="{Binding FilterCount}" Width="120" Height="40">
+                            <ComboBoxItem Content="الكل" IsSelected="True"/>
+                            <ComboBoxItem Content="&gt; 10"/>
+                            <ComboBoxItem Content="&gt; 50"/>
+                            <ComboBoxItem Content="&lt; 10"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Sort By -->
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="ترتيب:" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="0,0,8,0" FontSize="12"/>
+                        <ComboBox SelectedValue="{Binding SortBy}" Width="120" Height="40">
+                            <ComboBoxItem Content="الاسم" IsSelected="True"/>
+                            <ComboBoxItem Content="العدد"/>
+                            <ComboBoxItem Content="ID"/>
+                        </ComboBox>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="📊 Excel" Command="{Binding ExportExcelCommand}" Style="{StaticResource SecondaryButtonStyle}" Width="100" Height="40" Margin="0,0,8,0" />
+                    <Button Content="➕ تصنيف جديد" Command="{Binding AddNewCommand}" Style="{StaticResource PrimaryButtonStyle}" Padding="20,0" Height="40" FontWeight="Bold" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- DATAGRID                                                    -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="0" ClipToBounds="True">
+            <Grid>
+                <DataGrid ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"
+                          Style="{StaticResource ModernDataGrid}"
+                          CellStyle="{StaticResource ModernDataGridCell}"
+                          RowStyle="{StaticResource ModernDataGridRow}"
+                          ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="70" />
+                        
+                        <DataGridTemplateColumn Header="التصنيف" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="8,0">
+                                        <Border Width="32" Height="32" Background="{DynamicResource PrimaryGreenGlassBrush}" CornerRadius="8" Margin="0,0,12,0">
+                                            <TextBlock Text="{Binding Icon, FallbackValue=📦}" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                            <TextBlock Text="{Binding Description, FallbackValue='لا يوجد وصف'}" FontSize="11" Foreground="{StaticResource TextMutedBrush}" MaxWidth="300" TextTrimming="CharacterEllipsis"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="الحالة" Width="100">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border CornerRadius="10" Padding="8,2" HorizontalAlignment="Left">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="{DynamicResource WarningGlassBrush}"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource PrimaryGreenGlassBrush}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock FontSize="11" FontWeight="Bold">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Text" Value="معطل"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource WarningBrush}"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                                            <Setter Property="Text" Value="نشط"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource PrimaryGreenBrush}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="المنتجات" Width="140">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.ViewProductsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}" Background="Transparent" BorderThickness="0" Cursor="Hand">
+                                        <Border Background="{DynamicResource PrimaryBlueGlassBrush}" CornerRadius="12" Padding="12,4">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding ProductCount}" FontWeight="Bold" Foreground="{StaticResource PrimaryBlueLightBrush}"/>
+                                                <TextBlock Text=" منتج" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,0"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="الإجراءات" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="✏️" Command="{Binding DataContext.EditSelectedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}" Style="{StaticResource WindowButtonStyle}" ToolTip="تعديل"/>
+                                        <Button Content="🗑️" Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}" Style="{StaticResource CloseButtonStyle}" Margin="8,0,0,0" ToolTip="حذف"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Loading Overlay -->
+                <Border Background="{StaticResource OverlayBgBrush}" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel VerticalAlignment="Center">
+                        <ProgressBar IsIndeterminate="True" Width="200" Height="4" Foreground="{StaticResource PrimaryGreenBrush}" Style="{StaticResource ModernProgressBar}"/>
+                        <TextBlock Text="جاري التحديث..." Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,12"/>
+                    </StackPanel>
                 </Border>
-
-                <ListBox Grid.Row="1" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"
-                         Background="Transparent" BorderThickness="0" Margin="0,8,0,0">
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="Background" Value="Transparent" />
-                            <Setter Property="Padding" Value="8" />
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#FF21262D" />
-                                </Trigger>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="#FF316DCA" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding Name}" FontSize="14" Foreground="#FFADBAC7" VerticalAlignment="Center" />
-                                <Button Grid.Column="1" Content="حذف"
-                                        Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}"
-                                        Style="{StaticResource DangerButtonStyle}" Height="32" Padding="16,0" />
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
             </Grid>
         </Border>
     </Grid>

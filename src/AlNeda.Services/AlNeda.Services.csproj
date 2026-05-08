@@ -1,9 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\AlNeda.Core\AlNeda.Core.csproj" />
     <ProjectReference Include="..\AlNeda.Data\AlNeda.Data.csproj" />
     <ProjectReference Include="..\AlNeda.DomainLogic\AlNeda.DomainLogic.fsproj" />
+    <PackageReference Include="Serilog" Version="4.2.0" />
   </ItemGroup>
 
   <PropertyGroup>

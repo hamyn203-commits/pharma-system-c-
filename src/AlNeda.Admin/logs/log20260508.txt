@@ -1,0 +1,4 @@
+2026-05-08 15:41:00.993 +03:00 [INF] AlNeda Admin starting up
+2026-05-08 15:41:01.060 +03:00 [INF] Using database at: pharmacy.db
+2026-05-08 15:41:01.343 +03:00 [INF] Checking for database migrations...
+2026-05-08 15:41:04.185 +03:00 [INF] Database initialization successful

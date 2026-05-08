@@ -133,3 +133,10 @@ D:\New folder (3)\src\AlNeda.Admin\obj\Release\net9.0-windows\ref\AlNeda.Admin.d
 D:\New folder (3)\src\AlNeda.Admin\obj\Release\net9.0-windows\GeneratedInternalTypeHelper.g.cs
 D:\New folder (3)\src\AlNeda.Admin\obj\Release\net9.0-windows\AlNeda.Admin_MarkupCompile.lref
 D:\New folder (3)\src\AlNeda.Admin\obj\Release\net9.0-windows\App.baml
+D:\New folder (3)\src\AlNeda.Admin\bin\Release\net9.0-windows\Microsoft.Extensions.Configuration.dll
+D:\New folder (3)\src\AlNeda.Admin\bin\Release\net9.0-windows\Microsoft.Extensions.Configuration.FileExtensions.dll
+D:\New folder (3)\src\AlNeda.Admin\bin\Release\net9.0-windows\Microsoft.Extensions.Configuration.Json.dll
+D:\New folder (3)\src\AlNeda.Admin\bin\Release\net9.0-windows\Microsoft.Extensions.FileProviders.Abstractions.dll
+D:\New folder (3)\src\AlNeda.Admin\bin\Release\net9.0-windows\Microsoft.Extensions.FileProviders.Physical.dll
+D:\New folder (3)\src\AlNeda.Admin\bin\Release\net9.0-windows\Microsoft.Extensions.FileSystemGlobbing.dll
+D:\New folder (3)\src\AlNeda.Admin\obj\Release\net9.0-windows\AlNeda.Admin.sourcelink.json

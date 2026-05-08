@@ -1,6 +1,7 @@
 using AlNeda.Core.Entities;
 using AlNeda.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Text;
 
 namespace AlNeda.Services;
@@ -360,4 +361,214 @@ public class ReportService
         "deleted" => "محذوف",
         _ => status
     };
+
+    public async Task<DataTable> GetDailySalesDataTableAsync(DateTime? date = null)
+    {
+        date ??= DateTime.Today;
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        var start = date.Value.Date;
+        var end = start.AddDays(1);
+
+        var orders = db.Orders.Include(o => o.Pharmacy)
+            .Where(o => o.CreatedAt >= start && o.CreatedAt < end && o.Status != "cancelled")
+            .ToList();
+
+        var dt = new DataTable();
+        dt.Columns.Add("رقم الطلب", typeof(string));
+        dt.Columns.Add("الصيدلية", typeof(string));
+        dt.Columns.Add("الإجمالي", typeof(decimal));
+        dt.Columns.Add("الحالة", typeof(string));
+        dt.Columns.Add("التاريخ", typeof(DateTime));
+
+        foreach (var o in orders)
+        {
+            dt.Rows.Add(o.OrderNumber, o.Pharmacy?.Name ?? "-", o.FinalTotal, GetStatusName(o.Status), o.CreatedAt);
+        }
+
+        return dt;
+    }
+
+    public async Task<DataTable> GetMonthlySalesDataTableAsync(int? year = null, int? month = null)
+    {
+        year ??= DateTime.Today.Year;
+        month ??= DateTime.Today.Month;
+        await using var db = await _contextFactory.CreateDbContextAsync();
+
+        var start = new DateTime(year.Value, month.Value, 1);
+        var end = start.AddMonths(1);
+
+        var orders = db.Orders.Include(o => o.Pharmacy)
+            .Where(o => o.CreatedAt >= start && o.CreatedAt < end && o.Status != "cancelled")
+            .ToList();
+
+        var dt = new DataTable();
+        dt.Columns.Add("رقم الطلب", typeof(string));
+        dt.Columns.Add("الصيدلية", typeof(string));
+        dt.Columns.Add("الإجمالي", typeof(decimal));
+        dt.Columns.Add("الحالة", typeof(string));
+        dt.Columns.Add("التاريخ", typeof(DateTime));
+
+        foreach (var o in orders)
+        {
+            dt.Rows.Add(o.OrderNumber, o.Pharmacy?.Name ?? "-", o.FinalTotal, GetStatusName(o.Status), o.CreatedAt);
+        }
+
+        return dt;
+    }
+
+    public async Task<DataTable> GetTopProductsDataTableAsync(int top = 20)
+    {
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        var productSales = db.OrderItems.Include(i => i.Product).Include(i => i.Order)
+            .Where(i => i.Order != null && i.Order.Status != "cancelled")
+            .ToList()
+            .GroupBy(i => new { i.ProductId, Name = i.Product?.Name ?? "غير محدد", Category = i.Product?.Category ?? "غير محدد" })
+            .Select(g => new
+            {
+                g.Key.ProductId,
+                g.Key.Name,
+                g.Key.Category,
+                TotalQuantity = g.Sum(i => i.Quantity),
+                TotalRevenue = g.Sum(i => i.TotalPrice)
+            })
+            .OrderByDescending(p => p.TotalQuantity)
+            .Take(top)
+            .ToList();
+
+        var dt = new DataTable();
+        dt.Columns.Add("م", typeof(int));
+        dt.Columns.Add("اسم المنتج", typeof(string));
+        dt.Columns.Add("الفئة", typeof(string));
+        dt.Columns.Add("الكمية", typeof(int));
+        dt.Columns.Add("الإيرادات", typeof(decimal));
+
+        int i = 1;
+        foreach (var p in productSales)
+        {
+            dt.Rows.Add(i, p.Name, p.Category, p.TotalQuantity, p.TotalRevenue);
+            i++;
+        }
+
+        return dt;
+    }
+
+    public async Task<DataTable> GetTopPharmaciesDataTableAsync(int top = 20)
+    {
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        var pharmacyStats = db.Pharmacies
+            .Include(p => p.Orders.Where(o => o.Status != "cancelled"))
+            .Select(p => new
+            {
+                p.Id,
+                p.Name,
+                p.Balance,
+                p.AccountStatus,
+                OrderCount = p.Orders.Count(),
+                TotalSales = p.Orders.Sum(o => (decimal?)o.FinalTotal) ?? 0
+            })
+            .OrderByDescending(p => p.TotalSales)
+            .Take(top)
+            .ToList();
+
+        var dt = new DataTable();
+        dt.Columns.Add("م", typeof(int));
+        dt.Columns.Add("الاسم", typeof(string));
+        dt.Columns.Add("عدد الطلبات", typeof(int));
+        dt.Columns.Add("إجمالي المبيعات", typeof(decimal));
+        dt.Columns.Add("الرصيد", typeof(decimal));
+        dt.Columns.Add("الحالة", typeof(string));
+
+        int i = 1;
+        foreach (var p in pharmacyStats)
+        {
+            dt.Rows.Add(i, p.Name, p.OrderCount, p.TotalSales, p.Balance, GetAccountStatusName(p.AccountStatus));
+            i++;
+        }
+
+        return dt;
+    }
+
+    public async Task<DataTable> GetExpiryDataTableAsync()
+    {
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        var today = DateTime.Today;
+        var thirtyDays = today.AddDays(30);
+
+        var products = db.Products
+            .Where(p => !string.IsNullOrEmpty(p.ExpiryDate))
+            .ToList()
+            .Where(p => DateTime.TryParse(p.ExpiryDate, out var exp) && exp <= thirtyDays)
+            .OrderBy(p => DateTime.TryParse(p.ExpiryDate, out var d) ? d : DateTime.MaxValue)
+            .ToList();
+
+        var dt = new DataTable();
+        dt.Columns.Add("م", typeof(int));
+        dt.Columns.Add("المنتج", typeof(string));
+        dt.Columns.Add("تاريخ الانتهاء", typeof(string));
+        dt.Columns.Add("الكمية", typeof(int));
+        dt.Columns.Add("الأيام المتبقية", typeof(int));
+        dt.Columns.Add("الحالة", typeof(string));
+
+        int i = 1;
+        foreach (var p in products)
+        {
+            DateTime.TryParse(p.ExpiryDate, out var exp);
+            var daysLeft = (exp - today).Days;
+            var warning = daysLeft <= 0 ? "منتهي" : daysLeft <= 7 ? "عاجل" : daysLeft <= 30 ? "تنبيه" : "OK";
+            dt.Rows.Add(i, p.Name, p.ExpiryDate, p.Quantity, daysLeft, warning);
+            i++;
+        }
+
+        return dt;
+    }
+
+    public async Task<DataTable> GetDebtsDataTableAsync()
+    {
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        var pharmacies = db.Pharmacies
+            .Where(p => p.Balance > 0 && p.AccountStatus == "active")
+            .OrderByDescending(p => p.Balance)
+            .ToList();
+
+        var dt = new DataTable();
+        dt.Columns.Add("م", typeof(int));
+        dt.Columns.Add("الاسم", typeof(string));
+        dt.Columns.Add("الحالة", typeof(string));
+        dt.Columns.Add("الرصيد", typeof(decimal));
+
+        int i = 1;
+        foreach (var p in pharmacies)
+        {
+            dt.Rows.Add(i, p.Name, GetAccountStatusName(p.AccountStatus), p.Balance);
+            i++;
+        }
+
+        return dt;
+    }
+
+    public async Task<DataTable> GetStockDataTableAsync()
+    {
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        var products = db.Products.OrderBy(p => p.Quantity).ToList();
+
+        var dt = new DataTable();
+        dt.Columns.Add("م", typeof(int));
+        dt.Columns.Add("المنتج", typeof(string));
+        dt.Columns.Add("الفئة", typeof(string));
+        dt.Columns.Add("الكمية", typeof(int));
+        dt.Columns.Add("سعر الوحدة", typeof(decimal));
+        dt.Columns.Add("القيمة", typeof(decimal));
+        dt.Columns.Add("الحالة", typeof(string));
+
+        int i = 1;
+        foreach (var p in products)
+        {
+            var value = p.Quantity * p.UnitPrice;
+            var status = p.Quantity == 0 ? "نفذ" : p.Quantity <= 10 ? "منخفض" : "متوفر";
+            dt.Rows.Add(i, p.Name, p.Category ?? "-", p.Quantity, p.UnitPrice, value, status);
+            i++;
+        }
+
+        return dt;
+    }
 }

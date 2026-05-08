@@ -1,0 +1,10 @@
+import sqlite3
+conn = sqlite3.connect(r'D:\New folder (3)\src\AlNeda.API\bin\Debug\net9.0\pharmacy.db')
+c = conn.cursor()
+c.execute('PRAGMA table_info(Users)')
+print('Users columns:', [r[1] for r in c.fetchall()])
+c.execute('SELECT * FROM Users')
+print('Users:', c.fetchall())
+c.execute("SELECT name FROM sqlite_master WHERE type='table'")
+print('Tables:', [r[0] for r in c.fetchall()])
+conn.close()

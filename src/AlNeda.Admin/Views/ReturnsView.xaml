@@ -7,11 +7,12 @@
 
     <Grid Margin="24,20,10,20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" /> <!-- Stats -->
+            <RowDefinition Height="Auto" /> <!-- Actions -->
+            <RowDefinition Height="*" />    <!-- Grid -->
         </Grid.RowDefinitions>
 
-        <Border Grid.RowSpan="2" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+        <Border Grid.RowSpan="3" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="100">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="4"
@@ -21,19 +22,60 @@
             </StackPanel>
         </Border>
 
-        <Grid Grid.Row="0" Margin="0,0,0,16">
+        <!-- Stats Section -->
+        <Grid Grid.Row="0" Margin="0,0,0,24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Margin="0,0,12,0" Style="{StaticResource CardStyle}" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="مرتجعات اليوم" Foreground="#FF8B949E" FontSize="13" />
+                    <Grid Margin="0,8,0,0">
+                        <TextBlock Text="5" FontSize="28" FontWeight="Bold" Foreground="White" />
+                        <TextBlock Text="🔄" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1" Margin="6,0,6,0" Style="{StaticResource CardStyle}" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="إجمالي مبالغ المرتجعات" Foreground="#FF8B949E" FontSize="13" />
+                    <Grid Margin="0,8,0,0">
+                        <TextBlock Text="4,200" FontSize="28" FontWeight="Bold" Foreground="#FFFF5C5C" />
+                        <TextBlock Text="💵" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Margin="12,0,0,0" Style="{StaticResource CardStyle}" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="طلبات معلقة" Foreground="#FF8B949E" FontSize="13" />
+                    <Grid Margin="0,8,0,0">
+                        <TextBlock Text="2" FontSize="28" FontWeight="Bold" Foreground="#FFD29922" />
+                        <TextBlock Text="⏳" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Header -->
+        <Grid Grid.Row="1" Margin="0,0,0,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Text="المرتجعات" FontSize="22" FontWeight="Bold" Foreground="#FF55D66B" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="0" Text="إدارة المرتجعات" FontSize="22" FontWeight="Bold" Foreground="#FF55D66B" VerticalAlignment="Center" />
 
-            <Button Grid.Column="1" Content="+ مرتجع جديد" Command="{Binding NewReturnCommand}"
-                    Style="{StaticResource PrimaryButtonStyle}" Height="40" Padding="20,0" />
+            <Button Grid.Column="1" Content="+ إنشاء مرتجع جديد" Command="{Binding NewReturnCommand}"
+                    Style="{StaticResource PrimaryButtonStyle}" Height="44" Padding="24,0" />
         </Grid>
 
-        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="0">
+        <!-- Data Grid -->
+        <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="0" ClipToBounds="True">
             <DataGrid ItemsSource="{Binding Returns}" SelectedItem="{Binding SelectedReturn}"
                       Style="{StaticResource ModernDataGrid}"
                       CellStyle="{StaticResource ModernDataGridCell}"
@@ -44,28 +86,47 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="رقم المرتجع" Binding="{Binding ReturnNumber}" Width="120" />
                     <DataGridTextColumn Header="الصيدلية" Binding="{Binding Pharmacy.Name}" Width="*" />
-                    <DataGridTextColumn Header="المبلغ" Binding="{Binding TotalAmount, StringFormat={}{0:N2}}" Width="90" />
-                    <DataGridTextColumn Header="النوع" Binding="{Binding ReturnType}" Width="80" />
-                    <DataGridTemplateColumn Header="الحالة" Width="80">
+                    <DataGridTextColumn Header="المبلغ" Binding="{Binding TotalAmount, StringFormat={}{0:N2}}" Width="120" />
+                    <DataGridTextColumn Header="النوع" Binding="{Binding ReturnType}" Width="100" />
+                    <DataGridTemplateColumn Header="الحالة" Width="120">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Border CornerRadius="6" Padding="8,3" HorizontalAlignment="Left">
+                                <Border CornerRadius="12" Padding="10,4" HorizontalAlignment="Left" Margin="10,0,0,0">
                                     <Border.Style>
                                         <Style TargetType="Border">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Status}" Value="approved">
-                                                    <Setter Property="Background" Value="#FF238636" />
+                                                    <Setter Property="Background" Value="#FF1F3B2A" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Status}" Value="pending">
-                                                    <Setter Property="Background" Value="#FFD29922" />
+                                                    <Setter Property="Background" Value="#FF3B2D1A" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Status}" Value="rejected">
-                                                    <Setter Property="Background" Value="#FFDA3633" />
+                                                    <Setter Property="Background" Value="#FF3D1A1A" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Border.Style>
-                                    <TextBlock Text="{Binding Status}" FontSize="12" FontWeight="SemiBold" Foreground="White" />
+                                    <TextBlock FontSize="11" FontWeight="SemiBold">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="approved">
+                                                        <Setter Property="Text" Value="موافق عليه" />
+                                                        <Setter Property="Foreground" Value="#FF55D66B" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="pending">
+                                                        <Setter Property="Text" Value="قيد الانتظار" />
+                                                        <Setter Property="Foreground" Value="#FFD29922" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="rejected">
+                                                        <Setter Property="Text" Value="مرفوض" />
+                                                        <Setter Property="Foreground" Value="#FFFF5C5C" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
                                 </Border>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -74,13 +135,14 @@
             </DataGrid>
         </Border>
 
-        <Border Grid.RowSpan="2" Background="#E60D1117"
+        <!-- Editor Overlay -->
+        <Border Grid.RowSpan="3" Background="#E60D1117"
                 Visibility="{Binding ShowEditor, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="200">
             <Border Style="{StaticResource CardStyle}" Width="480"
                     HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel>
-                    <TextBlock Text="مرتجع جديد" FontSize="20" FontWeight="Bold" Foreground="#FF55D66B" Margin="0,0,0,20" />
+                    <TextBlock Text="إضافة مرتجع جديد" FontSize="20" FontWeight="Bold" Foreground="#FF55D66B" Margin="0,0,0,20" />
 
                     <Border Background="#FF3D1A1A" CornerRadius="8" Padding="12,8" Margin="0,0,0,12"
                             Visibility="{Binding ValidationMessage, Converter={StaticResource StringToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -92,25 +154,65 @@
                         <ComboBox ItemsSource="{Binding Pharmacies}" SelectedItem="{Binding SelectedPharmacy}"
                                   DisplayMemberPath="Name" Height="44" Style="{StaticResource ModernComboBox}" />
                     </StackPanel>
+                    
+                    <StackPanel Margin="0,0,0,12">
+                        <Grid>
+                            <TextBlock Text="المنتجات" FontSize="12" Foreground="#FF8B949E" VerticalAlignment="Center" />
+                            <Button Content="+ إضافة منتج" Command="{Binding AddItemCommand}" HorizontalAlignment="Right" 
+                                    Style="{StaticResource SecondaryButtonStyle}" Padding="8,4" FontSize="12" />
+                        </Grid>
+                        <DataGrid ItemsSource="{Binding NewItems}" Height="150" Margin="0,8,0,0" AutoGenerateColumns="False"
+                                  Style="{StaticResource ModernDataGrid}" CellStyle="{StaticResource ModernDataGridCell}"
+                                  RowStyle="{StaticResource ModernDataGridRow}" ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="المنتج" Width="*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox ItemsSource="{Binding DataContext.Products, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                      SelectedValue="{Binding ProductId, UpdateSourceTrigger=PropertyChanged}"
+                                                      SelectedValuePath="Id" DisplayMemberPath="Name"
+                                                      Style="{StaticResource ModernComboBox}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="الكمية" Binding="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" Width="70" />
+                                <DataGridTextColumn Header="سعر الوحدة" Binding="{Binding UnitPrice, UpdateSourceTrigger=PropertyChanged}" Width="80" />
+                                <DataGridTemplateColumn Width="40">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="🗑️" Command="{Binding DataContext.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" Background="Transparent" BorderThickness="0" Cursor="Hand" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
 
                     <StackPanel Margin="0,0,0,12">
                         <TextBlock Text="المبلغ" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
                         <TextBox Text="{Binding TotalAmount, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBox}" Height="44" />
+                                 Style="{StaticResource ModernTextBox}" Height="44" IsReadOnly="True" />
                     </StackPanel>
 
-                    <StackPanel Margin="0,0,0,12">
-                        <TextBlock Text="نوع المرتجع" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
-                        <ComboBox ItemsSource="{Binding ReturnTypes}" SelectedItem="{Binding ReturnType}"
-                                  Height="44" Style="{StaticResource ModernComboBox}" />
+                    <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                        <StackPanel Width="230" Margin="0,0,12,0">
+                            <TextBlock Text="نوع المرتجع" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                            <ComboBox ItemsSource="{Binding ReturnTypes}" SelectedItem="{Binding ReturnType}"
+                                      Height="44" Style="{StaticResource ModernComboBox}" />
+                        </StackPanel>
+                        <StackPanel Width="230">
+                            <TextBlock Text="سبب المرتجع" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                            <TextBox Text="{Binding Reason}" Style="{StaticResource ModernTextBox}" Height="44" />
+                        </StackPanel>
+                    </StackPanel>
+                    
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                        <CheckBox Content="تعديل المخزون" IsChecked="{Binding AdjustStock}" Margin="0,0,20,0" Foreground="White" />
+                        <CheckBox Content="تعديل حساب الصيدلية" IsChecked="{Binding AdjustBalance}" Foreground="White" />
                     </StackPanel>
 
-                    <StackPanel Margin="0,0,0,16">
-                        <TextBlock Text="السبب" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
-                        <TextBox Text="{Binding Reason}" Style="{StaticResource ModernTextBox}" Height="44" />
-                    </StackPanel>
-
-                    <Grid>
+                    <Grid Margin="0,10,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="12" />

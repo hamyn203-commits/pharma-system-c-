@@ -6,6 +6,9 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <conv:StatusToColorConverter x:Key="StatusToColorConverter" />
         <conv:BalanceColorConverter x:Key="BalanceColorConverter" />
+        <conv:PositiveIntegerRule x:Key="PositiveIntegerRule" />
+        <conv:PositiveDecimalRule x:Key="PositiveDecimalRule" />
+        <conv:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
     </UserControl.Resources>
 
     <Grid Margin="24,20,10,20">
@@ -30,6 +33,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Orientation="Horizontal">
@@ -40,7 +44,15 @@
                         Style="{StaticResource SecondaryButtonStyle}" Margin="10,0,0,0" Padding="20,0" />
             </StackPanel>
 
-            <Button Grid.Column="1" Content="+ إضافة منتج جديد" Command="{Binding NewProductCommand}"
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,10,0">
+                <TextBlock Text="📷" FontSize="18" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <TextBox Text="{Binding BarcodeSearch, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource ModernTextBox}" Width="160" Height="40"
+                         VerticalContentAlignment="Center"
+                         x:Name="BarcodeTextBox" />
+            </StackPanel>
+
+            <Button Grid.Column="2" Content="+ إضافة منتج جديد" Command="{Binding NewProductCommand}"
                     Style="{StaticResource PrimaryButtonStyle}" Height="40" Padding="20,0" />
         </Grid>
 
@@ -198,15 +210,29 @@
                             <!-- Price -->
                             <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,0,16">
                                 <TextBlock Text="السعر *" Style="{StaticResource SectionHeader}" Margin="0,0,0,8" />
-                                <TextBox Text="{Binding EditProduct.UnitPrice, UpdateSourceTrigger=PropertyChanged}"
-                                         Style="{StaticResource ModernTextBox}" Height="46" />
+                                <TextBox Style="{StaticResource ModernTextBox}" Height="46">
+                                    <TextBox.Text>
+                                        <Binding Path="EditProduct.UnitPrice" UpdateSourceTrigger="PropertyChanged" ValidatesOnDataErrors="True">
+                                            <Binding.ValidationRules>
+                                                <conv:PositiveDecimalRule />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
                             </StackPanel>
 
                             <!-- Quantity -->
                             <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,0,0,16">
                                 <TextBlock Text="الكمية *" Style="{StaticResource SectionHeader}" Margin="0,0,0,8" />
-                                <TextBox Text="{Binding EditProduct.Quantity, UpdateSourceTrigger=PropertyChanged}"
-                                         Style="{StaticResource ModernTextBox}" Height="46" />
+                                <TextBox Style="{StaticResource ModernTextBox}" Height="46">
+                                    <TextBox.Text>
+                                        <Binding Path="EditProduct.Quantity" UpdateSourceTrigger="PropertyChanged" ValidatesOnDataErrors="True">
+                                            <Binding.ValidationRules>
+                                                <conv:PositiveIntegerRule />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
                             </StackPanel>
 
                             <!-- Category -->

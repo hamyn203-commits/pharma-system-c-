@@ -2,48 +2,102 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!-- COLOR PALETTE                                                   -->
+    <!-- COLOR PALETTE (Premium Emerald Night)                           -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <Color x:Key="PrimaryGreen">#FF55D66B</Color>
-    <Color x:Key="PrimaryGreenDark">#FF3FA853</Color>
-    <Color x:Key="PrimaryBlue">#FF316DCA</Color>
-    <Color x:Key="PrimaryBlueDark">#FF2355A8</Color>
-    <Color x:Key="Danger">#FFFF5C5C</Color>
-    <Color x:Key="DangerDark">#FFCC3A3A</Color>
-    <Color x:Key="Warning">#FFD28A2D</Color>
-    <Color x:Key="WarningDark">#FFB06D1A</Color>
-    <Color x:Key="Purple">#FF9B59B6</Color>
-    <Color x:Key="Teal">#FF1ABC9C</Color>
-
-    <Color x:Key="DarkBg">#FF0D1117</Color>
-    <Color x:Key="SidebarBg">#FF161B22</Color>
-    <Color x:Key="HeaderBg">#FF161B22</Color>
-    <Color x:Key="CardBg">#FF1C2128</Color>
-    <Color x:Key="CardHover">#FF22272E</Color>
-    <Color x:Key="CardBorder">#FF30363D</Color>
-    <Color x:Key="CardBorderHover">#FF484F58</Color>
-    <Color x:Key="OverlayBg">#E60D1117</Color>
-
-    <Color x:Key="TextPrimary">#FFFFFFFF</Color>
-    <Color x:Key="TextSecondary">#FF8B949E</Color>
-    <Color x:Key="TextMuted">#FF484F58</Color>
+    <Color x:Key="PrimaryGreen">#FF10B981</Color> <!-- Emerald 500 -->
+    <Color x:Key="PrimaryGreenDark">#FF059669</Color>
+    <Color x:Key="PrimaryGreenLight">#FF34D399</Color>
+    <Color x:Key="PrimaryGreenGlass">#1A10B981</Color>
+    
+    <Color x:Key="PrimaryBlue">#FF3B82F6</Color> <!-- Blue 500 -->
+    <Color x:Key="PrimaryBlueLight">#FF60A5FA</Color>
+    <Color x:Key="PrimaryBlueGlass">#1A3B82F6</Color>
+    
+    <Color x:Key="Danger">#FFEF4444</Color> <!-- Red 500 -->
+    <Color x:Key="DangerLight">#FFF87171</Color>
+    <Color x:Key="DangerGlass">#1AEF4444</Color>
+    
+    <Color x:Key="Warning">#FFF59E0B</Color> <!-- Amber 500 -->
+    <Color x:Key="WarningLight">#FFFBBF24</Color>
+    <Color x:Key="WarningGlass">#1AF59E0B</Color>
+    
+    <Color x:Key="DarkBg">#FF0A0E13</Color>
+    <Color x:Key="SidebarBg">#FF111827</Color>
+    <Color x:Key="CardBg">#FF161B22</Color>
+    <Color x:Key="HeaderBg">#FF111827</Color>
+    <Color x:Key="BorderDefault">#FF3D4552</Color>
+    <Color x:Key="BorderMuted">#FF2D3748</Color>
+    
+    <Color x:Key="TextPrimary">#FFF9FAFB</Color>
+    <Color x:Key="TextSecondary">#FFA1ABB7</Color>
+    <Color x:Key="TextMuted">#FF6B7280</Color>
 
     <!-- SolidColorBrushes -->
     <SolidColorBrush x:Key="PrimaryGreenBrush" Color="{StaticResource PrimaryGreen}" />
+    <SolidColorBrush x:Key="PrimaryGreenLightBrush" Color="{StaticResource PrimaryGreenLight}" />
+    <SolidColorBrush x:Key="PrimaryGreenGlassBrush" Color="{StaticResource PrimaryGreenGlass}" />
     <SolidColorBrush x:Key="PrimaryBlueBrush" Color="{StaticResource PrimaryBlue}" />
+    <SolidColorBrush x:Key="PrimaryBlueGlassBrush" Color="{StaticResource PrimaryBlueGlass}" />
     <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource Danger}" />
+    <SolidColorBrush x:Key="DangerGlassBrush" Color="{StaticResource DangerGlass}" />
     <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource Warning}" />
-    <SolidColorBrush x:Key="PurpleBrush" Color="{StaticResource Purple}" />
-    <SolidColorBrush x:Key="TealBrush" Color="{StaticResource Teal}" />
+    <SolidColorBrush x:Key="WarningGlassBrush" Color="{StaticResource WarningGlass}" />
     <SolidColorBrush x:Key="DarkBgBrush" Color="{StaticResource DarkBg}" />
     <SolidColorBrush x:Key="SidebarBgBrush" Color="{StaticResource SidebarBg}" />
     <SolidColorBrush x:Key="CardBgBrush" Color="{StaticResource CardBg}" />
-    <SolidColorBrush x:Key="CardHoverBrush" Color="{StaticResource CardHover}" />
-    <SolidColorBrush x:Key="CardBorderBrush" Color="{StaticResource CardBorder}" />
-    <SolidColorBrush x:Key="CardBorderHoverBrush" Color="{StaticResource CardBorderHover}" />
+    <SolidColorBrush x:Key="HeaderBgBrush" Color="{StaticResource HeaderBg}" />
+    <SolidColorBrush x:Key="BorderDefaultBrush" Color="{StaticResource BorderDefault}" />
+    <SolidColorBrush x:Key="BorderMutedBrush" Color="{StaticResource BorderMuted}" />
     <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimary}" />
     <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondary}" />
     <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource TextMuted}" />
+
+    <!-- Group Colors -->
+    <SolidColorBrush x:Key="GeneralGroupBrush" Color="#FF10B981" />
+    <SolidColorBrush x:Key="InventoryGroupBrush" Color="#FF3B82F6" />
+    <SolidColorBrush x:Key="SalesGroupBrush" Color="#FFF59E0B" />
+    <SolidColorBrush x:Key="MonitoringGroupBrush" Color="#FF8B5CF6" />
+
+    <!-- Metric Brushes (More Vibrant) -->
+    <LinearGradientBrush x:Key="ReceivablesGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#4DFF5C5C" Offset="0" />
+        <GradientStop Color="#0D000000" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="PharmaciesGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#4D55D66B" Offset="0" />
+        <GradientStop Color="#0D000000" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="OrdersGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#4DD28A2D" Offset="0" />
+        <GradientStop Color="#0D000000" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="InExecutionGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#4D9B59B6" Offset="0" />
+        <GradientStop Color="#0D000000" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="DailySalesGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#4D316DCA" Offset="0" />
+        <GradientStop Color="#0D000000" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="MonthlySalesGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#4D1ABC9C" Offset="0" />
+        <GradientStop Color="#0D000000" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="ProductsGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#4DE67E22" Offset="0" />
+        <GradientStop Color="#0D000000" Offset="1" />
+    </LinearGradientBrush>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- EFFECTS & SHIMMERS                                              -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <DropShadowEffect x:Key="CardShadow" BlurRadius="12" ShadowDepth="0" Color="Black" Opacity="0.2" />
+    
+    <LinearGradientBrush x:Key="ShimmerBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#FF1A1F26" Offset="0" />
+        <GradientStop Color="#FF3D4552" Offset="0.5" />
+        <GradientStop Color="#FF1A1F26" Offset="1" />
+    </LinearGradientBrush>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!-- NAVIGATION BUTTON STYLE                                         -->
@@ -53,9 +107,9 @@
         <Setter Property="Margin" Value="4,2" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="#FF8B949E" />
+        <Setter Property="Foreground" Value="#FFA1ABB7" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="14" />
         <Setter Property="HorizontalContentAlignment" Value="Right" />
         <Setter Property="Template">
             <Setter.Value>
@@ -66,10 +120,10 @@
                             BorderThickness="0"
                             Padding="12,0">
                         <Grid>
-                            <Border x:Name="Indicator" Width="3" Height="20" CornerRadius="2"
-                                    Background="{StaticResource PrimaryGreenBrush}"
+                            <Border x:Name="Indicator" Width="4" Height="20" CornerRadius="2"
+                                    Background="{TemplateBinding Foreground}"
                                     HorizontalAlignment="Right" VerticalAlignment="Center"
-                                    Opacity="0" />
+                                    Opacity="0" Margin="0,0,-12,0" />
                             <ContentPresenter HorizontalAlignment="Right"
                                              VerticalAlignment="Center" />
                         </Grid>
@@ -77,12 +131,13 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Foreground" Value="#FFFFFFFF" />
-                            <Setter TargetName="Border" Property="Background" Value="#FF21262D" />
+                            <Setter TargetName="Border" Property="Background" Value="#1AFFFFFF" />
                         </Trigger>
                         <Trigger Property="Uid" Value="active">
                             <Setter Property="Foreground" Value="#FFFFFFFF" />
-                            <Setter TargetName="Border" Property="Background" Value="#FF1F3B2A" />
+                            <Setter TargetName="Border" Property="Background" Value="#33FFFFFF" />
                             <Setter TargetName="Indicator" Property="Opacity" Value="1" />
+                            <Setter Property="FontWeight" Value="Bold" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -95,10 +150,27 @@
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <Style x:Key="CardStyle" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource CardBgBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="16" />
-        <Setter Property="Padding" Value="20" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1.5" />
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="Padding" Value="24" />
+        <Setter Property="Effect" Value="{StaticResource CardShadow}" />
+    </Style>
+
+    <Style x:Key="TransparentButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -225,6 +297,7 @@
         <Setter Property="Padding" Value="14,12" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="CaretBrush" Value="#FF55D66B" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
@@ -232,10 +305,13 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="12">
+                            CornerRadius="12"
+                            SnapsToDevicePixels="True">
                         <ScrollViewer x:Name="PART_ContentHost"
-                                      Margin="{TemplateBinding Padding}"
-                                      VerticalAlignment="Center" />
+                                      Focusable="False"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Hidden"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -244,6 +320,9 @@
                         <Trigger Property="IsFocused" Value="True">
                             <Setter TargetName="Border" Property="BorderBrush" Value="#FF55D66B" />
                             <Setter TargetName="Border" Property="BorderThickness" Value="2" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -262,6 +341,7 @@
         <Setter Property="Padding" Value="14,12" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="CaretBrush" Value="#FF55D66B" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="PasswordBox">
@@ -269,10 +349,13 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="12">
+                            CornerRadius="12"
+                            SnapsToDevicePixels="True">
                         <ScrollViewer x:Name="PART_ContentHost"
-                                      Margin="{TemplateBinding Padding}"
-                                      VerticalAlignment="Center" />
+                                      Focusable="False"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Hidden"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -281,6 +364,9 @@
                         <Trigger Property="IsFocused" Value="True">
                             <Setter TargetName="Border" Property="BorderBrush" Value="#FF55D66B" />
                             <Setter TargetName="Border" Property="BorderThickness" Value="2" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -565,8 +651,19 @@
     <Style x:Key="SectionHeader" TargetType="TextBlock">
         <Setter Property="FontSize" Value="11" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Foreground" Value="#FF8B949E" />
+        <Setter Property="Foreground" Value="{StaticResource PrimaryGreenBrush}" />
         <Setter Property="Margin" Value="16,24,16,6" />
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="inventory">
+                <Setter Property="Foreground" Value="{StaticResource InventoryGroupBrush}" />
+            </Trigger>
+            <Trigger Property="Tag" Value="sales">
+                <Setter Property="Foreground" Value="{StaticResource SalesGroupBrush}" />
+            </Trigger>
+            <Trigger Property="Tag" Value="monitoring">
+                <Setter Property="Foreground" Value="{StaticResource MonitoringGroupBrush}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="PageTitle" TargetType="TextBlock">
@@ -575,15 +672,31 @@
         <Setter Property="Foreground" Value="#FFFFFFFF" />
     </Style>
 
-    <Style x:Key="CardTitle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="13" />
-        <Setter Property="Foreground" Value="#FF8B949E" />
-    </Style>
-
-    <Style x:Key="CardValue" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="28" />
+    <Style x:Key="MetricLabel" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Foreground" Value="#FFFFFFFF" />
+        <Setter Property="Margin" Value="0,0,0,16" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+    </Style>
+
+    <Style x:Key="DashboardCardStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource CardBgBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderMutedBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="Padding" Value="24" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="20" ShadowDepth="2" Color="Black" Opacity="0.3" />
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="{StaticResource PrimaryGreenBrush}" />
+                <Setter Property="Background" Value="#FF1C2128" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <!-- ListBox Modern -->
@@ -622,4 +735,39 @@
         </Setter>
     </Style>
 
+    <!-- ListBox Modern -->
+    <Style TargetType="ListBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+    </Style>
+
+    <Style TargetType="ListBoxItem">
+        <Setter Property="Margin" Value="0,2" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border x:Name="Border"
+                            Background="Transparent"
+                            CornerRadius="8"
+                            BorderThickness="1"
+                            BorderBrush="Transparent">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="#1AFFFFFF" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#33FFFFFF" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource PrimaryGreenGlassBrush}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryGreenBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

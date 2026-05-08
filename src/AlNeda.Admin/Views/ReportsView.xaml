@@ -59,21 +59,72 @@
         <!-- Report Content -->
         <Border Grid.Column="2" Style="{StaticResource CardStyle}" Padding="16">
             <Grid>
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                    <TextBlock Text="{Binding ReportContent}" 
-                               FontFamily="Consolas" FontSize="13" 
-                               Foreground="#FFADBAC7" 
-                               TextWrapping="Wrap" />
-                </ScrollViewer>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-                <!-- Placeholder when no report selected -->
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
-                           Visibility="{Binding ReportContent, Converter={StaticResource StringEmptyToVisibilityConverter}, FallbackValue=Visible}">
-                    <TextBlock Text="📊" FontSize="48" HorizontalAlignment="Center" Opacity="0.5" />
-                    <TextBlock Text="اختر تقريراً من القائمة الجانبية" 
-                               FontSize="14" Foreground="#FF8B949E" 
-                               HorizontalAlignment="Center" Margin="0,12,0,0" />
+                <!-- Toolbar -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
+                    <Button Content="🔄" Command="{Binding ToggleViewModeCommand}"
+                            ToolTip="تبديل العرض (جدول/نص)"
+                            Background="#2D333B" Foreground="#E6EDF3" BorderBrush="#444C56"
+                            Padding="10,8" BorderThickness="1" />
+                    <Button Content="📄 CSV" Command="{Binding ExportToCsvCommand}"
+                            Background="#2D333B" Foreground="#E6EDF3" BorderBrush="#444C56"
+                            Padding="12,8" Margin="8,0,0,0" BorderThickness="1"
+                            ToolTip="تصدير إلى CSV" />
+                    <Button Content="📊 Excel" Command="{Binding ExportToExcelCommand}"
+                            Background="#2D333B" Foreground="#E6EDF3" BorderBrush="#444C56"
+                            Padding="12,8" Margin="4,0,0,0" BorderThickness="1"
+                            ToolTip="تصدير إلى Excel" />
+                    <Button Content="📕 PDF" Command="{Binding ExportToPdfCommand}"
+                            Background="#2D333B" Foreground="#E6EDF3" BorderBrush="#444C56"
+                            Padding="12,8" Margin="4,0,0,0" BorderThickness="1"
+                            ToolTip="تصدير إلى PDF" />
+                    <Button Content="🖨️ طباعة" Command="{Binding PrintCommand}"
+                            Background="#238636" Foreground="White" BorderThickness="0"
+                            Padding="12,8" Margin="4,0,0,0"
+                            ToolTip="طباعة التقرير" />
                 </StackPanel>
+
+                <!-- Content -->
+                <Grid Grid.Row="1">
+                    <!-- Grid View -->
+                    <DataGrid ItemsSource="{Binding ReportData}"
+                              Visibility="{Binding IsGridView, Converter={StaticResource BooleanToVisibilityConverter}}"
+                              Style="{StaticResource ModernDataGrid}"
+                              CellStyle="{StaticResource ModernDataGridCell}"
+                              RowStyle="{StaticResource ModernDataGridRow}"
+                              ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}"
+                              GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#FF21262D"
+                              AutoGenerateColumns="True" IsReadOnly="True"
+                              CanUserAddRows="False" CanUserDeleteRows="False" />
+
+                    <!-- Text View -->
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                 Visibility="{Binding IsGridView, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}">
+                        <TextBlock Text="{Binding ReportContent}" 
+                                   FontFamily="Consolas" FontSize="13" 
+                                   Foreground="#FFADBAC7" 
+                                   TextWrapping="Wrap" />
+                    </ScrollViewer>
+
+                    <!-- Placeholder when no report selected -->
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Visibility="{Binding CurrentReportName, Converter={StaticResource StringEmptyToVisibilityConverter}, FallbackValue=Visible}">
+                        <TextBlock Text="📊" FontSize="48" HorizontalAlignment="Center" Opacity="0.5" />
+                        <TextBlock Text="اختر تقريراً من القائمة الجانبية" 
+                                   FontSize="14" Foreground="#FF8B949E" 
+                                   HorizontalAlignment="Center" Margin="0,12,0,0" />
+                    </StackPanel>
+                </Grid>
+
+                <!-- Status Bar -->
+                <Border Grid.Row="2" Background="#FF21262D" CornerRadius="4" Padding="8,4" Margin="0,12,0,0">
+                    <TextBlock Text="{Binding StatusMessage}" Foreground="#FF8B949E" FontSize="11" />
+                </Border>
             </Grid>
         </Border>
     </Grid>

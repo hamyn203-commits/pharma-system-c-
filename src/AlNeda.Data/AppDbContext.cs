@@ -108,16 +108,5 @@ public class AppDbContext : DbContext
             e.HasIndex(p => p.Barcode).IsUnique();
         });
 
-        modelBuilder.Entity<User>().HasData(
-            new User 
-            { 
-                Id = 1, 
-                Username = "admin", 
-                Password = "admin", // Will be upgraded on first login or I can use a known SHA256
-                PasswordSalt = "", 
-                Role = "admin", 
-                CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) 
-            }
-        );
     }
 }

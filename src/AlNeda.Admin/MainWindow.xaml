@@ -1,4 +1,4 @@
-﻿<Window x:Class="AlNeda.Admin.MainWindow"
+<Window x:Class="AlNeda.Admin.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="مخزن الندا - نظام إدارة المخزن"
@@ -11,7 +11,7 @@
         FlowDirection="RightToLeft"
         SnapsToDevicePixels="True"
         TextOptions.TextFormattingMode="Display"
-        Background="#FF0D1117"
+        Background="{StaticResource DarkBgBrush}"
         MouseLeftButtonDown="Window_MouseLeftButtonDown">
 
     <Window.Resources>
@@ -40,8 +40,8 @@
         <!-- ═══════════════════════════════════════════════════════════ -->
         <!-- SIDEBAR                                                      -->
         <!-- ═══════════════════════════════════════════════════════════ -->
-        <Border Grid.Column="0" Background="#FF161B22">
-            <Border BorderBrush="#FF21262D" BorderThickness="0,0,1,0">
+        <Border Grid.Column="0" Background="{StaticResource SidebarBgBrush}">
+            <Border BorderBrush="{StaticResource BorderMutedBrush}" BorderThickness="0,0,1,0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -53,86 +53,93 @@
                     <!-- Logo -->
                     <StackPanel Grid.Row="0" Margin="20,24,20,16" HorizontalAlignment="Center">
                         <Grid Width="48" Height="48" HorizontalAlignment="Center">
-                            <Ellipse Fill="#FF1F3B2A" />
+                            <Ellipse Fill="{DynamicResource PrimaryGreenGlassBrush}" />
                             <Grid>
-                                <Rectangle Width="6" Height="24" Fill="#FF55D66B"
+                                <Rectangle Width="6" Height="24" Fill="{StaticResource PrimaryGreenBrush}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                                           RadiusX="1.5" RadiusY="1.5" />
-                                <Rectangle Width="24" Height="6" Fill="#FF55D66B"
+                                           RadiusX="2" RadiusY="2" />
+                                <Rectangle Width="24" Height="6" Fill="{StaticResource PrimaryGreenBrush}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                                           RadiusX="1.5" RadiusY="1.5" />
+                                           RadiusX="2" RadiusY="2" />
                             </Grid>
                         </Grid>
-                        <TextBlock Text="مخزن الندا" FontSize="18" FontWeight="Bold"
-                                   Foreground="#FFFFFFFF" TextAlignment="Center" Margin="0,10,0,0" />
-                        <TextBlock Text="Pharmaceutical ERP" FontSize="10"
-                                   Foreground="#FF8B949E" TextAlignment="Center" Margin="0,2,0,0" />
+                        <TextBlock Text="مخزن الندا" FontSize="20" FontWeight="Bold"
+                                   TextAlignment="Center" Margin="0,10,0,0">
+                            <TextBlock.Foreground>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="{StaticResource PrimaryGreen}" Offset="0" />
+                                    <GradientStop Color="{StaticResource PrimaryBlueLight}" Offset="1" />
+                                </LinearGradientBrush>
+                            </TextBlock.Foreground>
+                        </TextBlock>
+                        <TextBlock Text="Pharmaceutical ERP" FontSize="10" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextMutedBrush}" TextAlignment="Center" Margin="0,2,0,0" Opacity="0.7" />
                     </StackPanel>
 
-                    <Border Grid.Row="1" Background="#FF21262D" Height="1" Margin="16,0" />
+                    <Border Grid.Row="1" Background="{StaticResource BorderMutedBrush}" Height="1" Margin="16,0" />
 
                     <!-- Navigation -->
                     <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto"
                                   Margin="8,12,8,0"
                                   Background="Transparent">
                         <StackPanel>
-                            <TextBlock Text="عام" Style="{StaticResource SectionHeader}" />
+                            <TextBlock Text="📊 عام" Style="{StaticResource SectionHeader}" />
 
-                            <Button x:Name="NavDashboard" Content="  الرئيسية"
+                            <Button x:Name="NavDashboard" Content="🏠 الرئيسية"
                                     Style="{StaticResource NavButtonStyle}" Tag="dashboard"
-                                    Click="NavButton_Click" ToolTip="F1" />
+                                    Click="NavButton_Click" ToolTip="F1" Foreground="{StaticResource GeneralGroupBrush}"/>
 
-                            <TextBlock Text="المخزون" Style="{StaticResource SectionHeader}" />
-                            <Button x:Name="NavProducts" Content="  المنتجات"
+                            <TextBlock Text="📦 المخزون" Style="{StaticResource SectionHeader}" Tag="inventory" />
+                            <Button x:Name="NavProducts" Content="💊 المنتجات"
                                     Style="{StaticResource NavButtonStyle}" Tag="products"
-                                    Click="NavButton_Click" ToolTip="F2" />
-                            <Button x:Name="NavCategories" Content="  التصنيفات"
+                                    Click="NavButton_Click" ToolTip="F2" Foreground="{StaticResource InventoryGroupBrush}"/>
+                            <Button x:Name="NavCategories" Content="📁 التصنيفات"
                                     Style="{StaticResource NavButtonStyle}" Tag="categories"
-                                    Click="NavButton_Click" />
-                            <Button x:Name="NavSuppliers" Content="  الموردين"
+                                    Click="NavButton_Click" Foreground="{StaticResource InventoryGroupBrush}"/>
+                            <Button x:Name="NavSuppliers" Content="👥 الموردين"
                                     Style="{StaticResource NavButtonStyle}" Tag="suppliers"
-                                    Click="NavButton_Click" />
-                            <Button x:Name="NavPurchases" Content="  المشتريات"
+                                    Click="NavButton_Click" Foreground="{StaticResource InventoryGroupBrush}"/>
+                            <Button x:Name="NavPurchases" Content="📥 المشتريات"
                                     Style="{StaticResource NavButtonStyle}" Tag="purchases"
-                                    Click="NavButton_Click" />
+                                    Click="NavButton_Click" Foreground="{StaticResource InventoryGroupBrush}"/>
 
-                            <TextBlock Text="المبيعات والحسابات" Style="{StaticResource SectionHeader}" />
-                            <Button x:Name="NavPharmacies" Content="  الصيدليات"
+                            <TextBlock Text="💰 المبيعات والحسابات" Style="{StaticResource SectionHeader}" Tag="sales" />
+                            <Button x:Name="NavPharmacies" Content="🏥 الصيدليات"
                                     Style="{StaticResource NavButtonStyle}" Tag="pharmacies"
-                                    Click="NavButton_Click" ToolTip="F3" />
-                            <Button x:Name="NavOrders" Content="  الطلبات"
+                                    Click="NavButton_Click" ToolTip="F3" Foreground="{StaticResource SalesGroupBrush}"/>
+                            <Button x:Name="NavOrders" Content="📝 الطلبات"
                                     Style="{StaticResource NavButtonStyle}" Tag="orders"
-                                    Click="NavButton_Click" ToolTip="F4" />
-                            <Button x:Name="NavPayments" Content="  التحصيلات"
+                                    Click="NavButton_Click" ToolTip="F4" Foreground="{StaticResource SalesGroupBrush}"/>
+                            <Button x:Name="NavPayments" Content="💵 التحصيلات"
                                     Style="{StaticResource NavButtonStyle}" Tag="payments"
-                                    Click="NavButton_Click" ToolTip="F5" />
-                            <Button x:Name="NavReturns" Content="  المرتجعات"
+                                    Click="NavButton_Click" ToolTip="F5" Foreground="{StaticResource SalesGroupBrush}"/>
+                            <Button x:Name="NavReturns" Content="🔄 المرتجعات"
                                     Style="{StaticResource NavButtonStyle}" Tag="returns"
-                                    Click="NavButton_Click" />
-                            <Button x:Name="NavStatements" Content="  كشف الحساب"
+                                    Click="NavButton_Click" Foreground="{StaticResource SalesGroupBrush}"/>
+                            <Button x:Name="NavStatements" Content="📄 كشف الحساب"
                                     Style="{StaticResource NavButtonStyle}" Tag="statements"
-                                    Click="NavButton_Click" />
+                                    Click="NavButton_Click" Foreground="{StaticResource SalesGroupBrush}"/>
 
-                            <TextBlock Text="المتابعة" Style="{StaticResource SectionHeader}" />
-                            <Button x:Name="NavReports" Content="  التقارير"
+                            <TextBlock Text="⚙️ المتابعة" Style="{StaticResource SectionHeader}" Tag="monitoring" />
+                            <Button x:Name="NavReports" Content="📈 التقارير"
                                     Style="{StaticResource NavButtonStyle}" Tag="reports"
-                                    Click="NavButton_Click" />
-                            <Button x:Name="NavAudit" Content="  سجل العمليات"
+                                    Click="NavButton_Click" Foreground="{StaticResource MonitoringGroupBrush}"/>
+                            <Button x:Name="NavAudit" Content="🛡️ سجل العمليات"
                                     Style="{StaticResource NavButtonStyle}" Tag="audit"
-                                    Click="NavButton_Click" />
-                            <Button x:Name="NavBackup" Content="  النسخ الاحتياطي"
+                                    Click="NavButton_Click" Foreground="{StaticResource MonitoringGroupBrush}"/>
+                            <Button x:Name="NavBackup" Content="💾 النسخ الاحتياطي"
                                     Style="{StaticResource NavButtonStyle}" Tag="backup"
-                                    Click="NavButton_Click" />
-                            <Button x:Name="NavSettings" Content="  الإعدادات"
+                                    Click="NavButton_Click" Foreground="{StaticResource MonitoringGroupBrush}"/>
+                            <Button x:Name="NavSettings" Content="⚙️ الإعدادات"
                                     Style="{StaticResource NavButtonStyle}" Tag="settings"
-                                    Click="NavButton_Click" />
+                                    Click="NavButton_Click" Foreground="{StaticResource MonitoringGroupBrush}"/>
                         </StackPanel>
                     </ScrollViewer>
 
                     <!-- User Panel -->
-                    <Border Grid.Row="3" Background="#FF21262D"
+                    <Border Grid.Row="3" Background="{StaticResource BorderMutedBrush}"
                             CornerRadius="16" Margin="12,8,12,16" Padding="4">
-                        <Border Background="#FF161B22" CornerRadius="12" Padding="16,12">
+                        <Border Background="{StaticResource CardBgBrush}" CornerRadius="12" Padding="16,12">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -142,7 +149,7 @@
 
                                 <!-- Avatar -->
                                 <Grid Grid.Column="0" Width="40" Height="40" VerticalAlignment="Center">
-                                    <Ellipse Fill="#FF1F3B2A" />
+                                    <Ellipse Fill="{DynamicResource PrimaryGreenGlassBrush}" />
                                     <TextBlock Text="👤" FontSize="18"
                                                HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Grid>
@@ -197,23 +204,21 @@
             </Grid.RowDefinitions>
 
             <!-- Header Bar -->
-            <Border Grid.Row="0" Background="#FF161B22"
-                    BorderBrush="#FF21262D" BorderThickness="0,0,0,1"
-                    Padding="24,16">
+            <Border Grid.Row="0" Background="{StaticResource HeaderBgBrush}" Height="72">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Page Title -->
+                    <Border BorderBrush="{StaticResource PrimaryGreenBrush}" BorderThickness="0,0,0,2" VerticalAlignment="Bottom" Opacity="0.5"/>
+                    <Grid Margin="24,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBlock Text="{Binding CurrentPageTitle}"
                                    FontSize="20" FontWeight="Bold"
-                                   Foreground="#FFFFFFFF" />
+                                   Foreground="{StaticResource TextPrimaryBrush}" />
                         <!-- Breadcrumb hint -->
-                        <TextBlock Text=" › " Foreground="#FF484F58" FontSize="18" VerticalAlignment="Center" />
-                        <TextBlock Text="مخزن الندا" Foreground="#FF8B949E" FontSize="13" VerticalAlignment="Center" />
+                        <TextBlock Text=" › " Foreground="{StaticResource TextMutedBrush}" FontSize="18" VerticalAlignment="Center" />
+                        <TextBlock Text="مخزن الندا" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" VerticalAlignment="Center" />
                     </StackPanel>
 
                     <!-- Clock & Actions -->
@@ -237,9 +242,9 @@
                         </Button>
 
                         <!-- Date/Time -->
-                        <Border Background="#FF21262D" CornerRadius="8" Padding="12,6" Margin="0,0,8,0">
+                        <Border Background="{StaticResource BorderMutedBrush}" CornerRadius="8" Padding="12,6" Margin="0,0,8,0">
                             <TextBlock x:Name="ClockText" FontSize="12"
-                                       Foreground="#FF8B949E" VerticalAlignment="Center" />
+                                       Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" />
                         </Border>
 
                         <!-- Minimize / Maximize / Close -->
@@ -256,14 +261,15 @@
                         </StackPanel>
                     </StackPanel>
                 </Grid>
+            </Grid>
             </Border>
 
             <!-- Content Area -->
             <ContentControl Content="{Binding CurrentPage}" Grid.Row="1" />
 
             <!-- Status Bar -->
-            <Border Grid.Row="2" Background="#FF161B22"
-                    BorderBrush="#FF21262D" BorderThickness="0,1,0,0"
+            <Border Grid.Row="2" Background="{StaticResource CardBgBrush}"
+                    BorderBrush="{StaticResource BorderMutedBrush}" BorderThickness="0,1,0,0"
                     Padding="24,8">
                 <Grid>
                     <Grid.ColumnDefinitions>

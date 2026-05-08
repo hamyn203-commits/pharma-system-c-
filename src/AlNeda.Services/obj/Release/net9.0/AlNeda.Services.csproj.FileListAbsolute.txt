@@ -20,3 +20,4 @@ D:\New folder (3)\src\AlNeda.Services\obj\Release\net9.0\refint\AlNeda.Services.
 D:\New folder (3)\src\AlNeda.Services\obj\Release\net9.0\AlNeda.Services.pdb
 D:\New folder (3)\src\AlNeda.Services\obj\Release\net9.0\AlNeda.Services.genruntimeconfig.cache
 D:\New folder (3)\src\AlNeda.Services\obj\Release\net9.0\ref\AlNeda.Services.dll
+D:\New folder (3)\src\AlNeda.Services\obj\Release\net9.0\AlNeda.Services.sourcelink.json

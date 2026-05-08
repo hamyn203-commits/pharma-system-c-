@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AlNeda.Core.Entities;
 
-public class OrderItem
+public class OrderItem : IEntity
 {
     public int Id { get; set; }
 

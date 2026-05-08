@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AlNeda.Core.Entities;
 
-public class Product
+public class Product : IEntity
 {
     public int Id { get; set; }
 
@@ -43,6 +43,10 @@ public class Product
     public string Description { get; set; } = string.Empty;
 
     public int IsActive { get; set; } = 1;
+
+    public int? RemoteId { get; set; }
+
+    public bool IsSynced { get; set; } = true;
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 

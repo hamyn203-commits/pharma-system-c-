@@ -1,4 +1,4 @@
-﻿<Application x:Class="AlNeda.Admin.App"
+<Application x:Class="AlNeda.Admin.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:AlNeda.Admin"
@@ -6,7 +6,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Themes/DarkTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AlNeda.Admin;component/Themes/DarkTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Global Converters -->
@@ -14,6 +14,8 @@
             <conv:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
             <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
             <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <conv:BoolToStatusBrushConverter x:Key="BoolToStatusBrushConverter" />
+            <conv:BoolToStatusTextConverter x:Key="BoolToStatusTextConverter" />
             <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
             <conv:StatusToColorConverter x:Key="StatusToColorConverter" />
             <conv:StatusToBgConverter x:Key="StatusToBgConverter" />

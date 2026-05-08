@@ -68,7 +68,10 @@ public class CategoryService
     public async Task<List<Category>> GetAllAsync()
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        return await db.Categories.OrderBy(c => c.Name).ToListAsync();
+        return await db.Categories
+            .Include(c => c.Products)
+            .OrderBy(c => c.Name)
+            .ToListAsync();
     }
 
     public async Task AddAsync(Category category)

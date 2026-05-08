@@ -52,6 +52,36 @@
                 </Border.Background>
             </Border>
 
+            <!-- Control Buttons -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20">
+                <Button x:Name="CloseButton" Content="✕" 
+                        Click="CloseButton_Click"
+                        Width="32" Height="32"
+                        Background="Transparent" BorderThickness="0"
+                        Foreground="#FF8B949E" FontSize="18"
+                        Cursor="Hand">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="B" Background="{TemplateBinding Background}" CornerRadius="16">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="B" Property="Background" Value="#FF3D1A1A" />
+                                                <Setter Property="Foreground" Value="#FFFF5C5C" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+
             <StackPanel VerticalAlignment="Center" Margin="40,0">
 
                 <!-- Logo & Branding -->
@@ -105,11 +135,51 @@
                 <!-- Password -->
                 <TextBlock Text="كلمة المرور" FontSize="12"
                            Foreground="#FF8B949E" Margin="0,16,0,8" />
-                <PasswordBox x:Name="PasswordBox"
+                <Grid>
+                    <PasswordBox x:Name="PasswordBox"
+                                 Height="48" FontSize="14"
+                                 Background="#FF0D1117" Foreground="White"
+                                 BorderBrush="#FF30363D" BorderThickness="1"
+                                 Padding="14,12,45,12" 
+                                 PasswordChanged="PasswordBox_PasswordChanged"
+                                 Visibility="{Binding ShowPassword, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+                    
+                    <TextBox x:Name="PasswordVisibleBox"
+                             Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
                              Height="48" FontSize="14"
                              Background="#FF0D1117" Foreground="White"
                              BorderBrush="#FF30363D" BorderThickness="1"
-                             Padding="14,12" />
+                             Padding="14,12,45,12"
+                             Visibility="{Binding ShowPassword, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    
+                    <ToggleButton IsChecked="{Binding ShowPassword}"
+                                  Content="👁" 
+                                  HorizontalAlignment="Right" 
+                                  VerticalAlignment="Center" 
+                                  Margin="0,0,10,0"
+                                  Background="Transparent"
+                                  BorderThickness="0"
+                                  Foreground="#FF8B949E"
+                                  Cursor="Hand"
+                                  FontSize="16">
+                        <ToggleButton.Style>
+                            <Style TargetType="ToggleButton">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <ContentPresenter />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter Property="Foreground" Value="#FF55D66B" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ToggleButton.Style>
+                    </ToggleButton>
+                </Grid>
 
                 <!-- Role -->
                 <TextBlock Text="الدور الوظيفي" FontSize="12"

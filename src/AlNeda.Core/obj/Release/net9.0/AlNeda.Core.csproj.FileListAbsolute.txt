@@ -9,3 +9,4 @@ D:\New folder (3)\src\AlNeda.Core\obj\Release\net9.0\AlNeda.Core.dll
 D:\New folder (3)\src\AlNeda.Core\obj\Release\net9.0\refint\AlNeda.Core.dll
 D:\New folder (3)\src\AlNeda.Core\obj\Release\net9.0\AlNeda.Core.pdb
 D:\New folder (3)\src\AlNeda.Core\obj\Release\net9.0\ref\AlNeda.Core.dll
+D:\New folder (3)\src\AlNeda.Core\obj\Release\net9.0\AlNeda.Core.sourcelink.json

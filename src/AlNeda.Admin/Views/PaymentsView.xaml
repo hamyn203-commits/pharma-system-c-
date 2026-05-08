@@ -7,33 +7,75 @@
 
     <Grid Margin="24,20,10,20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" /> <!-- Stats -->
+            <RowDefinition Height="Auto" /> <!-- Actions -->
+            <RowDefinition Height="*" />    <!-- Grid -->
         </Grid.RowDefinitions>
 
-        <Border Grid.RowSpan="2" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+        <Border Grid.RowSpan="3" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="100">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="4"
                              Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
-                <TextBlock Text="جاري تحميل المدفوعات..." Foreground="#FF8B949E"
+                <TextBlock Text="جاري تحميل التحصيلات..." Foreground="#FF8B949E"
                            HorizontalAlignment="Center" Margin="0,12,0,0" />
             </StackPanel>
         </Border>
 
-        <Grid Grid.Row="0" Margin="0,0,0,16">
+        <!-- Stats Section -->
+        <Grid Grid.Row="0" Margin="0,0,0,24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Margin="0,0,12,0" Style="{StaticResource CardStyle}" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="تحصيلات اليوم" Foreground="#FF8B949E" FontSize="13" />
+                    <Grid Margin="0,8,0,0">
+                        <TextBlock Text="12,500" FontSize="28" FontWeight="Bold" Foreground="White" />
+                        <TextBlock Text="💵" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1" Margin="6,0,6,0" Style="{StaticResource CardStyle}" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="تحصيلات الشهر" Foreground="#FF8B949E" FontSize="13" />
+                    <Grid Margin="0,8,0,0">
+                        <TextBlock Text="285,400" FontSize="28" FontWeight="Bold" Foreground="#FF55D66B" />
+                        <TextBlock Text="📈" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Margin="12,0,0,0" Style="{StaticResource CardStyle}" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="إجمالي النقدية" Foreground="#FF8B949E" FontSize="13" />
+                    <Grid Margin="0,8,0,0">
+                        <TextBlock Text="1,240,000" FontSize="28" FontWeight="Bold" Foreground="#FFD29922" />
+                        <TextBlock Text="💰" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Header -->
+        <Grid Grid.Row="1" Margin="0,0,0,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Text="المدفوعات" FontSize="22" FontWeight="Bold" Foreground="#FF55D66B" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="0" Text="سجل التحصيلات" FontSize="22" FontWeight="Bold" Foreground="#FF55D66B" VerticalAlignment="Center" />
 
-            <Button Grid.Column="1" Content="+ تحصيل جديد" Command="{Binding NewPaymentCommand}"
-                    Style="{StaticResource PrimaryButtonStyle}" Height="40" Padding="20,0" />
+            <Button Grid.Column="1" Content="+ تحصيل مبلغ جديد" Command="{Binding NewPaymentCommand}"
+                    Style="{StaticResource PrimaryButtonStyle}" Height="44" Padding="24,0" />
         </Grid>
 
-        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="0">
+        <!-- Data Grid -->
+        <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="0" ClipToBounds="True">
             <DataGrid ItemsSource="{Binding Payments}" SelectedItem="{Binding SelectedPayment}"
                       Style="{StaticResource ModernDataGrid}"
                       CellStyle="{StaticResource ModernDataGridCell}"
@@ -43,41 +85,57 @@
                       AutoGenerateColumns="False" IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="الصيدلية" Binding="{Binding Pharmacy.Name}" Width="*" />
-                    <DataGridTextColumn Header="المبلغ" Binding="{Binding Amount, StringFormat={}{0:N2}}" Width="90" />
-                    <DataGridTextColumn Header="النوع" Binding="{Binding PaymentType}" Width="80" />
-                    <DataGridTemplateColumn Header="الحالة" Width="80">
+                    <DataGridTextColumn Header="المبلغ" Binding="{Binding Amount, StringFormat={}{0:N2}}" Width="120" />
+                    <DataGridTextColumn Header="طريقة الدفع" Binding="{Binding PaymentType}" Width="120" />
+                    <DataGridTemplateColumn Header="الحالة" Width="120">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Border CornerRadius="6" Padding="8,3" HorizontalAlignment="Left">
+                                <Border CornerRadius="12" Padding="10,4" HorizontalAlignment="Left" Margin="10,0,0,0">
                                     <Border.Style>
                                         <Style TargetType="Border">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding PaymentStatus}" Value="completed">
-                                                    <Setter Property="Background" Value="#FF238636" />
+                                                    <Setter Property="Background" Value="#FF1F3B2A" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding PaymentStatus}" Value="pending">
-                                                    <Setter Property="Background" Value="#FFD29922" />
+                                                    <Setter Property="Background" Value="#FF3B2D1A" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Border.Style>
-                                    <TextBlock Text="{Binding PaymentStatus}" FontSize="12" FontWeight="SemiBold" Foreground="White" />
+                                    <TextBlock FontSize="11" FontWeight="SemiBold">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding PaymentStatus}" Value="completed">
+                                                        <Setter Property="Text" Value="مكتمل" />
+                                                        <Setter Property="Foreground" Value="#FF55D66B" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding PaymentStatus}" Value="pending">
+                                                        <Setter Property="Text" Value="قيد الانتظار" />
+                                                        <Setter Property="Foreground" Value="#FFD29922" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
                                 </Border>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="التاريخ" Binding="{Binding Date, StringFormat={}{0:yyyy-MM-dd}}" Width="90" />
+                    <DataGridTextColumn Header="التاريخ" Binding="{Binding Date, StringFormat={}{0:yyyy-MM-dd HH:mm}}" Width="140" />
                 </DataGrid.Columns>
             </DataGrid>
         </Border>
 
-        <Border Grid.RowSpan="2" Background="#E60D1117"
+        <!-- Editor Overlay -->
+        <Border Grid.RowSpan="3" Background="#E60D1117"
                 Visibility="{Binding ShowEditor, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="200">
             <Border Style="{StaticResource CardStyle}" Width="480"
                     HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel>
-                    <TextBlock Text="تحصيل جديد" FontSize="20" FontWeight="Bold" Foreground="#FF55D66B" Margin="0,0,0,20" />
+                    <TextBlock Text="تحصيل مبلغ جديد" FontSize="20" FontWeight="Bold" Foreground="#FF55D66B" Margin="0,0,0,20" />
 
                     <Border Background="#FF3D1A1A" CornerRadius="8" Padding="12,8" Margin="0,0,0,12"
                             Visibility="{Binding ValidationMessage, Converter={StaticResource StringToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -97,23 +155,23 @@
                     </StackPanel>
 
                     <StackPanel Margin="0,0,0,12">
-                        <TextBlock Text="نوع الدفع" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                        <TextBlock Text="طريقة التحصيل" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
                         <ComboBox ItemsSource="{Binding PaymentTypes}" SelectedItem="{Binding PaymentType}"
                                   Height="44" Style="{StaticResource ModernComboBox}" />
                     </StackPanel>
 
                     <StackPanel Margin="0,0,0,16">
-                        <TextBlock Text="ملاحظات" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                        <TextBlock Text="ملاحظات إضافية" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
                         <TextBox Text="{Binding PaymentNotes}" Style="{StaticResource ModernTextBox}" Height="44" />
                     </StackPanel>
 
-                    <Grid>
+                    <Grid Margin="0,10,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="12" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Content="حفظ" Command="{Binding SaveCommand}"
+                        <Button Grid.Column="0" Content="حفظ العملية" Command="{Binding SaveCommand}"
                                 Style="{StaticResource PrimaryButtonStyle}" Height="48" />
                         <Button Grid.Column="2" Content="إلغاء" Command="{Binding CancelEditCommand}"
                                 Style="{StaticResource DangerButtonStyle}" Height="48" />

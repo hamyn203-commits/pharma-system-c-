@@ -1,48 +1,70 @@
-#!/usr/bin/env pwsh
-<#
-.SYNOPSIS
-    Builds the AlNeda solution.
-.DESCRIPTION
-    Builds the entire AlNeda solution in Release or Debug configuration.
-    Supports -Configuration, -Clean switches.
-.EXAMPLE
-    ./build.ps1
-    ./build.ps1 -Configuration Release
-    ./build.ps1 -Clean
-#>
-
+#Requires -RunAsAdministrator
 param(
-    [ValidateSet("Debug", "Release")]
-    [string]$Configuration = "Debug",
-    [switch]$Clean,
-    [switch]$RunTests
+    [string]$Configuration = "Release",
+    [string]$OutputPath = ".\publish",
+    [switch]$SkipZip
 )
 
-$SolutionDir = Split-Path -Parent $PSScriptRoot
-$SolutionPath = Join-Path $SolutionDir "AlNeda.sln"
+$ErrorActionPreference = "Stop"
 
-Write-Host "=== AlNeda Build Script ===" -ForegroundColor Cyan
-Write-Host "Configuration: $Configuration" -ForegroundColor Gray
-Write-Host "Solution: $SolutionPath" -ForegroundColor Gray
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "  AlNeda Pharmacy - Build & Publish" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host ""
 
-if ($Clean) {
-    Write-Host "`nCleaning..." -ForegroundColor Yellow
-    dotnet clean $SolutionPath --configuration $Configuration -v q
+$SolutionDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectDir = Join-Path $SolutionDir "src\AlNeda.Admin"
+
+if (-not (Test-Path $ProjectDir)) {
+    $ProjectDir = "D:\New folder (3)\src\AlNeda.Admin"
 }
 
-Write-Host "`nRestoring packages..." -ForegroundColor Yellow
-dotnet restore $SolutionPath
-if ($LASTEXITCODE -ne 0) { Write-Host "Restore failed!" -ForegroundColor Red; exit 1 }
-
-Write-Host "`nBuilding..." -ForegroundColor Yellow
-dotnet build $SolutionPath --configuration $Configuration --no-restore
-if ($LASTEXITCODE -ne 0) { Write-Host "Build failed!" -ForegroundColor Red; exit 1 }
-
-Write-Host "`nBuild succeeded!" -ForegroundColor Green
-
-if ($RunTests) {
-    Write-Host "`nRunning tests..." -ForegroundColor Yellow
-    dotnet test $SolutionPath --configuration $Configuration --no-build
-    if ($LASTEXITCODE -ne 0) { Write-Host "Tests failed!" -ForegroundColor Red; exit 1 }
-    Write-Host "All tests passed!" -ForegroundColor Green
+Write-Host "[1/4] Cleaning previous builds..." -ForegroundColor Yellow
+if (Test-Path $OutputPath) {
+    Remove-Item -Path $OutputPath -Recurse -Force
+    New-Item -ItemType Directory -Path $OutputPath | Out-Null
 }
+
+Write-Host "[2/4] Restoring dependencies..." -ForegroundColor Yellow
+Push-Location $ProjectDir
+try {
+    dotnet restore
+    if ($LASTEXITCODE -ne 0) { throw "dotnet restore failed" }
+}
+finally {
+    Pop-Location
+}
+
+Write-Host "[3/4] Building ($Configuration)..." -ForegroundColor Yellow
+Push-Location $ProjectDir
+try {
+    dotnet build -c $Configuration
+    if ($LASTEXITCODE -ne 0) { throw "dotnet build failed" }
+}
+finally {
+    Pop-Location
+}
+
+Write-Host "[4/4] Publishing..." -ForegroundColor Yellow
+$PublishPath = Join-Path $OutputPath "AlNeda"
+Push-Location $ProjectDir
+try {
+    dotnet publish -c $Configuration -o $PublishPath --self-contained true -r win-x64
+    if ($LASTEXITCODE -ne 0) { throw "dotnet publish failed" }
+}
+finally {
+    Pop-Location
+}
+
+if (-not $SkipZip) {
+    Write-Host "Creating ZIP archive..." -ForegroundColor Yellow
+    $ZipPath = Join-Path $OutputPath "AlNeda-$((Get-Date).ToString('yyyyMMdd-HHmmss')).zip"
+    Compress-Archive -Path $PublishPath -DestinationPath $ZipPath -Force
+    Write-Host "Created: $ZipPath" -ForegroundColor Green
+}
+
+Write-Host ""
+Write-Host "========================================" -ForegroundColor Green
+Write-Host "  Build completed successfully!" -ForegroundColor Green
+Write-Host "  Output: $PublishPath" -ForegroundColor Green
+Write-Host "========================================" -ForegroundColor Green

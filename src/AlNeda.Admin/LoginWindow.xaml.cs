@@ -17,8 +17,16 @@ public partial class LoginWindow : Window
         DataContext = ViewModel;
         ViewModel.LoginSucceeded += OnLoginSucceeded;
 
+        ViewModel.PropertyChanged += (s, e) => {
+            if (e.PropertyName == nameof(LoginViewModel.ShowPassword) && !ViewModel.ShowPassword)
+            {
+                PasswordBox.Password = ViewModel.Password;
+            }
+        };
+
         ViewModel.Username = "admin";
         ViewModel.Password = "admin123";
+        PasswordBox.Password = "admin123"; // Initialize the PasswordBox too
         UsernameBox.Focus();
     }
 
@@ -29,6 +37,24 @@ public partial class LoginWindow : Window
         mainWindow.ViewModel.Initialize(e.Username, e.Role);
         mainWindow.Show();
         Close();
+    }
+
+    private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is LoginViewModel vm && !vm.ShowPassword)
+        {
+            vm.Password = PasswordBox.Password;
+        }
+    }
+
+    protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+    }
+
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        Application.Current.Shutdown();
     }
 
     protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)

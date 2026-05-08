@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 
 namespace AlNeda.Admin.Converters;
@@ -136,4 +137,62 @@ public class BalanceBgConverter : IValueConverter
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         => throw new NotImplementedException();
+}
+
+public class BoolToStatusBrushConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        bool isActive = value is bool b && b;
+        return isActive ? "#FF10B981" : "#FF6B7280"; // Green vs Gray
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
+public class BoolToStatusTextConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        bool isActive = value is bool b && b;
+        return isActive ? "نشط" : "معطل";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
+public class PositiveIntegerRule : ValidationRule
+{
+    public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+    {
+        if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
+            return new ValidationResult(true, null);
+
+        if (!int.TryParse(value.ToString(), out int result))
+            return new ValidationResult(false, "الكمية يجب أن تكون رقماً صحيحاً");
+
+        if (result < 0)
+            return new ValidationResult(false, "الكمية لا يمكن أن تكون سالبة");
+
+        return ValidationResult.ValidResult;
+    }
+}
+
+public class PositiveDecimalRule : ValidationRule
+{
+    public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+    {
+        if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
+            return new ValidationResult(true, null);
+
+        if (!decimal.TryParse(value.ToString(), out decimal result))
+            return new ValidationResult(false, "السعر يجب أن يكون رقماً");
+
+        if (result < 0)
+            return new ValidationResult(false, "السعر لا يمكن أن يكون سالباً");
+
+        return ValidationResult.ValidResult;
+    }
 }

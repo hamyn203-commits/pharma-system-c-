@@ -1,0 +1,88 @@
+<Window x:Class="AlNeda.Admin.Views.AddEditCategoryDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="تعديل التصنيف" Height="650" Width="500"
+        WindowStartupLocation="CenterOwner"
+        AllowsTransparency="True" WindowStyle="None" Background="Transparent">
+
+    <Border Background="{StaticResource PageBackgroundBrush}" CornerRadius="24" BorderThickness="1.5" BorderBrush="{StaticResource BorderDefaultBrush}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" /> <!-- Header -->
+                <RowDefinition Height="*" />    <!-- Content -->
+                <RowDefinition Height="Auto" /> <!-- Footer -->
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0" Background="{StaticResource HeaderBgBrush}" CornerRadius="24,24,0,0" Padding="32,24">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="📂" FontSize="24" Margin="0,0,16,0"/>
+                    <TextBlock Text="{Binding Title}" FontSize="20" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Content -->
+            <ScrollViewer Grid.Row="1" Margin="32,24">
+                <StackPanel>
+                    <!-- Validation Message -->
+                    <Border Background="{DynamicResource DangerGlassBrush}" CornerRadius="12" Padding="16,12" Margin="0,0,0,20"
+                            Visibility="{Binding ValidationMessage, Converter={StaticResource StringToVisibilityConverter}}">
+                        <TextBlock Text="{Binding ValidationMessage}" Foreground="{StaticResource DangerBrush}" FontSize="13" TextWrapping="Wrap"/>
+                    </Border>
+
+                    <TextBlock Text="اسم التصنيف" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8"/>
+                    <TextBox Text="{Binding Category.Name, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,20"/>
+
+                    <TextBlock Text="الوصف" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8"/>
+                    <TextBox Text="{Binding Category.Description, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="100" AcceptsReturn="True" VerticalContentAlignment="Top" Margin="0,0,0,20"/>
+
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="الأيقونة" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8"/>
+                            <ComboBox SelectedValue="{Binding Category.Icon}" SelectedValuePath="Tag" Style="{StaticResource ModernComboBox}">
+                                <ComboBoxItem Content="📦 عام" Tag="📦"/>
+                                <ComboBoxItem Content="💊 أدوية" Tag="💊"/>
+                                <ComboBoxItem Content="🧼 مستلزمات" Tag="🧼"/>
+                                <ComboBoxItem Content="🧴 تجميل" Tag="🧴"/>
+                                <ComboBoxItem Content="👶 أطفال" Tag="👶"/>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="اللون المميز" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8"/>
+                            <ComboBox SelectedValue="{Binding Category.ColorCode}" SelectedValuePath="Tag" Style="{StaticResource ModernComboBox}">
+                                <ComboBoxItem Content="🟢 أخضر" Tag="#FF10B981"/>
+                                <ComboBoxItem Content="🔵 أزرق" Tag="#FF3B82F6"/>
+                                <ComboBoxItem Content="🔴 أحمر" Tag="#FFEF4444"/>
+                                <ComboBoxItem Content="🟡 أصفر" Tag="#FFF59E0B"/>
+                                <ComboBoxItem Content="🟣 بنفسجي" Tag="#FF8B5CF6"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+
+                    <CheckBox IsChecked="{Binding Category.IsActive}" Content="تصنيف نشط" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,10"/>
+                    <TextBlock Text="التصنيف المعطل لن يظهر في قوائم اختيار المنتجات" FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="24,0,0,0"/>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Footer -->
+            <Border Grid.Row="2" Padding="32,24" Background="{StaticResource HeaderBgBrush}" CornerRadius="0,0,24,24">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Button Content="إلغاء" Command="{Binding CancelCommand}" Style="{StaticResource TransparentButtonStyle}" Width="100" Margin="0,0,16,0"/>
+                        <Button Content="حفظ التغييرات" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButtonStyle}" Width="160"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

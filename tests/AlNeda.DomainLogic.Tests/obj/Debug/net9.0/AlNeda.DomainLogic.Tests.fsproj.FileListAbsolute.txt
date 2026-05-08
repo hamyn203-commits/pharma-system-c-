@@ -116,3 +116,4 @@ D:\New folder (3)\tests\AlNeda.DomainLogic.Tests\obj\Debug\net9.0\refint\AlNeda.
 D:\New folder (3)\tests\AlNeda.DomainLogic.Tests\obj\Debug\net9.0\AlNeda.DomainLogic.Tests.pdb
 D:\New folder (3)\tests\AlNeda.DomainLogic.Tests\obj\Debug\net9.0\AlNeda.DomainLogic.Tests.genruntimeconfig.cache
 D:\New folder (3)\tests\AlNeda.DomainLogic.Tests\obj\Debug\net9.0\ref\AlNeda.DomainLogic.Tests.dll
+D:\New folder (3)\tests\AlNeda.DomainLogic.Tests\obj\Debug\net9.0\AlNeda.DomainLogic.Tests.sourcelink.json

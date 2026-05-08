@@ -15,9 +15,10 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Border Grid.RowSpan="3" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+        <Border Grid.RowSpan="4" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="100">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="4"
@@ -56,19 +57,39 @@
                     Margin="12,0,0,0" 
                     Padding="24,0" />
 
-            <!-- Balance Summary (if pharmacy selected) -->
-            <Border Grid.Column="3" 
-                    Background="{Binding SelectedPharmacy.Balance, Converter={StaticResource BalanceBgConverter}}" 
-                    CornerRadius="12" Padding="16,8"
-                    Visibility="{Binding SelectedPharmacy, Converter={StaticResource NullToVisibilityConverter}}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="الرصيد: " FontSize="14" Foreground="#FF8B949E" VerticalAlignment="Center" />
-                    <TextBlock Text="{Binding SelectedPharmacy.Balance, StringFormat={}{0:N2}}" 
-                               FontSize="16" FontWeight="Bold" 
-                               Foreground="{Binding SelectedPharmacy.Balance, Converter={StaticResource BalanceColorConverter}}" 
-                               VerticalAlignment="Center" />
-                </StackPanel>
-            </Border>
+            <!-- Action Buttons -->
+            <StackPanel Grid.Column="3" Orientation="Horizontal">
+                <Button Content="🖨️ طباعة" 
+                        Command="{Binding PrintStatementCommand}"
+                        IsEnabled="{Binding HasStatement}"
+                        Style="{StaticResource SecondaryButtonStyle}" 
+                        Height="44" 
+                        Padding="16,0"
+                        ToolTip="طباعة كشف الحساب" />
+                <Button Content="📄 تصدير HTML" 
+                        Command="{Binding ExportStatementHtmlCommand}"
+                        IsEnabled="{Binding HasStatement}"
+                        Style="{StaticResource SecondaryButtonStyle}" 
+                        Height="44" 
+                        Margin="8,0,0,0"
+                        Padding="16,0"
+                        ToolTip="تصدير كشف الحساب كملف HTML" />
+
+                <!-- Balance Summary (if pharmacy selected) -->
+                <Border Grid.Column="3" 
+                        Background="{Binding SelectedPharmacy.Balance, Converter={StaticResource BalanceBgConverter}}" 
+                        CornerRadius="12" Padding="16,8"
+                        Margin="12,0,0,0"
+                        Visibility="{Binding SelectedPharmacy, Converter={StaticResource NullToVisibilityConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="الرصيد: " FontSize="14" Foreground="#FF8B949E" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding SelectedPharmacy.Balance, StringFormat={}{0:N2}}" 
+                                   FontSize="16" FontWeight="Bold" 
+                                   Foreground="{Binding SelectedPharmacy.Balance, Converter={StaticResource BalanceColorConverter}}" 
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
         </Grid>
 
         <!-- Statement Content -->
@@ -90,6 +111,11 @@
                                HorizontalAlignment="Center" Margin="0,12,0,0" />
                 </StackPanel>
             </Grid>
+        </Border>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="3" Background="#FF21262D" CornerRadius="4" Padding="8,4" Margin="0,12,0,0">
+            <TextBlock Text="{Binding StatusMessage}" Foreground="#FF8B949E" FontSize="11" />
         </Border>
     </Grid>
 </UserControl>

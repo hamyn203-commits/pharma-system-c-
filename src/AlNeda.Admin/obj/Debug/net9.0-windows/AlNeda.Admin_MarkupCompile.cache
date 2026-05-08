@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET9_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NET9_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
 D:\New folder (3)\src\AlNeda.Admin\App.xaml
-17-730784099
+21-1460760912
 
-27-248275613
-232896099017
-LoginWindow.xaml;MainWindow.xaml;Themes\DarkTheme.xaml;Views\AccountStatementView.xaml;Views\AuditLogView.xaml;Views\BackupView.xaml;Views\CategoriesView.xaml;Views\DashboardView.xaml;Views\OrdersView.xaml;Views\PaymentsView.xaml;Views\PharmaciesView.xaml;Views\ProductsView.xaml;Views\PurchasesView.xaml;Views\ReportsView.xaml;Views\ReturnsView.xaml;Views\SettingsView.xaml;Views\SuppliersView.xaml;
+51-1559192043
+2741974111763
+Controls\SkeletonCard.xaml;LoginWindow.xaml;MainWindow.xaml;Themes\DarkTheme.xaml;Views\AccountStatementView.xaml;Views\AddEditCategoryDialog.xaml;Views\AddEditUserDialog.xaml;Views\AuditLogView.xaml;Views\BackupView.xaml;Views\CategoriesView.xaml;Views\CategoryProductsDialog.xaml;Views\DashboardView.xaml;Views\OrdersView.xaml;Views\PaymentsView.xaml;Views\PharmaciesView.xaml;Views\ProductsView.xaml;Views\PurchasesView.xaml;Views\ReportsView.xaml;Views\ReturnsView.xaml;Views\SettingsView.xaml;Views\SuppliersView.xaml;
 
 False
 

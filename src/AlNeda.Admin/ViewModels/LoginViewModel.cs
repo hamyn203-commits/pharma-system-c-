@@ -1,5 +1,6 @@
+using System.Net.Http;
 using System.Windows.Input;
-using AlNeda.Services;
+using AlNeda.Admin.Services.ApiClient;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -7,7 +8,7 @@ namespace AlNeda.Admin.ViewModels;
 
 public partial class LoginViewModel : ObservableObject
 {
-    private readonly AuthService _authService;
+    private readonly IAlNedaApiClient _apiClient;
 
     [ObservableProperty]
     private string _username = string.Empty;
@@ -27,19 +28,26 @@ public partial class LoginViewModel : ObservableObject
     [ObservableProperty]
     private string _selectedRole = "admin";
 
+    [ObservableProperty]
+    private bool _showPassword;
+
+    partial void OnShowPasswordChanged(bool value)
+    {
+    }
+
     public List<string> Roles { get; } = ["admin", "accountant", "rep"];
 
     public event EventHandler<LoginSuccessEventArgs>? LoginSucceeded;
 
-    public LoginViewModel(AuthService authService)
+    public LoginViewModel(IAlNedaApiClient apiClient)
     {
-        _authService = authService;
+        _apiClient = apiClient;
     }
 
     [RelayCommand]
     private async Task LoginAsync(object? parameter)
     {
-        if (parameter is System.Windows.Controls.PasswordBox passwordBox)
+        if (!ShowPassword && parameter is System.Windows.Controls.PasswordBox passwordBox)
         {
             Password = passwordBox.Password;
         }
@@ -56,27 +64,30 @@ public partial class LoginViewModel : ObservableObject
 
         try
         {
-            var user = await _authService.LoginAsync(Username.Trim(), Password);
-            if (user != null)
+            var result = await _apiClient.LoginAsync(Username.Trim(), Password);
+            if (result?.User != null)
             {
-                // Verify role if selected
-                if (!string.IsNullOrEmpty(SelectedRole) && user.Role.ToLower() != SelectedRole.ToLower())
+                if (!string.IsNullOrEmpty(SelectedRole) && result.User.Role.ToLower() != SelectedRole.ToLower())
                 {
                     ErrorMessage = $"هذا المستخدم ليس لديه صلاحية {SelectedRole}";
                     return;
                 }
 
-                LoginSucceeded?.Invoke(this, new LoginSuccessEventArgs(user.Username, user.Role));
+                LoginSucceeded?.Invoke(this, new LoginSuccessEventArgs(result.User.Username, result.User.Role));
             }
             else
             {
                 ErrorMessage = "اسم المستخدم أو كلمة المرور غير صحيحة";
             }
         }
+        catch (HttpRequestException)
+        {
+            ErrorMessage = "تعذر الاتصال بالخادم. تأكد من تشغيل الخدمة";
+        }
         catch (Exception ex)
         {
             Serilog.Log.Error(ex, "Login failed");
-            ErrorMessage = $"خطأ في الاتصال بقاعدة البيانات: {ex.Message}";
+            ErrorMessage = $"خطأ: {ex.Message}";
         }
         finally
         {
@@ -88,7 +99,6 @@ public partial class LoginViewModel : ObservableObject
     [RelayCommand]
     private void SkipLogin()
     {
-        // Bypass authentication for development/testing
         LoginSucceeded?.Invoke(this, new LoginSuccessEventArgs("admin", "admin"));
     }
 }

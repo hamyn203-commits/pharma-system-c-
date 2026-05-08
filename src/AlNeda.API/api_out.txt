@@ -1,0 +1,202 @@
+Using launch settings from D:\New folder (3)\src\AlNeda.API\Properties\launchSettings.json...
+Building...
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (27ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM "Users" AS "u")
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5000
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\New folder (3)\src\AlNeda.API
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "u"."Id", "u"."CreatedAt", "u"."IsActive", "u"."Password", "u"."PasswordSalt", "u"."Role", "u"."Username"
+      FROM "Users" AS "u"
+      WHERE lower("u"."Username") = 'admin'
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[@__ToLower_0='?' (Size = 5)], CommandType='Text', CommandTimeout='30']
+      SELECT "u"."Id", "u"."CreatedAt", "u"."IsActive", "u"."Password", "u"."PasswordSalt", "u"."Role", "u"."Username"
+      FROM "Users" AS "u"
+      WHERE lower("u"."Username") = @__ToLower_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(ef_sum("p"."Balance"), '0.0')
+      FROM "Pharmacies" AS "p"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM "Orders" AS "o"
+      WHERE "o"."Status" NOT IN ('delivered', 'cancelled')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM "Pharmacies" AS "p"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM "Products" AS "p"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[@__today_0='?' (DbType = DateTime)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(ef_sum("o"."FinalTotal"), '0.0')
+      FROM "Orders" AS "o"
+      WHERE "o"."CreatedAt" >= @__today_0 AND "o"."Status" <> 'cancelled'
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__firstDayOfMonth_0='?' (DbType = DateTime)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(ef_sum("o"."FinalTotal"), '0.0')
+      FROM "Orders" AS "o"
+      WHERE "o"."CreatedAt" >= @__firstDayOfMonth_0 AND "o"."Status" <> 'cancelled'
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__thirtyDaysAgo_0='?' (DbType = DateTime)], CommandType='Text', CommandTimeout='30']
+      SELECT "o0"."Key" AS "Date", COALESCE(ef_sum("o0"."FinalTotal"), '0.0') AS "Total"
+      FROM (
+          SELECT "o"."FinalTotal", rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', "o"."CreatedAt", 'start of day'), '0'), '.') AS "Key"
+          FROM "Orders" AS "o"
+          WHERE "o"."CreatedAt" >= @__thirtyDaysAgo_0 AND "o"."Status" <> 'cancelled'
+      ) AS "o0"
+      GROUP BY "o0"."Key"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "p"."Id", "p"."Barcode", "p"."Category", "p"."CategoryId", "p"."Company", "p"."CreatedAt", "p"."Description", "p"."ExpiryDate", "p"."ImagePath", "p"."ImageUrl", "p"."IsActive", "p"."IsSynced", "p"."Name", "p"."ProductImagesJson", "p"."Quantity", "p"."RemoteId", "p"."UnitPrice", "p"."UpdatedAt"
+      FROM "Products" AS "p"
+      WHERE "p"."Quantity" < 10 AND "p"."IsActive" = 1
+      ORDER BY "p"."Quantity"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "p"."Id", "p"."Barcode", "p"."Category", "p"."CategoryId", "p"."Company", "p"."CreatedAt", "p"."Description", "p"."ExpiryDate", "p"."ImagePath", "p"."ImageUrl", "p"."IsActive", "p"."IsSynced", "p"."Name", "p"."ProductImagesJson", "p"."Quantity", "p"."RemoteId", "p"."UnitPrice", "p"."UpdatedAt"
+      FROM "Products" AS "p"
+      WHERE "p"."ExpiryDate" IS NOT NULL AND "p"."ExpiryDate" <> '' AND "p"."IsActive" = 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "p"."Id", "p"."Barcode", "p"."Category", "p"."CategoryId", "p"."Company", "p"."CreatedAt", "p"."Description", "p"."ExpiryDate", "p"."ImagePath", "p"."ImageUrl", "p"."IsActive", "p"."IsSynced", "p"."Name", "p"."ProductImagesJson", "p"."Quantity", "p"."RemoteId", "p"."UnitPrice", "p"."UpdatedAt"
+      FROM "Products" AS "p"
+      WHERE "p"."ExpiryDate" IS NOT NULL AND "p"."ExpiryDate" <> '' AND "p"."IsActive" = 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "p"."Id", "p"."Barcode", "p"."Category", "p"."CategoryId", "p"."Company", "p"."CreatedAt", "p"."Description", "p"."ExpiryDate", "p"."ImagePath", "p"."ImageUrl", "p"."IsActive", "p"."IsSynced", "p"."Name", "p"."ProductImagesJson", "p"."Quantity", "p"."RemoteId", "p"."UnitPrice", "p"."UpdatedAt", "c"."Id", "c"."ColorCode", "c"."CreatedAt", "c"."Description", "c"."DisplayOrder", "c"."Icon", "c"."IsActive", "c"."IsDeleted", "c"."IsSynced", "c"."Name", "c"."RemoteId", "c"."UpdatedAt"
+      FROM "Products" AS "p"
+      LEFT JOIN "Categories" AS "c" ON "p"."CategoryId" = "c"."Id"
+      ORDER BY "p"."Name"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "c"."Id", "c"."ColorCode", "c"."CreatedAt", "c"."Description", "c"."DisplayOrder", "c"."Icon", "c"."IsActive", "c"."IsDeleted", "c"."IsSynced", "c"."Name", "c"."RemoteId", "c"."UpdatedAt", "p"."Id", "p"."Barcode", "p"."Category", "p"."CategoryId", "p"."Company", "p"."CreatedAt", "p"."Description", "p"."ExpiryDate", "p"."ImagePath", "p"."ImageUrl", "p"."IsActive", "p"."IsSynced", "p"."Name", "p"."ProductImagesJson", "p"."Quantity", "p"."RemoteId", "p"."UnitPrice", "p"."UpdatedAt"
+      FROM "Categories" AS "c"
+      LEFT JOIN "Products" AS "p" ON "c"."Id" = "p"."CategoryId"
+      ORDER BY "c"."Name", "c"."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "p"."Id", "p"."Barcode", "p"."Category", "p"."CategoryId", "p"."Company", "p"."CreatedAt", "p"."Description", "p"."ExpiryDate", "p"."ImagePath", "p"."ImageUrl", "p"."IsActive", "p"."IsSynced", "p"."Name", "p"."ProductImagesJson", "p"."Quantity", "p"."RemoteId", "p"."UnitPrice", "p"."UpdatedAt"
+      FROM "Products" AS "p"
+      WHERE "p"."Quantity" < 10 AND "p"."IsActive" = 1
+      ORDER BY "p"."Quantity"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "p"."Id", "p"."Barcode", "p"."Category", "p"."CategoryId", "p"."Company", "p"."CreatedAt", "p"."Description", "p"."ExpiryDate", "p"."ImagePath", "p"."ImageUrl", "p"."IsActive", "p"."IsSynced", "p"."Name", "p"."ProductImagesJson", "p"."Quantity", "p"."RemoteId", "p"."UnitPrice", "p"."UpdatedAt"
+      FROM "Products" AS "p"
+      WHERE "p"."ExpiryDate" IS NOT NULL AND "p"."ExpiryDate" <> '' AND "p"."IsActive" = 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "p"."Id", "p"."Barcode", "p"."Category", "p"."CategoryId", "p"."Company", "p"."CreatedAt", "p"."Description", "p"."ExpiryDate", "p"."ImagePath", "p"."ImageUrl", "p"."IsActive", "p"."IsSynced", "p"."Name", "p"."ProductImagesJson", "p"."Quantity", "p"."RemoteId", "p"."UnitPrice", "p"."UpdatedAt"
+      FROM "Products" AS "p"
+      WHERE "p"."ExpiryDate" IS NOT NULL AND "p"."ExpiryDate" <> '' AND "p"."IsActive" = 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "p"."Id", "p"."Barcode", "p"."Category", "p"."CategoryId", "p"."Company", "p"."CreatedAt", "p"."Description", "p"."ExpiryDate", "p"."ImagePath", "p"."ImageUrl", "p"."IsActive", "p"."IsSynced", "p"."Name", "p"."ProductImagesJson", "p"."Quantity", "p"."RemoteId", "p"."UnitPrice", "p"."UpdatedAt"
+      FROM "Products" AS "p"
+      WHERE "p"."Quantity" < 10 AND "p"."IsActive" = 1
+      ORDER BY "p"."Quantity"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "p"."Id", "p"."Barcode", "p"."Category", "p"."CategoryId", "p"."Company", "p"."CreatedAt", "p"."Description", "p"."ExpiryDate", "p"."ImagePath", "p"."ImageUrl", "p"."IsActive", "p"."IsSynced", "p"."Name", "p"."ProductImagesJson", "p"."Quantity", "p"."RemoteId", "p"."UnitPrice", "p"."UpdatedAt"
+      FROM "Products" AS "p"
+      WHERE "p"."ExpiryDate" IS NOT NULL AND "p"."ExpiryDate" <> '' AND "p"."IsActive" = 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "p"."Id", "p"."Barcode", "p"."Category", "p"."CategoryId", "p"."Company", "p"."CreatedAt", "p"."Description", "p"."ExpiryDate", "p"."ImagePath", "p"."ImageUrl", "p"."IsActive", "p"."IsSynced", "p"."Name", "p"."ProductImagesJson", "p"."Quantity", "p"."RemoteId", "p"."UnitPrice", "p"."UpdatedAt"
+      FROM "Products" AS "p"
+      WHERE "p"."ExpiryDate" IS NOT NULL AND "p"."ExpiryDate" <> '' AND "p"."IsActive" = 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "u"."Id", "u"."CreatedAt", "u"."IsActive", "u"."Password", "u"."PasswordSalt", "u"."Role", "u"."Username"
+      FROM "Users" AS "u"
+      WHERE lower("u"."Username") = 'admin'
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__ToLower_0='?' (Size = 5)], CommandType='Text', CommandTimeout='30']
+      SELECT "u"."Id", "u"."CreatedAt", "u"."IsActive", "u"."Password", "u"."PasswordSalt", "u"."Role", "u"."Username"
+      FROM "Users" AS "u"
+      WHERE lower("u"."Username") = @__ToLower_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(ef_sum("p"."Balance"), '0.0')
+      FROM "Pharmacies" AS "p"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM "Orders" AS "o"
+      WHERE "o"."Status" NOT IN ('delivered', 'cancelled')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM "Pharmacies" AS "p"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (13ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM "Products" AS "p"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__today_0='?' (DbType = DateTime)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(ef_sum("o"."FinalTotal"), '0.0')
+      FROM "Orders" AS "o"
+      WHERE "o"."CreatedAt" >= @__today_0 AND "o"."Status" <> 'cancelled'
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__firstDayOfMonth_0='?' (DbType = DateTime)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(ef_sum("o"."FinalTotal"), '0.0')
+      FROM "Orders" AS "o"
+      WHERE "o"."CreatedAt" >= @__firstDayOfMonth_0 AND "o"."Status" <> 'cancelled'
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__thirtyDaysAgo_0='?' (DbType = DateTime)], CommandType='Text', CommandTimeout='30']
+      SELECT "o0"."Key" AS "Date", COALESCE(ef_sum("o0"."FinalTotal"), '0.0') AS "Total"
+      FROM (
+          SELECT "o"."FinalTotal", rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', "o"."CreatedAt", 'start of day'), '0'), '.') AS "Key"
+          FROM "Orders" AS "o"
+          WHERE "o"."CreatedAt" >= @__thirtyDaysAgo_0 AND "o"."Status" <> 'cancelled'
+      ) AS "o0"
+      GROUP BY "o0"."Key"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "p"."Id", "p"."Barcode", "p"."Category", "p"."CategoryId", "p"."Company", "p"."CreatedAt", "p"."Description", "p"."ExpiryDate", "p"."ImagePath", "p"."ImageUrl", "p"."IsActive", "p"."IsSynced", "p"."Name", "p"."ProductImagesJson", "p"."Quantity", "p"."RemoteId", "p"."UnitPrice", "p"."UpdatedAt"
+      FROM "Products" AS "p"
+      WHERE "p"."Quantity" < 10 AND "p"."IsActive" = 1
+      ORDER BY "p"."Quantity"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "p"."Id", "p"."Barcode", "p"."Category", "p"."CategoryId", "p"."Company", "p"."CreatedAt", "p"."Description", "p"."ExpiryDate", "p"."ImagePath", "p"."ImageUrl", "p"."IsActive", "p"."IsSynced", "p"."Name", "p"."ProductImagesJson", "p"."Quantity", "p"."RemoteId", "p"."UnitPrice", "p"."UpdatedAt"
+      FROM "Products" AS "p"
+      WHERE "p"."ExpiryDate" IS NOT NULL AND "p"."ExpiryDate" <> '' AND "p"."IsActive" = 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "p"."Id", "p"."Barcode", "p"."Category", "p"."CategoryId", "p"."Company", "p"."CreatedAt", "p"."Description", "p"."ExpiryDate", "p"."ImagePath", "p"."ImageUrl", "p"."IsActive", "p"."IsSynced", "p"."Name", "p"."ProductImagesJson", "p"."Quantity", "p"."RemoteId", "p"."UnitPrice", "p"."UpdatedAt"
+      FROM "Products" AS "p"
+      WHERE "p"."ExpiryDate" IS NOT NULL AND "p"."ExpiryDate" <> '' AND "p"."IsActive" = 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "p"."Id", "p"."Barcode", "p"."Category", "p"."CategoryId", "p"."Company", "p"."CreatedAt", "p"."Description", "p"."ExpiryDate", "p"."ImagePath", "p"."ImageUrl", "p"."IsActive", "p"."IsSynced", "p"."Name", "p"."ProductImagesJson", "p"."Quantity", "p"."RemoteId", "p"."UnitPrice", "p"."UpdatedAt", "c"."Id", "c"."ColorCode", "c"."CreatedAt", "c"."Description", "c"."DisplayOrder", "c"."Icon", "c"."IsActive", "c"."IsDeleted", "c"."IsSynced", "c"."Name", "c"."RemoteId", "c"."UpdatedAt"
+      FROM "Products" AS "p"
+      LEFT JOIN "Categories" AS "c" ON "p"."CategoryId" = "c"."Id"
+      ORDER BY "p"."Name"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (9ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "c"."Id", "c"."ColorCode", "c"."CreatedAt", "c"."Description", "c"."DisplayOrder", "c"."Icon", "c"."IsActive", "c"."IsDeleted", "c"."IsSynced", "c"."Name", "c"."RemoteId", "c"."UpdatedAt", "p"."Id", "p"."Barcode", "p"."Category", "p"."CategoryId", "p"."Company", "p"."CreatedAt", "p"."Description", "p"."ExpiryDate", "p"."ImagePath", "p"."ImageUrl", "p"."IsActive", "p"."IsSynced", "p"."Name", "p"."ProductImagesJson", "p"."Quantity", "p"."RemoteId", "p"."UnitPrice", "p"."UpdatedAt"
+      FROM "Categories" AS "c"
+      LEFT JOIN "Products" AS "p" ON "c"."Id" = "p"."CategoryId"
+      ORDER BY "c"."Name", "c"."Id"
