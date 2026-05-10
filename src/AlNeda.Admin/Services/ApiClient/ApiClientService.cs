@@ -70,6 +70,10 @@ public interface IAlNedaApiClient
     Task<List<ReturnDto>> GetReturnsAsync();
     Task<ReturnDto?> CreateReturnAsync(CreateReturnRequest request);
 
+    // Payments
+    Task<List<PaymentDto>> GetPaymentsAsync(int? pharmacyId = null);
+    Task<PaymentDto?> CreatePaymentAsync(CreatePaymentRequest request);
+
     // Audit Log
     Task<PagedResult<AuditLogDto>> GetAuditLogsAsync(AuditLogFilterRequest filter);
 
@@ -395,6 +399,27 @@ public class ApiClientService : IAlNedaApiClient, IDisposable
         var response = await _httpClient.PostAsJsonAsync("api/returns", request, _jsonOptions);
         await ThrowIfErrorAsync(response);
         return await response.Content.ReadFromJsonAsync<ReturnDto>(_jsonOptions);
+    }
+
+    // ── Payments ──
+    public async Task<List<PaymentDto>> GetPaymentsAsync(int? pharmacyId = null)
+    {
+        EnsureAuthenticated();
+        var url = "api/payments";
+        if (pharmacyId.HasValue)
+            url += $"?pharmacyId={pharmacyId.Value}";
+
+        var response = await _httpClient.GetAsync(url);
+        await ThrowIfErrorAsync(response);
+        return await response.Content.ReadFromJsonAsync<List<PaymentDto>>(_jsonOptions) ?? [];
+    }
+
+    public async Task<PaymentDto?> CreatePaymentAsync(CreatePaymentRequest request)
+    {
+        EnsureAuthenticated();
+        var response = await _httpClient.PostAsJsonAsync("api/payments", request, _jsonOptions);
+        await ThrowIfErrorAsync(response);
+        return await response.Content.ReadFromJsonAsync<PaymentDto>(_jsonOptions);
     }
 
     // ── Audit Log ──

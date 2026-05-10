@@ -69,8 +69,22 @@ public class CategoryService
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
         return await db.Categories
-            .Include(c => c.Products)
             .OrderBy(c => c.Name)
+            .Select(c => new Category
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                Icon = c.Icon,
+                ColorCode = c.ColorCode,
+                IsActive = c.IsActive,
+                IsDeleted = c.IsDeleted,
+                RemoteId = c.RemoteId,
+                IsSynced = c.IsSynced,
+                DisplayOrder = c.DisplayOrder,
+                CreatedAt = c.CreatedAt,
+                UpdatedAt = c.UpdatedAt
+            })
             .ToListAsync();
     }
 

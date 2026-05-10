@@ -12,10 +12,11 @@ public class LegacyImportTests
 
     public LegacyImportTests(ITestOutputHelper output) => _output = output;
 
-    [Fact(Skip = "Requires legacy database at D:\\pharma_project\\pharmacy.db")]
-    public async Task Import_From_Real_PharmacyDb()
+    [Fact]
+    public async Task ImportLegacyDb()
     {
-        var legacyPath = @"D:\pharma_project\pharmacy.db";
+        var legacyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "pharmacy.db");
+        if (!File.Exists(legacyPath)) legacyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pharmacy.db");
         var targetDb = Path.GetTempFileName() + ".db";
 
         var options = new DbContextOptionsBuilder<AppDbContext>()

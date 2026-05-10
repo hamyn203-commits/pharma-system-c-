@@ -12,7 +12,8 @@ Write-Host "  AlNeda Pharmacy - Build & Publish" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-$SolutionDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$SolutionDir = Split-Path -Parent $PSScriptRoot
+$ScriptDir = $PSScriptRoot
 $ProjectDir = Join-Path $SolutionDir "src\AlNeda.Admin"
 
 if (-not (Test-Path $ProjectDir)) {

@@ -183,13 +183,15 @@ public class ReportsController : ControllerBase
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
         var today = DateTime.Today;
-        var orders = await db.Orders.Include(o => o.Pharmacy)
-            .Where(o => o.CreatedAt >= today && o.CreatedAt < today.AddDays(1) && o.Status != "cancelled").ToListAsync();
+        var orders = await db.Orders
+            .Where(o => o.CreatedAt >= today && o.CreatedAt < today.AddDays(1) && o.Status != "cancelled")
+            .Select(o => new { o.OrderNumber, PharmacyName = o.Pharmacy != null ? o.Pharmacy.Name : "-", o.FinalTotal, o.Status, o.CreatedAt })
+            .ToListAsync();
 
         var dt = CreateTable("م", "رقم الطلب", "الصيدلية", "الإجمالي", "الحالة", "التاريخ");
         int i = 1;
         foreach (var o in orders)
-            dt.Rows.Add(i++, o.OrderNumber, o.Pharmacy?.Name ?? "-", o.FinalTotal, o.Status, o.CreatedAt.ToString("yyyy-MM-dd"));
+            dt.Rows.Add(i++, o.OrderNumber, o.PharmacyName, o.FinalTotal, o.Status, o.CreatedAt.ToString("yyyy-MM-dd"));
         return dt;
     }
 
@@ -198,23 +200,27 @@ public class ReportsController : ControllerBase
         await using var db = await _contextFactory.CreateDbContextAsync();
         var start = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
         var end = start.AddMonths(1);
-        var orders = await db.Orders.Include(o => o.Pharmacy)
-            .Where(o => o.CreatedAt >= start && o.CreatedAt < end && o.Status != "cancelled").ToListAsync();
+        var orders = await db.Orders
+            .Where(o => o.CreatedAt >= start && o.CreatedAt < end && o.Status != "cancelled")
+            .Select(o => new { o.OrderNumber, PharmacyName = o.Pharmacy != null ? o.Pharmacy.Name : "-", o.FinalTotal, o.Status, o.CreatedAt })
+            .ToListAsync();
 
         var dt = CreateTable("م", "رقم الطلب", "الصيدلية", "الإجمالي", "الحالة", "التاريخ");
         int i = 1;
         foreach (var o in orders)
-            dt.Rows.Add(i++, o.OrderNumber, o.Pharmacy?.Name ?? "-", o.FinalTotal, o.Status, o.CreatedAt.ToString("yyyy-MM-dd"));
+            dt.Rows.Add(i++, o.OrderNumber, o.PharmacyName, o.FinalTotal, o.Status, o.CreatedAt.ToString("yyyy-MM-dd"));
         return dt;
     }
 
     private async Task<System.Data.DataTable> GenerateTopProductsAsync()
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        var items = await db.OrderItems.Include(i => i.Product).Include(i => i.Order)
-            .Where(i => i.Order != null && i.Order.Status != "cancelled").ToListAsync();
+        var items = await db.OrderItems
+            .Where(i => i.Order != null && i.Order.Status != "cancelled")
+            .Select(i => new { i.ProductId, ProductName = i.Product != null ? i.Product.Name : "غير محدد", i.Quantity, i.TotalPrice })
+            .ToListAsync();
 
-        var grouped = items.GroupBy(i => new { i.ProductId, Name = i.Product?.Name ?? "غير محدد" })
+        var grouped = items.GroupBy(i => new { i.ProductId, Name = i.ProductName })
             .Select(g => new { g.Key.ProductId, g.Key.Name, TotalQuantity = g.Sum(i => i.Quantity), TotalRevenue = g.Sum(i => i.TotalPrice) })
             .OrderByDescending(p => p.TotalQuantity).ToList();
 
@@ -253,13 +259,12 @@ public class ReportsController : ControllerBase
     private async Task<System.Data.DataTable> GenerateTopPharmaciesAsync()
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        var pharmacies = await db.Pharmacies.Include(p => p.Orders).ToListAsync();
-        var grouped = pharmacies.Select(p => new
+        var grouped = await db.Pharmacies.Select(p => new
         {
             p.Name,
-            OrderCount = p.Orders?.Count(o => o.Status != "cancelled") ?? 0,
-            TotalRevenue = p.Orders?.Where(o => o.Status != "cancelled").Sum(o => o.FinalTotal) ?? 0
-        }).OrderByDescending(p => p.TotalRevenue).ToList();
+            OrderCount = p.Orders != null ? p.Orders.Count(o => o.Status != "cancelled") : 0,
+            TotalRevenue = p.Orders != null ? p.Orders.Where(o => o.Status != "cancelled").Sum(o => o.FinalTotal) : 0
+        }).OrderByDescending(p => p.TotalRevenue).ToListAsync();
 
         var dt = CreateTable("م", "الصيدلية", "عدد الطلبات", "الإيرادات");
         int i = 1;

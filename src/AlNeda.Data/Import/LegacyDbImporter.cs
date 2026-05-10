@@ -1,4 +1,4 @@
-using System.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using AlNeda.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,8 +23,7 @@ public class LegacyDbImporter
         var errors = new List<string>();
         int imported = 0, skipped = 0;
 
-        var csb = new SQLiteConnectionStringBuilder { DataSource = _legacyDbPath, ReadOnly = true };
-        using var legacyConn = new SQLiteConnection(csb.ConnectionString);
+        using var legacyConn = new SqliteConnection($"Data Source={_legacyDbPath}");
         await legacyConn.OpenAsync();
 
         using var target = await _contextFactory.CreateDbContextAsync();
@@ -58,7 +57,7 @@ public class LegacyDbImporter
     private static DateTime? ParseDateN(object? val) => val is DBNull or null ? null : DateTime.TryParse(Convert.ToString(val), out var d) ? d : null;
     private static bool ToBool(object? val) => val is not DBNull and not null && (Convert.ToInt32(val) != 0);
 
-    private async Task<int> BulkInsertAsync<T>(SQLiteConnection legacy, AppDbContext target, string table, Func<System.Data.Common.DbDataReader, T> factory, List<string> errors) where T : class
+    private async Task<int> BulkInsertAsync<T>(SqliteConnection legacy, AppDbContext target, string table, Func<System.Data.Common.DbDataReader, T> factory, List<string> errors) where T : class
     {
         int count = 0;
         try
@@ -99,7 +98,7 @@ public class LegacyDbImporter
         return count;
     }
 
-    private async Task<int> ImportUsersAsync(SQLiteConnection legacy, AppDbContext target, List<string> errors)
+    private async Task<int> ImportUsersAsync(SqliteConnection legacy, AppDbContext target, List<string> errors)
     {
         return await BulkInsertAsync(legacy, target, "users", r => new User
         {
@@ -111,7 +110,7 @@ public class LegacyDbImporter
         }, errors);
     }
 
-    private async Task<int> ImportCategoriesAsync(SQLiteConnection legacy, AppDbContext target, List<string> errors)
+    private async Task<int> ImportCategoriesAsync(SqliteConnection legacy, AppDbContext target, List<string> errors)
     {
         return await BulkInsertAsync(legacy, target, "categories", r => new Category
         {
@@ -121,7 +120,7 @@ public class LegacyDbImporter
         }, errors);
     }
 
-    private async Task<int> ImportSuppliersAsync(SQLiteConnection legacy, AppDbContext target, List<string> errors)
+    private async Task<int> ImportSuppliersAsync(SqliteConnection legacy, AppDbContext target, List<string> errors)
     {
         return await BulkInsertAsync(legacy, target, "suppliers", r => new Supplier
         {
@@ -136,7 +135,7 @@ public class LegacyDbImporter
         }, errors);
     }
 
-    private async Task<int> ImportProductsAsync(SQLiteConnection legacy, AppDbContext target, List<string> errors)
+    private async Task<int> ImportProductsAsync(SqliteConnection legacy, AppDbContext target, List<string> errors)
     {
         return await BulkInsertAsync(legacy, target, "products", r => new Product
         {
@@ -159,7 +158,7 @@ public class LegacyDbImporter
         }, errors);
     }
 
-    private async Task<int> ImportPharmaciesAsync(SQLiteConnection legacy, AppDbContext target, List<string> errors)
+    private async Task<int> ImportPharmaciesAsync(SqliteConnection legacy, AppDbContext target, List<string> errors)
     {
         return await BulkInsertAsync(legacy, target, "pharmacies", r => new Pharmacy
         {
@@ -177,7 +176,7 @@ public class LegacyDbImporter
         }, errors);
     }
 
-    private async Task<int> ImportPurchasesAsync(SQLiteConnection legacy, AppDbContext target, List<string> errors)
+    private async Task<int> ImportPurchasesAsync(SqliteConnection legacy, AppDbContext target, List<string> errors)
     {
         return await BulkInsertAsync(legacy, target, "purchases", r => new Purchase
         {
@@ -193,7 +192,7 @@ public class LegacyDbImporter
         }, errors);
     }
 
-    private async Task<int> ImportPurchaseItemsAsync(SQLiteConnection legacy, AppDbContext target, List<string> errors)
+    private async Task<int> ImportPurchaseItemsAsync(SqliteConnection legacy, AppDbContext target, List<string> errors)
     {
         return await BulkInsertAsync(legacy, target, "purchase_items", r => new PurchaseItem
         {
@@ -206,7 +205,7 @@ public class LegacyDbImporter
         }, errors);
     }
 
-    private async Task<int> ImportOrdersAsync(SQLiteConnection legacy, AppDbContext target, List<string> errors)
+    private async Task<int> ImportOrdersAsync(SqliteConnection legacy, AppDbContext target, List<string> errors)
     {
         return await BulkInsertAsync(legacy, target, "orders", r => new Order
         {
@@ -233,7 +232,7 @@ public class LegacyDbImporter
         }, errors);
     }
 
-    private async Task<int> ImportOrderItemsAsync(SQLiteConnection legacy, AppDbContext target, List<string> errors)
+    private async Task<int> ImportOrderItemsAsync(SqliteConnection legacy, AppDbContext target, List<string> errors)
     {
         return await BulkInsertAsync(legacy, target, "order_items", r => new OrderItem
         {
@@ -246,7 +245,7 @@ public class LegacyDbImporter
         }, errors);
     }
 
-    private async Task<int> ImportOrderStatusHistoryAsync(SQLiteConnection legacy, AppDbContext target, List<string> errors)
+    private async Task<int> ImportOrderStatusHistoryAsync(SqliteConnection legacy, AppDbContext target, List<string> errors)
     {
         return await BulkInsertAsync(legacy, target, "order_status_history", r => new OrderStatusHistory
         {
@@ -259,7 +258,7 @@ public class LegacyDbImporter
         }, errors);
     }
 
-    private async Task<int> ImportPaymentsAsync(SQLiteConnection legacy, AppDbContext target, List<string> errors)
+    private async Task<int> ImportPaymentsAsync(SqliteConnection legacy, AppDbContext target, List<string> errors)
     {
         return await BulkInsertAsync(legacy, target, "payments", r => new Payment
         {
@@ -276,7 +275,7 @@ public class LegacyDbImporter
         }, errors);
     }
 
-    private async Task<int> ImportReturnsAsync(SQLiteConnection legacy, AppDbContext target, List<string> errors)
+    private async Task<int> ImportReturnsAsync(SqliteConnection legacy, AppDbContext target, List<string> errors)
     {
         return await BulkInsertAsync(legacy, target, "returns", r => new Return
         {
@@ -297,7 +296,7 @@ public class LegacyDbImporter
         }, errors);
     }
 
-    private async Task<int> ImportReturnItemsAsync(SQLiteConnection legacy, AppDbContext target, List<string> errors)
+    private async Task<int> ImportReturnItemsAsync(SqliteConnection legacy, AppDbContext target, List<string> errors)
     {
         return await BulkInsertAsync(legacy, target, "return_items", r => new ReturnItem
         {
@@ -310,7 +309,7 @@ public class LegacyDbImporter
         }, errors);
     }
 
-    private async Task<int> ImportAuditLogsAsync(SQLiteConnection legacy, AppDbContext target, List<string> errors)
+    private async Task<int> ImportAuditLogsAsync(SqliteConnection legacy, AppDbContext target, List<string> errors)
     {
         return await BulkInsertAsync(legacy, target, "audit_logs", r => new AuditLog
         {

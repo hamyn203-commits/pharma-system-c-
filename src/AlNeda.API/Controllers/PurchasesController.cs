@@ -25,20 +25,19 @@ public class PurchasesController : ControllerBase
     public async Task<IActionResult> GetAll()
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        var list = await db.Purchases.Include(p => p.Supplier).Include(p => p.Items).ThenInclude(i => i.Product)
-            .OrderByDescending(p => p.CreatedAt).ToListAsync();
-        var dto = list.Select(p => new PurchaseDto
-        {
-            Id = p.Id, InvoiceNumber = p.InvoiceNumber, SupplierId = p.SupplierId,
-            SupplierName = p.Supplier?.Name, TotalAmount = p.TotalAmount,
-            AmountPaid = p.AmountPaid, RemainingAmount = p.RemainingAmount,
-            Status = p.Status, Notes = p.Notes, CreatedAt = p.CreatedAt,
-            Items = p.Items.Select(i => new PurchaseItemDto
+        var dto = await db.Purchases.OrderByDescending(p => p.CreatedAt)
+            .Select(p => new PurchaseDto
             {
-                Id = i.Id, ProductId = i.ProductId, ProductName = i.Product?.Name,
-                Quantity = i.Quantity, UnitPrice = i.UnitCost, TotalPrice = i.Quantity * i.UnitCost
-            }).ToList()
-        }).ToList();
+                Id = p.Id, InvoiceNumber = p.InvoiceNumber, SupplierId = p.SupplierId,
+                SupplierName = p.Supplier!.Name, TotalAmount = p.TotalAmount,
+                AmountPaid = p.AmountPaid, RemainingAmount = p.RemainingAmount,
+                Status = p.Status, Notes = p.Notes, CreatedAt = p.CreatedAt,
+                Items = p.Items.Select(i => new PurchaseItemDto
+                {
+                    Id = i.Id, ProductId = i.ProductId, ProductName = i.Product!.Name,
+                    Quantity = i.Quantity, UnitPrice = i.UnitCost, TotalPrice = i.Quantity * i.UnitCost
+                }).ToList()
+            }).ToListAsync();
         return Ok(dto);
     }
 

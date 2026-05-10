@@ -91,7 +91,19 @@ public class PurchaseService
     public async Task<List<Purchase>> GetAllAsync()
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        return await db.Purchases.Include(p => p.Supplier).Include(p => p.Items).ThenInclude(i => i.Product).OrderByDescending(p => p.CreatedAt).ToListAsync();
+        return await db.Purchases.OrderByDescending(p => p.CreatedAt)
+            .Select(p => new Purchase
+            {
+                Id = p.Id, InvoiceNumber = p.InvoiceNumber, SupplierId = p.SupplierId,
+                Supplier = p.Supplier, TotalAmount = p.TotalAmount,
+                AmountPaid = p.AmountPaid, RemainingAmount = p.RemainingAmount,
+                Status = p.Status, Notes = p.Notes, CreatedAt = p.CreatedAt,
+                Items = p.Items.Select(i => new PurchaseItem
+                {
+                    Id = i.Id, ProductId = i.ProductId, Product = i.Product,
+                    Quantity = i.Quantity, UnitCost = i.UnitCost
+                }).ToList()
+            }).ToListAsync();
     }
 
     public async Task AddAsync(Purchase purchase)
@@ -111,16 +123,47 @@ public class OrderService
     public async Task<List<Order>> GetAllAsync(string? statusFilter = null)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        var q = db.Orders.Include(o => o.Pharmacy).Include(o => o.Items).ThenInclude(i => i.Product).AsQueryable();
+        var q = db.Orders.AsQueryable();
         if (!string.IsNullOrWhiteSpace(statusFilter))
             q = q.Where(o => o.Status == statusFilter);
-        return await q.OrderByDescending(o => o.CreatedAt).ToListAsync();
+        return await q.OrderByDescending(o => o.CreatedAt)
+            .Select(o => new Order
+            {
+                Id = o.Id, OrderNumber = o.OrderNumber, PharmacyId = o.PharmacyId, Pharmacy = o.Pharmacy,
+                TotalAmount = o.TotalAmount, Discount = o.Discount, DiscountType = o.DiscountType,
+                FinalTotal = o.FinalTotal, BalanceBefore = o.BalanceBefore, BalanceAfter = o.BalanceAfter,
+                Status = o.Status, DeliveryPerson = o.DeliveryPerson, Notes = o.Notes,
+                LastStatusUpdate = o.LastStatusUpdate, ExpectedDeliveryNote = o.ExpectedDeliveryNote,
+                PaymentStatus = o.PaymentStatus, PaymentType = o.PaymentType, AmountPaid = o.AmountPaid,
+                RemainingAmount = o.RemainingAmount, PaymentNotes = o.PaymentNotes, CreatedAt = o.CreatedAt,
+                Items = o.Items.Select(i => new OrderItem
+                {
+                    Id = i.Id, ProductId = i.ProductId, Product = i.Product,
+                    Quantity = i.Quantity, UnitPrice = i.UnitPrice, TotalPrice = i.TotalPrice
+                }).ToList()
+            }).ToListAsync();
     }
 
     public async Task<Order?> GetByIdAsync(int id)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        return await db.Orders.Include(o => o.Pharmacy).Include(o => o.Items).ThenInclude(i => i.Product).Include(o => o.StatusHistory).FirstOrDefaultAsync(o => o.Id == id);
+        return await db.Orders.Where(o => o.Id == id)
+            .Select(o => new Order
+            {
+                Id = o.Id, OrderNumber = o.OrderNumber, PharmacyId = o.PharmacyId, Pharmacy = o.Pharmacy,
+                TotalAmount = o.TotalAmount, Discount = o.Discount, DiscountType = o.DiscountType,
+                FinalTotal = o.FinalTotal, BalanceBefore = o.BalanceBefore, BalanceAfter = o.BalanceAfter,
+                Status = o.Status, DeliveryPerson = o.DeliveryPerson, Notes = o.Notes,
+                LastStatusUpdate = o.LastStatusUpdate, ExpectedDeliveryNote = o.ExpectedDeliveryNote,
+                PaymentStatus = o.PaymentStatus, PaymentType = o.PaymentType, AmountPaid = o.AmountPaid,
+                RemainingAmount = o.RemainingAmount, PaymentNotes = o.PaymentNotes, CreatedAt = o.CreatedAt,
+                Items = o.Items.Select(i => new OrderItem
+                {
+                    Id = i.Id, ProductId = i.ProductId, Product = i.Product,
+                    Quantity = i.Quantity, UnitPrice = i.UnitPrice, TotalPrice = i.TotalPrice
+                }).ToList(),
+                StatusHistory = o.StatusHistory.ToList()
+            }).FirstOrDefaultAsync();
     }
 
     public async Task<string> CreateAsync(Order order, List<OrderItem> items)
@@ -134,6 +177,8 @@ public class OrderService
         order.BalanceAfter = OrderWorkflow.updateBalance(order.BalanceBefore, order.FinalTotal, "order");
 
         db.Orders.Add(order);
+        await db.SaveChangesAsync();
+
         foreach (var item in items)
         {
             item.OrderId = order.Id;
@@ -149,22 +194,24 @@ public class OrderService
     public async Task<bool> TransitionStatusAsync(int orderId, string newStatus)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        var order = await db.Orders.Include(o => o.Items).FirstOrDefaultAsync(o => o.Id == orderId);
+        var order = await db.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
         if (order == null) return false;
 
         var result = OrderWorkflow.validateTransition(order.Status, newStatus);
         if (result is not OrderWorkflow.TransitionOutcome.Allowed allowed) return false;
 
+        var oldStatus = order.Status;
         order.Status = allowed.newStatus;
         order.LastStatusUpdate = DateTime.Now;
         db.OrderStatusHistories.Add(new OrderStatusHistory
         {
-            OrderId = orderId, OldStatus = order.Status, NewStatus = allowed.newStatus, Note = allowed.message, CreatedAt = DateTime.Now
+            OrderId = orderId, OldStatus = oldStatus, NewStatus = allowed.newStatus, Note = allowed.message, CreatedAt = DateTime.Now
         });
 
         if (allowed.newStatus == "reviewed")
         {
-            foreach (var item in order.Items)
+            var items = await db.OrderItems.Where(i => i.OrderId == orderId).ToListAsync();
+            foreach (var item in items)
             {
                 var prod = await db.Products.FindAsync(item.ProductId);
                 if (prod != null) prod.Quantity -= item.Quantity;
@@ -185,9 +232,25 @@ public class PaymentService
     public async Task<List<Payment>> GetAllAsync(int? pharmacyId = null)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        var q = db.Payments.Include(p => p.Pharmacy).Include(p => p.Order).AsQueryable();
+        var q = db.Payments.AsQueryable();
         if (pharmacyId.HasValue) q = q.Where(p => p.PharmacyId == pharmacyId.Value);
-        return await q.OrderByDescending(p => p.Date).ToListAsync();
+        
+        return await q.OrderByDescending(p => p.Date)
+            .Select(p => new Payment
+            {
+                Id = p.Id,
+                PharmacyId = p.PharmacyId,
+                Pharmacy = p.Pharmacy,
+                OrderId = p.OrderId,
+                Order = p.Order,
+                Amount = p.Amount,
+                AmountPaid = p.AmountPaid,
+                RemainingAmount = p.RemainingAmount,
+                PaymentType = p.PaymentType,
+                PaymentStatus = p.PaymentStatus,
+                PaymentNotes = p.PaymentNotes,
+                Date = p.Date
+            }).ToListAsync();
     }
 
     public async Task AddAsync(Payment payment)
@@ -214,7 +277,20 @@ public class ReturnService
     public async Task<List<Return>> GetAllAsync()
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        return await db.Returns.Include(r => r.Pharmacy).Include(r => r.Items).ThenInclude(i => i.Product).OrderByDescending(r => r.CreatedAt).ToListAsync();
+        return await db.Returns.OrderByDescending(r => r.CreatedAt)
+            .Select(r => new Return
+            {
+                Id = r.Id, ReturnNumber = r.ReturnNumber, PharmacyId = r.PharmacyId, Pharmacy = r.Pharmacy,
+                OrderId = r.OrderId, TotalAmount = r.TotalAmount, Status = r.Status,
+                ReturnType = r.ReturnType, Reason = r.Reason, Notes = r.Notes,
+                StockAdjusted = r.StockAdjusted, BalanceAdjusted = r.BalanceAdjusted,
+                BalanceBefore = r.BalanceBefore, BalanceAfter = r.BalanceAfter, CreatedAt = r.CreatedAt,
+                Items = r.Items.Select(i => new ReturnItem
+                {
+                    Id = i.Id, ProductId = i.ProductId, Product = i.Product,
+                    Quantity = i.Quantity, UnitPrice = i.UnitPrice
+                }).ToList()
+            }).ToListAsync();
     }
 
     public async Task<string> CreateAsync(Return ret, List<ReturnItem> items)
@@ -249,5 +325,4 @@ public class ReturnService
         return ret.ReturnNumber;
     }
 }
-
 

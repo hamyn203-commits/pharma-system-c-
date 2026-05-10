@@ -4,6 +4,7 @@ using System.Text;
 using AlNeda.Core.Entities;
 using AlNeda.Core.Models;
 using AlNeda.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -46,6 +47,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("validate")]
+    [Authorize]
     public IActionResult ValidateToken()
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -65,7 +67,13 @@ public class AuthController : ControllerBase
     private string GenerateJwtToken(User user)
     {
         var jwtSection = _configuration.GetSection("Jwt");
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSection["Key"]!));
+        var jwtKey = Environment.GetEnvironmentVariable("ALNEDA_JWT_KEY") ?? jwtSection["Key"];
+        if (string.IsNullOrWhiteSpace(jwtKey))
+        {
+            throw new InvalidOperationException("JWT Key is missing.");
+        }
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]

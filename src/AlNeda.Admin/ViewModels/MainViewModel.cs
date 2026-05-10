@@ -103,7 +103,7 @@ public partial class MainViewModel : ObservableObject, INavigationService
         {
             "dashboard" => CreateWithViewModel<DashboardView, DashboardViewModel>(vm => vm.LoadCommand.Execute(null)),
             "products" => CreateWithViewModel<ProductsView, ProductsViewModel>(vm => vm.LoadCommand.Execute(null)),
-            "categories" => CreateWithViewModel<CategoriesView, CategoriesViewModel>(vm => vm.LoadCommand.Execute(null)),
+            "categories" => CreateWithViewModel<CategoriesView, CategoryViewModel>(vm => vm.LoadCommand.Execute(null)),
             "suppliers" => CreateWithViewModel<SuppliersView, SuppliersViewModel>(vm => vm.LoadCommand.Execute(null)),
             "purchases" => CreateWithViewModel<PurchasesView, PurchasesViewModel>(vm => vm.LoadCommand.Execute(null)),
             "pharmacies" => CreateWithViewModel<PharmaciesView, PharmaciesViewModel>(vm => vm.LoadCommand.Execute(null)),

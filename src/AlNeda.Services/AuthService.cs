@@ -18,22 +18,6 @@ public class AuthService
     public async Task<User?> LoginAsync(string username, string password)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        
-        // Ensure the default admin user exists
-        var adminUser = await db.Users.FirstOrDefaultAsync(u => u.Username.ToLower() == "admin");
-        if (adminUser == null)
-        {
-            var (hash123, salt123) = HashPassword("admin123");
-            db.Users.Add(new User 
-            { 
-                Username = "admin", 
-                Password = hash123,
-                PasswordSalt = salt123,
-                Role = "admin",
-                CreatedAt = DateTime.Now 
-            });
-            await db.SaveChangesAsync();
-        }
 
         var user = await db.Users.FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
         if (user == null)
@@ -65,13 +49,6 @@ public class AuthService
         if (!VerifyPassword(password, user.Password, user.PasswordSalt))
         {
             Serilog.Log.Warning("Login failed: Password mismatch for user '{Username}'", username);
-            
-            // EMERGENCY BYPASS: Allow admin/admin123 even if verification fails
-            if (username.ToLower() == "admin" && password == "admin123")
-            {
-                Serilog.Log.Information("EMERGENCY BYPASS: Allowing admin login with hardcoded credentials.");
-                return user;
-            }
             return null;
         }
 

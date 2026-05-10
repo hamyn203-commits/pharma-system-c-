@@ -26,23 +26,23 @@ public class OrdersController : ControllerBase
     public async Task<IActionResult> GetAll([FromQuery] string? status)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        var q = db.Orders.Include(o => o.Pharmacy).Include(o => o.Items).ThenInclude(i => i.Product).AsQueryable();
+        var q = db.Orders.AsQueryable();
         if (!string.IsNullOrWhiteSpace(status))
             q = q.Where(o => o.Status == status);
-        var orders = await q.OrderByDescending(o => o.CreatedAt).ToListAsync();
-        var dto = orders.Select(o => new OrderDto
-        {
-            Id = o.Id, OrderNumber = o.OrderNumber, PharmacyId = o.PharmacyId,
-            PharmacyName = o.Pharmacy?.Name, TotalAmount = o.TotalAmount,
-            Discount = o.Discount, DiscountType = o.DiscountType, FinalTotal = o.FinalTotal,
-            AmountPaid = o.AmountPaid, BalanceBefore = o.BalanceBefore,
-            BalanceAfter = o.BalanceAfter, Status = o.Status, CreatedAt = o.CreatedAt,
-            Items = o.Items.Select(i => new OrderItemDto
+        var dto = await q.OrderByDescending(o => o.CreatedAt)
+            .Select(o => new OrderDto
             {
-                Id = i.Id, ProductId = i.ProductId, ProductName = i.Product?.Name,
-                Quantity = i.Quantity, UnitPrice = i.UnitPrice, TotalPrice = i.TotalPrice
-            }).ToList()
-        }).ToList();
+                Id = o.Id, OrderNumber = o.OrderNumber, PharmacyId = o.PharmacyId,
+                PharmacyName = o.Pharmacy.Name, TotalAmount = o.TotalAmount,
+                Discount = o.Discount, DiscountType = o.DiscountType, FinalTotal = o.FinalTotal,
+                AmountPaid = o.AmountPaid, BalanceBefore = o.BalanceBefore,
+                BalanceAfter = o.BalanceAfter, Status = o.Status, CreatedAt = o.CreatedAt,
+                Items = o.Items.Select(i => new OrderItemDto
+                {
+                    Id = i.Id, ProductId = i.ProductId, ProductName = i.Product!.Name,
+                    Quantity = i.Quantity, UnitPrice = i.UnitPrice, TotalPrice = i.TotalPrice
+                }).ToList()
+            }).ToListAsync();
         return Ok(dto);
     }
 
@@ -50,10 +50,22 @@ public class OrdersController : ControllerBase
     public async Task<IActionResult> GetById(int id)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        var o = await db.Orders.Include(x => x.Pharmacy).Include(x => x.Items).ThenInclude(i => i.Product)
-            .Include(x => x.StatusHistory).FirstOrDefaultAsync(x => x.Id == id);
-        if (o == null) return NotFound(new { message = "الطلب غير موجود" });
-        return Ok(MapOrder(o));
+        var dto = await db.Orders.Where(x => x.Id == id)
+            .Select(o => new OrderDto
+            {
+                Id = o.Id, OrderNumber = o.OrderNumber, PharmacyId = o.PharmacyId,
+                PharmacyName = o.Pharmacy.Name, TotalAmount = o.TotalAmount,
+                Discount = o.Discount, DiscountType = o.DiscountType, FinalTotal = o.FinalTotal,
+                AmountPaid = o.AmountPaid, BalanceBefore = o.BalanceBefore,
+                BalanceAfter = o.BalanceAfter, Status = o.Status, CreatedAt = o.CreatedAt,
+                Items = o.Items.Select(i => new OrderItemDto
+                {
+                    Id = i.Id, ProductId = i.ProductId, ProductName = i.Product!.Name,
+                    Quantity = i.Quantity, UnitPrice = i.UnitPrice, TotalPrice = i.TotalPrice
+                }).ToList()
+            }).FirstOrDefaultAsync();
+        if (dto == null) return NotFound(new { message = "الطلب غير موجود" });
+        return Ok(dto);
     }
 
     [HttpPost]
@@ -103,8 +115,6 @@ public class OrdersController : ControllerBase
                 Quantity = item.Quantity, UnitPrice = item.UnitPrice,
                 TotalPrice = item.Quantity * item.UnitPrice
             });
-            var prod = await db.Products.FindAsync(item.ProductId);
-            if (prod != null) prod.Quantity -= item.Quantity;
         }
 
         pharmacy.Balance = order.BalanceAfter;
@@ -114,14 +124,22 @@ public class OrdersController : ControllerBase
         await _audit.LogAsync(username, "create", "Order", order.Id.ToString(),
             $"طلب #{order.OrderNumber} للصيدلية '{pharmacy.Name}' بقيمة {order.FinalTotal}");
 
-        return Ok(MapOrder(order));
+        return Ok(new OrderDto
+        {
+            Id = order.Id, OrderNumber = order.OrderNumber, PharmacyId = order.PharmacyId,
+            PharmacyName = pharmacy.Name, TotalAmount = order.TotalAmount,
+            Discount = order.Discount, DiscountType = order.DiscountType, FinalTotal = order.FinalTotal,
+            AmountPaid = order.AmountPaid, BalanceBefore = order.BalanceBefore,
+            BalanceAfter = order.BalanceAfter, Status = order.Status, CreatedAt = order.CreatedAt,
+            Items = []
+        });
     }
 
     [HttpPut("{id}/status")]
     public async Task<IActionResult> UpdateStatus(int id, [FromBody] ChangeStatusRequest request)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        var order = await db.Orders.Include(o => o.Items).Include(o => o.Pharmacy).FirstOrDefaultAsync(o => o.Id == id);
+        var order = await db.Orders.FirstOrDefaultAsync(o => o.Id == id);
         if (order == null) return NotFound(new { message = "الطلب غير موجود" });
 
         var result = OrderWorkflow.validateTransition(order.Status, request.Status);
@@ -137,15 +155,33 @@ public class OrdersController : ControllerBase
             Note = allowed.message, CreatedAt = DateTime.Now
         });
 
-        if (allowed.newStatus == "cancelled" && oldStatus != "reviewed")
+        if (allowed.newStatus == "reviewed")
         {
-            foreach (var item in order.Items)
+            var items = await db.OrderItems.Where(i => i.OrderId == id).ToListAsync();
+            foreach (var item in items)
             {
                 var prod = await db.Products.FindAsync(item.ProductId);
-                if (prod != null) prod.Quantity += item.Quantity;
+                if (prod != null) prod.Quantity = Math.Max(prod.Quantity - item.Quantity, 0);
             }
-            if (order.Pharmacy != null)
-                order.Pharmacy.Balance = OrderWorkflow.updateBalance(order.Pharmacy.Balance, order.FinalTotal, "cancel");
+        }
+
+        if (allowed.newStatus == "cancelled")
+        {
+            var stockWasDeducted =
+                oldStatus is "reviewed" or "in_store" or "with_driver" or "on_the_way" or "postponed";
+            if (stockWasDeducted)
+            {
+                var items = await db.OrderItems.Where(i => i.OrderId == id).ToListAsync();
+                foreach (var item in items)
+                {
+                    var prod = await db.Products.FindAsync(item.ProductId);
+                    if (prod != null) prod.Quantity += item.Quantity;
+                }
+            }
+
+            var pharmacy = await db.Pharmacies.FindAsync(order.PharmacyId);
+            if (pharmacy != null)
+                pharmacy.Balance = OrderWorkflow.updateBalance(pharmacy.Balance, order.FinalTotal, "cancel");
         }
 
         await db.SaveChangesAsync();
@@ -154,22 +190,10 @@ public class OrdersController : ControllerBase
         await _audit.LogAsync(username, "status_change", "Order", id.ToString(),
             $"تغيير حالة الطلب #{order.OrderNumber} من {oldStatus} إلى {allowed.newStatus}");
 
-        return Ok(MapOrder(order));
+        return Ok(new { id = order.Id, status = order.Status, orderNumber = order.OrderNumber });
     }
 
-    private static OrderDto MapOrder(Order o) => new()
-    {
-        Id = o.Id, OrderNumber = o.OrderNumber, PharmacyId = o.PharmacyId,
-        PharmacyName = o.Pharmacy?.Name, TotalAmount = o.TotalAmount,
-        Discount = o.Discount, DiscountType = o.DiscountType, FinalTotal = o.FinalTotal,
-        AmountPaid = o.AmountPaid, BalanceBefore = o.BalanceBefore,
-        BalanceAfter = o.BalanceAfter, Status = o.Status, CreatedAt = o.CreatedAt,
-        Items = o.Items?.Select(i => new OrderItemDto
-        {
-            Id = i.Id, ProductId = i.ProductId, ProductName = i.Product?.Name,
-            Quantity = i.Quantity, UnitPrice = i.UnitPrice, TotalPrice = i.TotalPrice
-        }).ToList() ?? []
-    };
+
 }
 
 public class ChangeStatusRequest

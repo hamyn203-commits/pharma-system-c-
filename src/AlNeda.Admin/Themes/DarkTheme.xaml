@@ -51,6 +51,64 @@
     <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimary}" />
     <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondary}" />
     <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource TextMuted}" />
+    <SolidColorBrush x:Key="PrimaryBlueLightBrush" Color="{StaticResource PrimaryBlueLight}" />
+    <SolidColorBrush x:Key="PrimaryGreenDarkBrush" Color="{StaticResource PrimaryGreenDark}" />
+
+    <!-- Overlay & Page -->
+    <SolidColorBrush x:Key="PageBgBrush" Color="#FF0A0E13" />
+    <SolidColorBrush x:Key="OverlayBgBrush" Color="#80000000" />
+
+    <!-- Glass Gradient Brushes for Settings -->
+    <LinearGradientBrush x:Key="GlassCardBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#1AFFFFFF" Offset="0" />
+        <GradientStop Color="#0DFFFFFF" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GeneralTabGradient" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#FF10B981" Offset="0" />
+        <GradientStop Color="#FF34D399" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="DatabaseTabGradient" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#FF3B82F6" Offset="0" />
+        <GradientStop Color="#FF60A5FA" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="UsersTabGradient" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#FF8B5CF6" Offset="0" />
+        <GradientStop Color="#FFA78BFA" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="NotificationsTabGradient" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#FFF59E0B" Offset="0" />
+        <GradientStop Color="#FFFBBF24" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="BackupTabGradient" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#FFEF4444" Offset="0" />
+        <GradientStop Color="#FFF87171" Offset="1" />
+    </LinearGradientBrush>
+
+    <!-- Stat Card Gradients -->
+    <LinearGradientBrush x:Key="StatCardGreenGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#1A10B981" Offset="0" />
+        <GradientStop Color="#0A000000" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="StatCardBlueGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#1A3B82F6" Offset="0" />
+        <GradientStop Color="#0A000000" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="StatCardPurpleGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#1A8B5CF6" Offset="0" />
+        <GradientStop Color="#0A000000" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="StatCardAmberGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#1AF59E0B" Offset="0" />
+        <GradientStop Color="#0A000000" Offset="1" />
+    </LinearGradientBrush>
+
+    <!-- Glass Border Gradient -->
+    <LinearGradientBrush x:Key="GlassBorderBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#33FFFFFF" Offset="0" />
+        <GradientStop Color="#0DFFFFFF" Offset="0.5" />
+        <GradientStop Color="#33FFFFFF" Offset="1" />
+    </LinearGradientBrush>
 
     <!-- Group Colors -->
     <SolidColorBrush x:Key="GeneralGroupBrush" Color="#FF10B981" />
@@ -670,6 +728,101 @@
         <Setter Property="FontSize" Value="24" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Foreground" Value="#FFFFFFFF" />
+    </Style>
+
+    <Style x:Key="CardTitle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+    </Style>
+
+    <!-- Premium Settings Card Style -->
+    <Style x:Key="SettingsCardStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource CardBgBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1.5" />
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="Padding" Value="32,24" />
+        <Setter Property="Effect" Value="{StaticResource CardShadow}" />
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <ScaleTransform ScaleX="1" ScaleY="1" />
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="MouseEnter">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.005" Duration="0:0:0.15" />
+                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.005" Duration="0:0:0.15" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="MouseLeave">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1" Duration="0:0:0.15" />
+                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1" Duration="0:0:0.15" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Toggle Switch Style -->
+    <Style x:Key="ModernToggleSwitch" TargetType="CheckBox">
+        <Setter Property="Width" Value="44" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Border x:Name="ToggleOuter"
+                            Width="44" Height="24"
+                            CornerRadius="12"
+                            Background="#FF30363D"
+                            BorderThickness="0"
+                            SnapsToDevicePixels="True">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="4" ShadowDepth="1" Color="Black" Opacity="0.3" />
+                        </Border.Effect>
+                        <Border x:Name="ToggleThumb"
+                                Width="18" Height="18"
+                                CornerRadius="9"
+                                Background="#FF8B949E"
+                                HorizontalAlignment="Left"
+                                Margin="3,0,0,0"
+                                VerticalAlignment="Center">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="4" ShadowDepth="1" Color="Black" Opacity="0.4" />
+                            </Border.Effect>
+                        </Border>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="ToggleOuter" Property="Background" Value="#FF10B981" />
+                            <Setter TargetName="ToggleThumb" Property="Background" Value="#FFFFFFFF" />
+                            <Setter TargetName="ToggleThumb" Property="HorizontalAlignment" Value="Right" />
+                            <Setter TargetName="ToggleThumb" Property="Margin" Value="0,0,3,0" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ToggleOuter" Property="Opacity" Value="0.85" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.4" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Section Divider -->
+    <Style x:Key="SectionDivider" TargetType="Rectangle">
+        <Setter Property="Height" Value="1" />
+        <Setter Property="Fill" Value="{StaticResource BorderMutedBrush}" />
+        <Setter Property="Margin" Value="0,8,0,24" />
     </Style>
 
     <Style x:Key="MetricLabel" TargetType="TextBlock">

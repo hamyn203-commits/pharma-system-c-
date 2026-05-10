@@ -62,7 +62,9 @@ public partial class App : Application
             services.AddDbContextFactory<Data.AppDbContext>(options =>
             {
                 options.UseSqlite($"Data Source={DbPath}");
-                options.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
+                options.ConfigureWarnings(w => w.Ignore(
+                    Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning,
+                    Microsoft.EntityFrameworkCore.Diagnostics.CoreEventId.NavigationBaseIncludeIgnored));
             });
 
             services.AddSingleton<IDialogService, DialogService>();
@@ -72,6 +74,7 @@ public partial class App : Application
             services.AddTransient<AuthService>();
             services.AddTransient<ProductService>();
             services.AddTransient<CategoryService>();
+            services.AddTransient<AlNeda.Data.Repositories.CategoryRepository>();
             services.AddTransient<PharmacyService>();
             services.AddTransient<PurchaseService>();
             services.AddTransient<OrderService>();
@@ -91,7 +94,7 @@ public partial class App : Application
             services.AddSingleton<ViewModels.MainViewModel>();
             services.AddSingleton<INavigationService>(sp => sp.GetRequiredService<ViewModels.MainViewModel>());
             services.AddTransient<ViewModels.ProductsViewModel>();
-            services.AddTransient<ViewModels.CategoriesViewModel>();
+            services.AddTransient<ViewModels.CategoryViewModel>();
             services.AddTransient<ViewModels.PharmaciesViewModel>();
             services.AddTransient<ViewModels.SuppliersViewModel>();
             services.AddTransient<ViewModels.PurchasesViewModel>();
@@ -123,17 +126,25 @@ public partial class App : Application
                 // Seed default admin if no users exist
                 if (!await dbContext.Users.AnyAsync())
                 {
-                    Log.Information("Seeding default admin user...");
-                    var (hash, salt) = AuthService.HashPassword("admin123");
-                    dbContext.Users.Add(new User
+                    var adminPassword = Environment.GetEnvironmentVariable("ALNEDA_DEFAULT_ADMIN_PASSWORD");
+                    if (string.IsNullOrWhiteSpace(adminPassword))
                     {
-                        Username = "admin",
-                        Password = hash,
-                        PasswordSalt = salt,
-                        Role = "admin",
-                        CreatedAt = DateTime.Now
-                    });
-                    await dbContext.SaveChangesAsync();
+                        Log.Warning("No users found and ALNEDA_DEFAULT_ADMIN_PASSWORD is not set; skipping default admin seed.");
+                    }
+                    else
+                    {
+                        Log.Information("Seeding default admin user from environment variable...");
+                        var (hash, salt) = AuthService.HashPassword(adminPassword);
+                        dbContext.Users.Add(new User
+                        {
+                            Username = "admin",
+                            Password = hash,
+                            PasswordSalt = salt,
+                            Role = "admin",
+                            CreatedAt = DateTime.Now
+                        });
+                        await dbContext.SaveChangesAsync();
+                    }
                 }
                 Log.Information("Database initialization successful");
             }

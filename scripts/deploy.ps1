@@ -15,8 +15,8 @@ param(
     [string]$Configuration = "Release"
 )
 
-$ScriptDir = Split-Path -Parent $PSScriptRoot
-$SolutionDir = Split-Path -Parent $ScriptDir
+$SolutionDir = Split-Path -Parent $PSScriptRoot
+$ScriptDir = $PSScriptRoot
 $AdminOutput = Join-Path $SolutionDir "src\AlNeda.Admin\bin\$Configuration\net9.0-windows"
 
 Write-Host "=== AlNeda Deploy Script ===" -ForegroundColor Cyan

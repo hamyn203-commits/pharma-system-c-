@@ -1,0 +1,70 @@
+## .NET / C# ##
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+*.rsuser
+
+## Build outputs ##
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## NuGet ##
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+project.lock.json
+project.fragment.lock.json
+
+## Test results ##
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+## Publish ##
+publish/
+*.pubxml
+
+## Database files (don't commit the actual DB) ##
+*.db
+*.db-shm
+*.db-wal
+
+## Logs ##
+logs/
+*.log
+
+## OS ##
+.DS_Store
+Thumbs.db
+desktop.ini
+
+## Secrets ##
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+
+## Scratch / temp ##
+scratch/
+
+## Rider ##
+.idea/
+
+## VS Code ##
+.vscode/

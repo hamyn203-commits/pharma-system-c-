@@ -21,6 +21,12 @@
             <conv:StatusToBgConverter x:Key="StatusToBgConverter" />
             <conv:BalanceColorConverter x:Key="BalanceColorConverter" />
             <conv:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <conv:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
+            <conv:BoolToTextConverter x:Key="BoolToTextConverter" />
+            <conv:PositiveNegativeToBrushConverter x:Key="PositiveNegativeToBrushConverter" />
+            <conv:ProfitMarginToBrushConverter x:Key="ProfitMarginToBrushConverter" />
+            <conv:TrendToBrushConverter x:Key="TrendToBrushConverter" />
+            <conv:TrendToForegroundConverter x:Key="TrendToForegroundConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

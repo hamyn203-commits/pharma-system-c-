@@ -28,7 +28,6 @@ public class UnitOfWork : IUnitOfWork
     private static readonly Dictionary<Type, Type> _repositoryTypes = new()
     {
         { typeof(Core.Entities.Product), typeof(ProductRepository) },
-        { typeof(Core.Entities.Category), typeof(CategoryRepository) },
         { typeof(Core.Entities.Pharmacy), typeof(PharmacyRepository) },
         { typeof(Core.Entities.Order), typeof(OrderRepository) },
         { typeof(Core.Entities.OrderItem), typeof(OrderItemRepository) },
@@ -223,11 +222,6 @@ public class ProductRepository : GenericRepository<Core.Entities.Product>
     }
 }
 
-public class CategoryRepository : GenericRepository<Core.Entities.Category> 
-{
-    public CategoryRepository(AppDbContext context) : base(context) { }
-}
-
 public class PharmacyRepository : GenericRepository<Core.Entities.Pharmacy> 
 {
     public PharmacyRepository(AppDbContext context) : base(context) { }
@@ -239,7 +233,17 @@ public class OrderRepository : GenericRepository<Core.Entities.Order>
 
     public override async Task<IEnumerable<Core.Entities.Order>> GetAllAsync()
     {
-        return await _dbSet.Include(o => o.Pharmacy).OrderByDescending(o => o.CreatedAt).ToListAsync();
+        return await _dbSet.OrderByDescending(o => o.CreatedAt)
+            .Select(o => new Core.Entities.Order
+            {
+                Id = o.Id, OrderNumber = o.OrderNumber, PharmacyId = o.PharmacyId, Pharmacy = o.Pharmacy,
+                TotalAmount = o.TotalAmount, Discount = o.Discount, DiscountType = o.DiscountType,
+                FinalTotal = o.FinalTotal, BalanceBefore = o.BalanceBefore, BalanceAfter = o.BalanceAfter,
+                Status = o.Status, DeliveryPerson = o.DeliveryPerson, Notes = o.Notes,
+                LastStatusUpdate = o.LastStatusUpdate, ExpectedDeliveryNote = o.ExpectedDeliveryNote,
+                PaymentStatus = o.PaymentStatus, PaymentType = o.PaymentType, AmountPaid = o.AmountPaid,
+                RemainingAmount = o.RemainingAmount, PaymentNotes = o.PaymentNotes, CreatedAt = o.CreatedAt
+            }).ToListAsync();
     }
 }
 

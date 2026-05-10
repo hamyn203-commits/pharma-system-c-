@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using AlNeda.Admin.Services.ApiClient;
-using AlNeda.Core.Entities;
 using AlNeda.Core.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -12,9 +11,9 @@ public partial class PaymentsViewModel : ObservableObject
     private readonly IAlNedaApiClient _apiClient;
     private readonly Services.IDialogService _dialog;
 
-    [ObservableProperty] private ObservableCollection<Payment> _payments = [];
+    [ObservableProperty] private ObservableCollection<PaymentDto> _payments = [];
     [ObservableProperty] private ObservableCollection<PharmacyDto> _pharmacies = [];
-    [ObservableProperty] private Payment? _selectedPayment;
+    [ObservableProperty] private PaymentDto? _selectedPayment;
     [ObservableProperty] private bool _showEditor;
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private int _selectedPharmacyId;
@@ -37,7 +36,8 @@ public partial class PaymentsViewModel : ObservableObject
         IsLoading = true;
         try
         {
-            Payments = new ObservableCollection<Payment>([]); // placeholder — no GET payments endpoint yet
+            var payments = await _apiClient.GetPaymentsAsync();
+            Payments = new ObservableCollection<PaymentDto>(payments);
             var phs = await _apiClient.GetPharmaciesAsync();
             Pharmacies = new ObservableCollection<PharmacyDto>(phs);
         }
@@ -64,9 +64,24 @@ public partial class PaymentsViewModel : ObservableObject
         ValidationMessage = "";
         if (SelectedPharmacyId == 0) { ValidationMessage = "اختر الصيدلية"; return; }
         if (Amount <= 0) { ValidationMessage = "المبلغ يجب أن يكون أكبر من صفر"; return; }
-        // Payment creation via API not yet implemented — kept as placeholder
-        ShowEditor = false;
-        await LoadAsync();
+        try
+        {
+            await _apiClient.CreatePaymentAsync(new CreatePaymentRequest
+            {
+                PharmacyId = SelectedPharmacyId,
+                Amount = Amount,
+                PaymentType = PaymentType,
+                PaymentNotes = PaymentNotes
+            });
+
+            ShowEditor = false;
+            await LoadAsync();
+            _dialog.ShowMessage("تم تسجيل التحصيل بنجاح", "نجاح");
+        }
+        catch (ApiException ex)
+        {
+            ValidationMessage = ex.Message;
+        }
     }
 
     [RelayCommand]

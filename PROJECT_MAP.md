@@ -168,21 +168,21 @@ AlNada.sln
 
 ## 6. MILESTONES
 
-| M# | Name | Deliverables | Verifiable Criteria |
-|----|------|-------------|-------------------|
-| **M0** | Discovery & Plan | PROJECT_MAP.md, this document | ✅ Done |
-| **M1** | Foundation | .NET 9 SDK installed, solution created, WPF shell with sidebar + DI + logging + dark theme | `dotnet build` passes, window appears with sidebar |
+| M# | Name | Deliverables | Verifiable Criteria | Status |
+|----|------|-------------|-------------------|--------|
+| **M0** | Discovery & Plan | PROJECT_MAP.md, this document | ✅ Done | ✅ Done |
+| **M1** | Foundation | .NET 9 SDK installed, solution created, WPF shell with sidebar + DI + logging + dark theme | `dotnet build` passes, window appears with sidebar | ✅ Done |
 | **M2** | Data Layer | Entities, DbContext, migrations, Legacy DB import tool | Import runs, all 14 tables populated | ✅ Done |
 | **M3** | Auth & Navigation | Login screen, user roles, sidebar navigation, session | Login → dashboard, role-based tab hiding | ✅ Done |
-| **M4** | Inventory | Products CRUD + Categories CRUD + image support | Add/edit/delete product + category, search, filter |
-| **M5** | Pharmacies | CRUD, account_status (pending/active/blocked/deleted), balance | Approve/block/revoke, balance display |
-| **M6** | Orders | Full order lifecycle with state machine, items, stock, discount | Create → review → stock deduct → deliver, history |
-| **M7** | Payments | Payment entry, partial/full/deferred, balance update, over-payment guard | Payment → balance updates, edge cases |
-| **M8** | Returns | Return creation with items, stock/balance adjustment, status | Full return lifecycle |
-| **M9** | Account Statement | Ledger with running balance, filters, export | Statement matches manual calculation |
-| **M10** | Reports | Sales, top pharmacies, top products, debts, stock | Numbers match raw data |
-| **M11** | Utilities | Backup/export/import, audit log viewer, settings | Backup creates valid .db, restore works |
-| **M12** | Polish | RTL verified, dialogs, error states, build packaging | `dotnet build -c Release`, installer-ready |
+| **M4** | Inventory | Products CRUD + Categories CRUD + image support | Add/edit/delete product + category, search, filter | ✅ Done |
+| **M5** | Pharmacies | CRUD, account_status (pending/active/blocked/deleted), balance | Approve/block/revoke, balance display | ✅ Done |
+| **M6** | Orders | Full order lifecycle with state machine, items, stock, discount | Create → review → stock deduct → deliver, history | ✅ Done |
+| **M7** | Payments | Payment entry, partial/full/deferred, balance update, over-payment guard | Payment → balance updates, edge cases | ✅ Done |
+| **M8** | Returns | Return creation with items, stock/balance adjustment, status | Full return lifecycle | ✅ Done |
+| **M9** | Account Statement | Ledger with running balance, filters, export | Statement matches manual calculation | ✅ Done |
+| **M10** | Reports | Sales, top pharmacies, top products, debts, stock | Numbers match raw data | ✅ Done |
+| **M11** | Utilities | Backup/export/import, audit log viewer, settings | Backup creates valid .db, restore works | ✅ Done |
+| **M12** | Polish | RTL verified, dialogs, error states, build packaging | `dotnet build -c Release`, installer-ready | ✅ Done |
 
 ---
 
@@ -331,4 +331,13 @@ C# Tests  (AlNeda.Tests):            2 passed
 Total:                                 30 passed
 ```
 
-*Last updated: 2026-05-07T16:30*
+## 12. POST-MIGRATION UPDATES & OPTIMIZATIONS (May 2026)
+
+| Date | Category | Update Description | Impact |
+|------|----------|--------------------|--------|
+| **2026-05-06** | UI & Deployment | UI/UX Modernization, Dark Theme fixes, Inno Setup Installer generated. | Application packaged as distributable `.exe`. |
+| **2026-05-07** | Security | Migrated password hashing from simple SHA-256 to PBKDF2 with unique random salts. | Enhanced data security for user credentials. Database schema updated. |
+| **2026-05-08** | Stability | Removed EF Core `.Include()` navigation queries to fix `NavigationBaseIncludeIgnored` crashes. | Prevented runtime crashes in WPF components. |
+| **2026-05-09** | Performance | Replaced all navigation queries with explicit `.Select()` server-side projections. | Optimized Data Access and Sales Reporting speeds. |
+
+*Last updated: 2026-05-10T20:48*

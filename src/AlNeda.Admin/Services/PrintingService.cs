@@ -21,20 +21,92 @@ public class PrintingService
     public async Task<Order?> GetOrderWithDetailsAsync(int orderId)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        return db.Orders
-            .Include(o => o.Pharmacy)
-            .Include(o => o.Items)
-            .ThenInclude(i => i.Product)
-            .FirstOrDefault(o => o.Id == orderId);
+        return await db.Orders
+            .Where(o => o.Id == orderId)
+            .Select(o => new Order
+            {
+                Id = o.Id,
+                OrderNumber = o.OrderNumber,
+                PharmacyId = o.PharmacyId,
+                Pharmacy = o.Pharmacy,
+                TotalAmount = o.TotalAmount,
+                Discount = o.Discount,
+                DiscountType = o.DiscountType,
+                FinalTotal = o.FinalTotal,
+                AmountPaid = o.AmountPaid,
+                BalanceBefore = o.BalanceBefore,
+                BalanceAfter = o.BalanceAfter,
+                Status = o.Status,
+                DeliveryPerson = o.DeliveryPerson,
+                Notes = o.Notes,
+                LastStatusUpdate = o.LastStatusUpdate,
+                ExpectedDeliveryNote = o.ExpectedDeliveryNote,
+                PaymentStatus = o.PaymentStatus,
+                PaymentType = o.PaymentType,
+                RemainingAmount = o.RemainingAmount,
+                PaymentNotes = o.PaymentNotes,
+                CreatedAt = o.CreatedAt,
+                Items = o.Items.Select(i => new OrderItem
+                {
+                    Id = i.Id,
+                    OrderId = i.OrderId,
+                    ProductId = i.ProductId,
+                    Product = i.Product,
+                    Quantity = i.Quantity,
+                    UnitPrice = i.UnitPrice,
+                    TotalPrice = i.TotalPrice
+                }).ToList()
+            })
+            .FirstOrDefaultAsync();
     }
 
     public async Task<Pharmacy?> GetPharmacyWithOrdersAsync(int pharmacyId)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        return db.Pharmacies
-            .Include(p => p.Orders.Where(o => o.Status != "cancelled"))
-            .ThenInclude(o => o.Items)
-            .FirstOrDefault(p => p.Id == pharmacyId);
+        return await db.Pharmacies
+            .Where(p => p.Id == pharmacyId)
+            .Select(p => new Pharmacy
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Address = p.Address,
+                Phone = p.Phone,
+                Balance = p.Balance,
+                CreatedAt = p.CreatedAt,
+                AccountStatus = p.AccountStatus,
+                ApprovedAt = p.ApprovedAt,
+                BlockedAt = p.BlockedAt,
+                LastLoginAt = p.LastLoginAt,
+                DeviceId = p.DeviceId,
+                Orders = p.Orders.Where(o => o.Status != "cancelled")
+                    .Select(o => new Order
+                    {
+                        Id = o.Id,
+                        OrderNumber = o.OrderNumber,
+                        PharmacyId = o.PharmacyId,
+                        Pharmacy = o.Pharmacy,
+                        TotalAmount = o.TotalAmount,
+                        Discount = o.Discount,
+                        DiscountType = o.DiscountType,
+                        FinalTotal = o.FinalTotal,
+                        AmountPaid = o.AmountPaid,
+                        BalanceBefore = o.BalanceBefore,
+                        BalanceAfter = o.BalanceAfter,
+                        Status = o.Status,
+                        CreatedAt = o.CreatedAt,
+                        Items = o.Items.Select(i => new OrderItem
+                        {
+                            Id = i.Id,
+                            OrderId = i.OrderId,
+                            ProductId = i.ProductId,
+                            Product = i.Product,
+                            Quantity = i.Quantity,
+                            UnitPrice = i.UnitPrice,
+                            TotalPrice = i.TotalPrice
+                        }).ToList()
+                    }).ToList()
+            })
+            .FirstOrDefaultAsync();
     }
 
     public FlowDocument CreateOrderInvoiceDocument(Order order)

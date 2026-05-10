@@ -186,6 +186,34 @@ public partial class SettingsViewModel : ObservableObject
 
 
     [RelayCommand]
+    private async Task CreateBackupAsync()
+    {
+        try
+        {
+            IsLoading = true;
+            Status = "جارٍ إنشاء النسخة الاحتياطية...";
+            var backupDir = CurrentSettings.BackupPath;
+            if (!Directory.Exists(backupDir)) Directory.CreateDirectory(backupDir);
+            var fileName = $"backup_{DateTime.Now:yyyyMMdd_HHmmss}.db";
+            var destPath = Path.Combine(backupDir, fileName);
+            await using var src = System.IO.File.OpenRead(CurrentSettings.DbPath);
+            await using var dst = System.IO.File.Create(destPath);
+            await src.CopyToAsync(dst);
+            Status = $"✅ تم إنشاء النسخة الاحتياطية بنجاح: {fileName}";
+            _dialog.ShowMessage($"تم حفظ النسخة في:\n{destPath}", "نسخ احتياطي");
+        }
+        catch (Exception ex)
+        {
+            Status = $"❌ فشل النسخ الاحتياطي: {ex.Message}";
+            _dialog.ShowError(ex.Message);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    [RelayCommand]
     private async Task DeleteUserAsync(User? user)
     {
         if (user == null) return;

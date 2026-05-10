@@ -101,6 +101,7 @@ public static class DbContextOptionsBuilderExtensions
                     options.UseNpgsql(connectionString);
                     break;
             }
+            options.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.CoreEventId.NavigationBaseIncludeIgnored));
         });
 
         return services;

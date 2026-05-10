@@ -11,11 +11,15 @@
 
 param(
     [switch]$ImportLegacy,
-    [string]$LegacyDbPath = "D:\pharma_project\pharmacy.db"
+    [string]$LegacyDbPath = ""
 )
 
-$ScriptDir = Split-Path -Parent $PSScriptRoot
-$SolutionDir = Split-Path -Parent $ScriptDir
+$SolutionDir = Split-Path -Parent $PSScriptRoot
+$ScriptDir = $PSScriptRoot
+
+if ([string]::IsNullOrWhiteSpace($LegacyDbPath)) {
+    $LegacyDbPath = Join-Path $SolutionDir "pharmacy.db"
+}
 
 Write-Host "=== AlNeda Initialization ===" -ForegroundColor Cyan
 Write-Host "Solution: $SolutionDir" -ForegroundColor Gray

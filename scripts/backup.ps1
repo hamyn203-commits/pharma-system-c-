@@ -18,8 +18,10 @@ param(
 
 # Auto-detect
 if ([string]::IsNullOrEmpty($DbPath)) {
+    $SolutionDir = Split-Path -Parent $PSScriptRoot
+    $ScriptDir = $PSScriptRoot
     $candidates = @(
-        Join-Path (Split-Path -Parent $PSScriptRoot) "src\AlNeda.Data\pharmacy.db"
+        Join-Path $SolutionDir "src\AlNeda.Data\pharmacy.db"
         "D:\pharma_project\pharmacy.db"
         ".\pharmacy.db"
     )

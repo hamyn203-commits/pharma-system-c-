@@ -13,8 +13,11 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 var jwtKey = Environment.GetEnvironmentVariable("ALNEDA_JWT_KEY")
-    ?? builder.Configuration["Jwt:Key"]
-    ?? throw new InvalidOperationException("JWT Key is not configured. Set ALNEDA_JWT_KEY env var or Jwt:Key in config.");
+    ?? builder.Configuration["Jwt:Key"];
+if (string.IsNullOrWhiteSpace(jwtKey))
+{
+    throw new InvalidOperationException("JWT Key is not configured. Set ALNEDA_JWT_KEY env var or Jwt:Key in config.");
+}
 
 var jwtIssuer = Environment.GetEnvironmentVariable("ALNEDA_JWT_ISSUER")
     ?? builder.Configuration["Jwt:Issuer"]
@@ -39,7 +42,17 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.AllowAnyOrigin()
+        var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+        if (allowedOrigins is { Length: > 0 })
+        {
+            policy.WithOrigins(allowedOrigins)
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+            return;
+        }
+
+        // Fail-closed by default: no cross-origin access unless explicitly configured.
+        policy.WithOrigins("http://localhost:5000")
               .AllowAnyMethod()
               .AllowAnyHeader();
     });
@@ -127,8 +140,15 @@ try
     if (!await initDb.Users.AnyAsync())
     {
         var logger = app.Services.GetRequiredService<ILogger<Program>>();
-        logger.LogInformation("Seeding default admin user...");
-        var (hash, salt) = AuthService.HashPassword("admin123");
+        var adminPassword = Environment.GetEnvironmentVariable("ALNEDA_DEFAULT_ADMIN_PASSWORD");
+        if (string.IsNullOrWhiteSpace(adminPassword))
+        {
+            logger.LogWarning("No users exist and ALNEDA_DEFAULT_ADMIN_PASSWORD is not set. Default admin user was not created.");
+            goto SeedDone;
+        }
+
+        logger.LogInformation("Seeding default admin user from environment variable...");
+        var (hash, salt) = AuthService.HashPassword(adminPassword);
         initDb.Users.Add(new User
         {
             Username = "admin",
@@ -140,6 +160,7 @@ try
         });
         await initDb.SaveChangesAsync();
     }
+SeedDone:;
 }
 catch (Exception ex)
 {

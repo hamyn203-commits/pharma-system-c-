@@ -1812,3 +1812,1177 @@ System.Reflection.TargetInvocationException: Exception has been thrown by the ta
    at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
    at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
    at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 18:29:04.349 +03:00 [INF] AlNeda Admin starting up
+2026-05-08 18:29:04.409 +03:00 [INF] Using database at: pharmacy.db
+2026-05-08 18:29:04.622 +03:00 [INF] Checking for database migrations...
+2026-05-08 18:29:06.104 +03:00 [INF] Database initialization successful
+2026-05-08 18:29:08.337 +03:00 [INF] User logged in: admin (admin)
+2026-05-08 18:29:08.888 +03:00 [ERR] Unobserved Task Exception
+System.AggregateException: A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. (XAxes and YAxes must contain at least one element.)
+ ---> System.Exception: XAxes and YAxes must contain at least one element.
+   at LiveChartsCore.CartesianChart`1.Measure() in /_/src/LiveChartsCore/CartesianChart.cs:line 425
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_1() in /_/src/LiveChartsCore/Chart.cs:line 493
+   at System.Windows.Threading.DispatcherOperation.InvokeDelegateCore()
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+--- End of stack trace from previous location ---
+   at System.Windows.Threading.DispatcherOperation.Wait(TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.InvokeImpl(DispatcherOperation operation, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback, DispatcherPriority priority, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback)
+   at LiveChartsCore.SkiaSharpView.WPF.Chart.LiveChartsCore.Kernel.Sketches.IChartView.InvokeOnUIThread(Action action) in /_/src/skiasharp/LiveChartsCore.SkiaSharp.Wpf/Chart.cs:line 577
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_0() in /_/src/LiveChartsCore/Chart.cs:line 489
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+   --- End of inner exception stack trace ---
+2026-05-08 18:29:10.442 +03:00 [INF] Navigating to: orders
+2026-05-08 18:29:10.479 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '189' and line position '37'.
+ ---> System.Exception: Cannot find resource named 'ActionButtonStyle'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.OrdersView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\OrdersView.xaml:line 1
+   at AlNeda.Admin.Views.OrdersView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\OrdersView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 110
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 18:29:12.393 +03:00 [INF] Navigating to: categories
+2026-05-08 18:29:12.399 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '44' and line position '26'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 18:29:15.153 +03:00 [INF] Navigating to: settings
+2026-05-08 18:29:15.177 +03:00 [FTL] Unhandled UI Exception
+System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '98' and line position '52'.
+ ---> System.Exception: Cannot find resource named 'CardTitle'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.SettingsView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\SettingsView.xaml:line 1
+   at AlNeda.Admin.Views.SettingsView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\SettingsView.xaml.cs:line 7
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 117
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 18:48:03.415 +03:00 [INF] Navigating to: orders
+2026-05-08 18:48:03.429 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '189' and line position '37'.
+ ---> System.Exception: Cannot find resource named 'ActionButtonStyle'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.OrdersView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\OrdersView.xaml:line 1
+   at AlNeda.Admin.Views.OrdersView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\OrdersView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 110
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 18:54:44.263 +03:00 [INF] AlNeda Admin starting up
+2026-05-08 18:54:44.312 +03:00 [INF] Using database at: pharmacy.db
+2026-05-08 18:54:44.488 +03:00 [INF] Checking for database migrations...
+2026-05-08 18:54:45.833 +03:00 [INF] Database initialization successful
+2026-05-08 18:54:49.429 +03:00 [INF] User logged in: admin (admin)
+2026-05-08 18:54:49.997 +03:00 [ERR] Unobserved Task Exception
+System.AggregateException: A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. (XAxes and YAxes must contain at least one element.)
+ ---> System.Exception: XAxes and YAxes must contain at least one element.
+   at LiveChartsCore.CartesianChart`1.Measure() in /_/src/LiveChartsCore/CartesianChart.cs:line 425
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_1() in /_/src/LiveChartsCore/Chart.cs:line 493
+   at System.Windows.Threading.DispatcherOperation.InvokeDelegateCore()
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+--- End of stack trace from previous location ---
+   at System.Windows.Threading.DispatcherOperation.Wait(TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.InvokeImpl(DispatcherOperation operation, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback, DispatcherPriority priority, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback)
+   at LiveChartsCore.SkiaSharpView.WPF.Chart.LiveChartsCore.Kernel.Sketches.IChartView.InvokeOnUIThread(Action action) in /_/src/skiasharp/LiveChartsCore.SkiaSharp.Wpf/Chart.cs:line 577
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_0() in /_/src/LiveChartsCore/Chart.cs:line 489
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+   --- End of inner exception stack trace ---
+2026-05-08 18:54:51.815 +03:00 [INF] Navigating to: categories
+2026-05-08 18:54:51.825 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '44' and line position '26'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 18:55:52.749 +03:00 [INF] AlNeda Admin starting up
+2026-05-08 18:55:52.795 +03:00 [INF] Using database at: pharmacy.db
+2026-05-08 18:55:52.973 +03:00 [INF] Checking for database migrations...
+2026-05-08 18:55:54.565 +03:00 [INF] Database initialization successful
+2026-05-08 18:55:56.856 +03:00 [INF] User logged in: admin (admin)
+2026-05-08 18:55:57.436 +03:00 [ERR] Unobserved Task Exception
+System.AggregateException: A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. (XAxes and YAxes must contain at least one element.)
+ ---> System.Exception: XAxes and YAxes must contain at least one element.
+   at LiveChartsCore.CartesianChart`1.Measure() in /_/src/LiveChartsCore/CartesianChart.cs:line 425
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_1() in /_/src/LiveChartsCore/Chart.cs:line 493
+   at System.Windows.Threading.DispatcherOperation.InvokeDelegateCore()
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+--- End of stack trace from previous location ---
+   at System.Windows.Threading.DispatcherOperation.Wait(TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.InvokeImpl(DispatcherOperation operation, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback, DispatcherPriority priority, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback)
+   at LiveChartsCore.SkiaSharpView.WPF.Chart.LiveChartsCore.Kernel.Sketches.IChartView.InvokeOnUIThread(Action action) in /_/src/skiasharp/LiveChartsCore.SkiaSharp.Wpf/Chart.cs:line 577
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_0() in /_/src/LiveChartsCore/Chart.cs:line 489
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+   --- End of inner exception stack trace ---
+2026-05-08 18:55:58.693 +03:00 [INF] Navigating to: categories
+2026-05-08 18:55:58.700 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '44' and line position '26'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 18:56:02.773 +03:00 [INF] Navigating to: categories
+2026-05-08 18:56:02.777 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '44' and line position '26'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Input.InputManager.ProcessInput(InputEventArgs input)
+   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 19:09:14.930 +03:00 [INF] AlNeda Admin starting up
+2026-05-08 19:09:14.978 +03:00 [INF] Using database at: pharmacy.db
+2026-05-08 19:09:15.149 +03:00 [INF] Checking for database migrations...
+2026-05-08 19:09:16.404 +03:00 [INF] Database initialization successful
+2026-05-08 19:09:46.506 +03:00 [INF] User logged in: admin (admin)
+2026-05-08 19:09:47.960 +03:00 [ERR] Unobserved Task Exception
+System.AggregateException: A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. (XAxes and YAxes must contain at least one element.)
+ ---> System.Exception: XAxes and YAxes must contain at least one element.
+   at LiveChartsCore.CartesianChart`1.Measure() in /_/src/LiveChartsCore/CartesianChart.cs:line 425
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_1() in /_/src/LiveChartsCore/Chart.cs:line 493
+   at System.Windows.Threading.DispatcherOperation.InvokeDelegateCore()
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+--- End of stack trace from previous location ---
+   at System.Windows.Threading.DispatcherOperation.Wait(TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.InvokeImpl(DispatcherOperation operation, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback, DispatcherPriority priority, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback)
+   at LiveChartsCore.SkiaSharpView.WPF.Chart.LiveChartsCore.Kernel.Sketches.IChartView.InvokeOnUIThread(Action action) in /_/src/skiasharp/LiveChartsCore.SkiaSharp.Wpf/Chart.cs:line 577
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_0() in /_/src/LiveChartsCore/Chart.cs:line 489
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+   --- End of inner exception stack trace ---
+2026-05-08 19:09:48.327 +03:00 [INF] Navigating to: categories
+2026-05-08 19:09:48.332 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '44' and line position '26'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 19:09:50.855 +03:00 [INF] Navigating to: categories
+2026-05-08 19:09:50.858 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '44' and line position '26'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 19:09:53.999 +03:00 [INF] Navigating to: categories
+2026-05-08 19:09:54.001 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '44' and line position '26'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 19:22:51.149 +03:00 [INF] AlNeda Admin starting up
+2026-05-08 19:22:51.255 +03:00 [INF] Using database at: pharmacy.db
+2026-05-08 19:22:51.511 +03:00 [INF] Checking for database migrations...
+2026-05-08 19:22:53.023 +03:00 [INF] Database initialization successful
+2026-05-08 19:23:12.488 +03:00 [INF] User logged in: admin (admin)
+2026-05-08 19:23:15.086 +03:00 [INF] Navigating to: categories
+2026-05-08 19:23:15.094 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '44' and line position '26'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 19:23:16.939 +03:00 [INF] Navigating to: categories
+2026-05-08 19:23:16.942 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '44' and line position '26'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 19:23:16.952 +03:00 [ERR] Unobserved Task Exception
+System.AggregateException: A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. (XAxes and YAxes must contain at least one element.)
+ ---> System.Exception: XAxes and YAxes must contain at least one element.
+   at LiveChartsCore.CartesianChart`1.Measure() in /_/src/LiveChartsCore/CartesianChart.cs:line 425
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_1() in /_/src/LiveChartsCore/Chart.cs:line 493
+   at System.Windows.Threading.DispatcherOperation.InvokeDelegateCore()
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+--- End of stack trace from previous location ---
+   at System.Windows.Threading.DispatcherOperation.Wait(TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.InvokeImpl(DispatcherOperation operation, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback, DispatcherPriority priority, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback)
+   at LiveChartsCore.SkiaSharpView.WPF.Chart.LiveChartsCore.Kernel.Sketches.IChartView.InvokeOnUIThread(Action action) in /_/src/skiasharp/LiveChartsCore.SkiaSharp.Wpf/Chart.cs:line 577
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_0() in /_/src/LiveChartsCore/Chart.cs:line 489
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+   --- End of inner exception stack trace ---
+2026-05-08 19:32:02.810 +03:00 [INF] AlNeda Admin starting up
+2026-05-08 19:32:02.858 +03:00 [INF] Using database at: pharmacy.db
+2026-05-08 19:32:03.048 +03:00 [INF] Checking for database migrations...
+2026-05-08 19:32:04.393 +03:00 [INF] Database initialization successful
+2026-05-08 19:32:06.429 +03:00 [INF] User logged in: admin (admin)
+2026-05-08 19:32:07.123 +03:00 [ERR] Unobserved Task Exception
+System.AggregateException: A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. (XAxes and YAxes must contain at least one element.)
+ ---> System.Exception: XAxes and YAxes must contain at least one element.
+   at LiveChartsCore.CartesianChart`1.Measure() in /_/src/LiveChartsCore/CartesianChart.cs:line 425
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_1() in /_/src/LiveChartsCore/Chart.cs:line 493
+   at System.Windows.Threading.DispatcherOperation.InvokeDelegateCore()
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+--- End of stack trace from previous location ---
+   at System.Windows.Threading.DispatcherOperation.Wait(TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.InvokeImpl(DispatcherOperation operation, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback, DispatcherPriority priority, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback)
+   at LiveChartsCore.SkiaSharpView.WPF.Chart.LiveChartsCore.Kernel.Sketches.IChartView.InvokeOnUIThread(Action action) in /_/src/skiasharp/LiveChartsCore.SkiaSharp.Wpf/Chart.cs:line 577
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_0() in /_/src/LiveChartsCore/Chart.cs:line 489
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+   --- End of inner exception stack trace ---
+2026-05-08 19:32:08.265 +03:00 [INF] Navigating to: categories
+2026-05-08 19:32:08.274 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '44' and line position '26'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 19:32:10.216 +03:00 [INF] Navigating to: categories
+2026-05-08 19:32:10.222 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '44' and line position '26'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Input.InputManager.ProcessInput(InputEventArgs input)
+   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 19:39:11.238 +03:00 [INF] AlNeda Admin starting up
+2026-05-08 19:39:11.312 +03:00 [INF] Using database at: pharmacy.db
+2026-05-08 19:39:11.580 +03:00 [INF] Checking for database migrations...
+2026-05-08 19:39:13.547 +03:00 [INF] Database initialization successful
+2026-05-08 19:39:17.506 +03:00 [INF] User logged in: admin (admin)
+2026-05-08 19:39:18.473 +03:00 [ERR] Unobserved Task Exception
+System.AggregateException: A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. (XAxes and YAxes must contain at least one element.)
+ ---> System.Exception: XAxes and YAxes must contain at least one element.
+   at LiveChartsCore.CartesianChart`1.Measure() in /_/src/LiveChartsCore/CartesianChart.cs:line 425
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_1() in /_/src/LiveChartsCore/Chart.cs:line 493
+   at System.Windows.Threading.DispatcherOperation.InvokeDelegateCore()
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+--- End of stack trace from previous location ---
+   at System.Windows.Threading.DispatcherOperation.Wait(TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.InvokeImpl(DispatcherOperation operation, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback, DispatcherPriority priority, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback)
+   at LiveChartsCore.SkiaSharpView.WPF.Chart.LiveChartsCore.Kernel.Sketches.IChartView.InvokeOnUIThread(Action action) in /_/src/skiasharp/LiveChartsCore.SkiaSharp.Wpf/Chart.cs:line 577
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_0() in /_/src/LiveChartsCore/Chart.cs:line 489
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+   --- End of inner exception stack trace ---
+2026-05-08 19:39:19.432 +03:00 [INF] Navigating to: categories
+2026-05-08 19:39:19.444 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '44' and line position '26'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 19:39:21.586 +03:00 [INF] Navigating to: categories
+2026-05-08 19:39:21.592 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '44' and line position '26'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 19:39:29.408 +03:00 [INF] Navigating to: backup
+2026-05-08 19:39:30.293 +03:00 [INF] Navigating to: settings
+2026-05-08 19:39:30.301 +03:00 [FTL] Unhandled UI Exception
+System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '98' and line position '52'.
+ ---> System.Exception: Cannot find resource named 'CardTitle'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.SettingsView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\SettingsView.xaml:line 1
+   at AlNeda.Admin.Views.SettingsView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\SettingsView.xaml.cs:line 7
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 117
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 20:03:05.708 +03:00 [INF] AlNeda Admin starting up
+2026-05-08 20:03:05.755 +03:00 [INF] Using database at: pharmacy.db
+2026-05-08 20:03:05.939 +03:00 [INF] Checking for database migrations...
+2026-05-08 20:03:07.228 +03:00 [INF] Database initialization successful
+2026-05-08 20:03:09.381 +03:00 [INF] User logged in: admin (admin)
+2026-05-08 20:03:09.917 +03:00 [ERR] Unobserved Task Exception
+System.AggregateException: A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. (XAxes and YAxes must contain at least one element.)
+ ---> System.Exception: XAxes and YAxes must contain at least one element.
+   at LiveChartsCore.CartesianChart`1.Measure() in /_/src/LiveChartsCore/CartesianChart.cs:line 425
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_1() in /_/src/LiveChartsCore/Chart.cs:line 493
+   at System.Windows.Threading.DispatcherOperation.InvokeDelegateCore()
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+--- End of stack trace from previous location ---
+   at System.Windows.Threading.DispatcherOperation.Wait(TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.InvokeImpl(DispatcherOperation operation, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback, DispatcherPriority priority, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback)
+   at LiveChartsCore.SkiaSharpView.WPF.Chart.LiveChartsCore.Kernel.Sketches.IChartView.InvokeOnUIThread(Action action) in /_/src/skiasharp/LiveChartsCore.SkiaSharp.Wpf/Chart.cs:line 577
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_0() in /_/src/LiveChartsCore/Chart.cs:line 489
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+   --- End of inner exception stack trace ---
+2026-05-08 20:03:10.892 +03:00 [INF] Navigating to: categories
+2026-05-08 20:03:10.899 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '45' and line position '30'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 20:03:15.563 +03:00 [INF] Navigating to: settings
+2026-05-08 20:03:15.570 +03:00 [FTL] Unhandled UI Exception
+System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '98' and line position '52'.
+ ---> System.Exception: Cannot find resource named 'CardTitle'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.SettingsView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\SettingsView.xaml:line 1
+   at AlNeda.Admin.Views.SettingsView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\SettingsView.xaml.cs:line 7
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 117
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 20:34:21.893 +03:00 [INF] AlNeda Admin starting up
+2026-05-08 20:34:21.941 +03:00 [INF] Using database at: pharmacy.db
+2026-05-08 20:34:22.138 +03:00 [INF] Checking for database migrations...
+2026-05-08 20:34:23.548 +03:00 [INF] Database initialization successful
+2026-05-08 20:34:25.699 +03:00 [INF] User logged in: admin (admin)
+2026-05-08 20:34:26.249 +03:00 [ERR] Unobserved Task Exception
+System.AggregateException: A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. (XAxes and YAxes must contain at least one element.)
+ ---> System.Exception: XAxes and YAxes must contain at least one element.
+   at LiveChartsCore.CartesianChart`1.Measure() in /_/src/LiveChartsCore/CartesianChart.cs:line 425
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_1() in /_/src/LiveChartsCore/Chart.cs:line 493
+   at System.Windows.Threading.DispatcherOperation.InvokeDelegateCore()
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+--- End of stack trace from previous location ---
+   at System.Windows.Threading.DispatcherOperation.Wait(TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.InvokeImpl(DispatcherOperation operation, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback, DispatcherPriority priority, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback)
+   at LiveChartsCore.SkiaSharpView.WPF.Chart.LiveChartsCore.Kernel.Sketches.IChartView.InvokeOnUIThread(Action action) in /_/src/skiasharp/LiveChartsCore.SkiaSharp.Wpf/Chart.cs:line 577
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_0() in /_/src/LiveChartsCore/Chart.cs:line 489
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+   --- End of inner exception stack trace ---
+2026-05-08 20:34:27.287 +03:00 [INF] Navigating to: categories
+2026-05-08 20:34:27.296 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '45' and line position '30'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Input.InputManager.ProcessInput(InputEventArgs input)
+   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 20:37:24.102 +03:00 [INF] AlNeda Admin starting up
+2026-05-08 20:37:24.158 +03:00 [INF] Using database at: pharmacy.db
+2026-05-08 20:37:24.342 +03:00 [INF] Checking for database migrations...
+2026-05-08 20:37:25.757 +03:00 [INF] Database initialization successful
+2026-05-08 20:38:18.112 +03:00 [INF] AlNeda Admin starting up
+2026-05-08 20:38:18.187 +03:00 [INF] Using database at: pharmacy.db
+2026-05-08 20:38:18.379 +03:00 [INF] Checking for database migrations...
+2026-05-08 20:38:19.757 +03:00 [INF] Database initialization successful
+2026-05-08 20:38:21.507 +03:00 [INF] User logged in: admin (admin)
+2026-05-08 20:38:22.182 +03:00 [ERR] Unobserved Task Exception
+System.AggregateException: A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. (XAxes and YAxes must contain at least one element.)
+ ---> System.Exception: XAxes and YAxes must contain at least one element.
+   at LiveChartsCore.CartesianChart`1.Measure() in /_/src/LiveChartsCore/CartesianChart.cs:line 425
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_1() in /_/src/LiveChartsCore/Chart.cs:line 493
+   at System.Windows.Threading.DispatcherOperation.InvokeDelegateCore()
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+--- End of stack trace from previous location ---
+   at System.Windows.Threading.DispatcherOperation.Wait(TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.InvokeImpl(DispatcherOperation operation, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback, DispatcherPriority priority, CancellationToken cancellationToken, TimeSpan timeout)
+   at System.Windows.Threading.Dispatcher.Invoke(Action callback)
+   at LiveChartsCore.SkiaSharpView.WPF.Chart.LiveChartsCore.Kernel.Sketches.IChartView.InvokeOnUIThread(Action action) in /_/src/skiasharp/LiveChartsCore.SkiaSharp.Wpf/Chart.cs:line 577
+   at LiveChartsCore.Chart`1.<UpdateThrottlerUnlocked>b__123_0() in /_/src/LiveChartsCore/Chart.cs:line 489
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+   --- End of inner exception stack trace ---
+2026-05-08 20:38:23.086 +03:00 [INF] Navigating to: categories
+2026-05-08 20:38:23.097 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '45' and line position '30'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2026-05-08 20:40:17.078 +03:00 [INF] Navigating to: categories
+2026-05-08 20:40:17.083 +03:00 [FTL] Unhandled UI Exception
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.Windows.Markup.XamlParseException: 'Provide value on 'System.Windows.StaticResourceExtension' threw an exception.' Line number '45' and line position '30'.
+ ---> System.Exception: Cannot find resource named 'PrimaryBlueLightBrush'. Resource names are case sensitive.
+   at System.Windows.StaticResourceExtension.ProvideValueInternal(IServiceProvider serviceProvider, Boolean allowDeferredReference)
+   at MS.Internal.Xaml.Runtime.ClrObjectRuntime.CallProvideValue(MarkupExtension me, IServiceProvider serviceProvider)
+   --- End of inner exception stack trace ---
+   at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at AlNeda.Admin.Views.CategoriesView.InitializeComponent() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml:line 1
+   at AlNeda.Admin.Views.CategoriesView..ctor() in D:\New folder (3)\src\AlNeda.Admin\Views\CategoriesView.xaml.cs:line 7
+   at System.RuntimeType.CreateInstanceOfT()
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceOfT()
+   at System.Activator.CreateInstance[T]()
+   at AlNeda.Admin.ViewModels.MainViewModel.CreateWithViewModel[T,VM](Action`1 init) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 125
+   at AlNeda.Admin.ViewModels.MainViewModel.NavigateTo(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 106
+   at AlNeda.Admin.ViewModels.MainViewModel.Navigate(String tag) in D:\New folder (3)\src\AlNeda.Admin\ViewModels\MainViewModel.cs:line 96
+   at AlNeda.Admin.MainWindow.NavButton_Click(Object sender, RoutedEventArgs e) in D:\New folder (3)\src\AlNeda.Admin\MainWindow.xaml.cs:line 65
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   at System.Windows.Controls.Button.OnClick()
+   at System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)

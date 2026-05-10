@@ -9,6 +9,7 @@ namespace AlNeda.Admin.ViewModels;
 public partial class LoginViewModel : ObservableObject
 {
     private readonly IAlNedaApiClient _apiClient;
+    private readonly bool _allowDevSkip;
 
     [ObservableProperty]
     private string _username = string.Empty;
@@ -31,6 +32,9 @@ public partial class LoginViewModel : ObservableObject
     [ObservableProperty]
     private bool _showPassword;
 
+    [ObservableProperty]
+    private bool _showDevSkip;
+
     partial void OnShowPasswordChanged(bool value)
     {
     }
@@ -42,6 +46,11 @@ public partial class LoginViewModel : ObservableObject
     public LoginViewModel(IAlNedaApiClient apiClient)
     {
         _apiClient = apiClient;
+        _allowDevSkip = string.Equals(
+            Environment.GetEnvironmentVariable("ALNEDA_ALLOW_DEV_SKIP"),
+            "true",
+            StringComparison.OrdinalIgnoreCase);
+        ShowDevSkip = _allowDevSkip;
     }
 
     [RelayCommand]
@@ -99,6 +108,12 @@ public partial class LoginViewModel : ObservableObject
     [RelayCommand]
     private void SkipLogin()
     {
+        if (!_allowDevSkip)
+        {
+            ErrorMessage = "تخطي تسجيل الدخول معطل في هذه البيئة";
+            return;
+        }
+
         LoginSucceeded?.Invoke(this, new LoginSuccessEventArgs("admin", "admin"));
     }
 }

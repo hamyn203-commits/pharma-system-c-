@@ -84,45 +84,10 @@
                       GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#FF21262D"
                       AutoGenerateColumns="False" IsReadOnly="True">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="الصيدلية" Binding="{Binding Pharmacy.Name}" Width="*" />
+                    <DataGridTextColumn Header="الصيدلية" Binding="{Binding PharmacyName}" Width="*" />
                     <DataGridTextColumn Header="المبلغ" Binding="{Binding Amount, StringFormat={}{0:N2}}" Width="120" />
                     <DataGridTextColumn Header="طريقة الدفع" Binding="{Binding PaymentType}" Width="120" />
-                    <DataGridTemplateColumn Header="الحالة" Width="120">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Border CornerRadius="12" Padding="10,4" HorizontalAlignment="Left" Margin="10,0,0,0">
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding PaymentStatus}" Value="completed">
-                                                    <Setter Property="Background" Value="#FF1F3B2A" />
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding PaymentStatus}" Value="pending">
-                                                    <Setter Property="Background" Value="#FF3B2D1A" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-                                    <TextBlock FontSize="11" FontWeight="SemiBold">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding PaymentStatus}" Value="completed">
-                                                        <Setter Property="Text" Value="مكتمل" />
-                                                        <Setter Property="Foreground" Value="#FF55D66B" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding PaymentStatus}" Value="pending">
-                                                        <Setter Property="Text" Value="قيد الانتظار" />
-                                                        <Setter Property="Foreground" Value="#FFD29922" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </Border>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="الحالة" Binding="{Binding PaymentStatus}" Width="120" />
                     <DataGridTextColumn Header="التاريخ" Binding="{Binding Date, StringFormat={}{0:yyyy-MM-dd HH:mm}}" Width="140" />
                 </DataGrid.Columns>
             </DataGrid>

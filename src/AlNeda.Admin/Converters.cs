@@ -163,6 +163,91 @@ public class BoolToStatusTextConverter : IValueConverter
         => throw new NotImplementedException();
 }
 
+public class BoolToOpacityConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        => value is bool b && b ? 1.0 : 0.4;
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
+public class BoolToTextConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        => value is bool b && b ? "إخفاء الفلاتر" : "إظهار الفلاتر";
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
+public class PositiveNegativeToBrushConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is decimal d)
+        {
+            if (d > 0) return "#FF10B981";
+            if (d < 0) return "#FFEF4444";
+        }
+        return "#FFFFFFFF";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
+public class ProfitMarginToBrushConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is decimal d)
+        {
+            if (d >= 20) return "#FF1F3B2A";
+            if (d >= 10) return "#FF3B2D1A";
+            return "#FF3D1A1A";
+        }
+        return "#FF21262D";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
+public class TrendToBrushConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        var trend = (value as string ?? "").ToLower();
+        return trend switch
+        {
+            "up" => "#FF1F3B2A",
+            "down" => "#FF3D1A1A",
+            _ => "#FF3B2D1A"
+        };
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
+public class TrendToForegroundConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        var trend = (value as string ?? "").ToLower();
+        return trend switch
+        {
+            "up" => "#FF55D66B",
+            "down" => "#FFFF5C5C",
+            _ => "#FFD28A2D"
+        };
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
 public class PositiveIntegerRule : ValidationRule
 {
     public override ValidationResult Validate(object value, CultureInfo cultureInfo)
