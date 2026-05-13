@@ -8,7 +8,12 @@
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ALNEDA_JWT_KEY": "KlOf2YFE4KqIodTtxpeVASKWeRDdA6vaUw2CMY/ccrs=",
+        "ALNEDA_JWT_ISSUER": "AlNeda.API",
+        "ALNEDA_JWT_AUDIENCE": "AlNeda.Clients",
+        "ALNEDA_JWT_EXPIRE_MINUTES": "1440",
+        "ALNEDA_DEFAULT_ADMIN_PASSWORD": "Admin@Secure123!"
       }
     }
   }
