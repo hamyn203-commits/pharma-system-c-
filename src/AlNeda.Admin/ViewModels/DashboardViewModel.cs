@@ -22,14 +22,33 @@ public partial class DashboardViewModel : ObservableObject
     private bool _alertsChecked;
 
     [ObservableProperty] private DashboardStats _stats = new();
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SalesGrowthText))]
+    [NotifyPropertyChangedFor(nameof(SalesGrowthPrefix))]
+    private DashboardAnalyticsDto _analytics = new();
     [ObservableProperty] private bool _isLoading = true;
     [ObservableProperty] private string _currentDate = DateTime.Now.ToString("dddd، dd MMMM yyyy", new System.Globalization.CultureInfo("ar-EG"));
     [ObservableProperty] private string _lastBackup = "غير متوفر";
 
     // Chart Properties
     [ObservableProperty] private ISeries[] _salesSeries = [];
-    [ObservableProperty] private Axis[] _xAxes = [];
-    [ObservableProperty] private Axis[] _yAxes = [];
+    [ObservableProperty] private Axis[] _xAxes =
+    [
+        new Axis
+        {
+            LabelsPaint = new SolidColorPaint(new SKColor(148, 163, 184)),
+            SeparatorsPaint = new SolidColorPaint(new SKColor(51, 65, 85, 80))
+        }
+    ];
+    [ObservableProperty] private Axis[] _yAxes =
+    [
+        new Axis
+        {
+            Labeler = value => value.ToString("N0"),
+            LabelsPaint = new SolidColorPaint(new SKColor(148, 163, 184)),
+            SeparatorsPaint = new SolidColorPaint(new SKColor(51, 65, 85, 80))
+        }
+    ];
 
     [ObservableProperty] private ObservableCollection<ProductAlertDto> _lowStockProducts = [];
     [ObservableProperty] private ObservableCollection<ProductAlertDto> _expiringProducts = [];
@@ -39,6 +58,9 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty] private bool _hasAlerts;
     [ObservableProperty] private string _alertSummary = "";
     [ObservableProperty] private bool _showAlertNotification;
+
+    public string SalesGrowthText => $"{Analytics.SalesMovement.GrowthPercentage:+0.0;-0.0;0.0}%";
+    public string SalesGrowthPrefix => Analytics.SalesMovement.GrowthPercentage >= 0 ? "ارتفاع" : "انخفاض";
 
     public DashboardViewModel(IAlNedaApiClient apiClient, INavigationService navigationService, IDialogService dialog)
     {
@@ -62,20 +84,32 @@ public partial class DashboardViewModel : ObservableObject
             var stats = await _apiClient.GetDashboardStatsAsync();
             if (stats != null) Stats = stats;
 
+            var analytics = await _apiClient.GetDashboardAnalyticsAsync();
+            if (analytics != null) Analytics = analytics;
+
             // 2. Load Chart Data
             var salesData = await _apiClient.GetLast30DaysSalesAsync();
             if (salesData != null)
             {
                 SalesSeries = new ISeries[]
                 {
+                    new ColumnSeries<decimal>
+                    {
+                        Values = salesData.Select(x => x.Value).ToArray(),
+                        Name = "حجم اليوم",
+                        Fill = new LinearGradientPaint(new SKColor(34, 211, 238, 80), new SKColor(56, 189, 248, 16)),
+                        Stroke = null,
+                        MaxBarWidth = 18
+                    },
                     new LineSeries<decimal>
                     {
                         Values = salesData.Select(x => x.Value).ToArray(),
                         Name = "المبيعات",
-                        Fill = new LinearGradientPaint(new SKColor(16, 185, 129, 50), new SKColor(16, 185, 129, 0)),
-                        Stroke = new SolidColorPaint(new SKColor(16, 185, 129)) { StrokeThickness = 3 },
-                        GeometrySize = 8,
-                        GeometryStroke = new SolidColorPaint(new SKColor(16, 185, 129)) { StrokeThickness = 2 }
+                        Fill = null,
+                        Stroke = new SolidColorPaint(new SKColor(52, 211, 153)) { StrokeThickness = 4 },
+                        GeometrySize = 9,
+                        GeometryFill = new SolidColorPaint(new SKColor(11, 18, 32)),
+                        GeometryStroke = new SolidColorPaint(new SKColor(52, 211, 153)) { StrokeThickness = 3 }
                     }
                 };
 
@@ -85,7 +119,8 @@ public partial class DashboardViewModel : ObservableObject
                     {
                         Labels = salesData.Select(x => x.Label).ToArray(),
                         LabelsRotation = 45,
-                        SeparatorsPaint = new SolidColorPaint(new SKColor(61, 69, 82, 50))
+                        LabelsPaint = new SolidColorPaint(new SKColor(148, 163, 184)),
+                        SeparatorsPaint = new SolidColorPaint(new SKColor(51, 65, 85, 80))
                     }
                 };
 
@@ -94,7 +129,8 @@ public partial class DashboardViewModel : ObservableObject
                     new Axis
                     {
                         Labeler = value => value.ToString("N0"),
-                        SeparatorsPaint = new SolidColorPaint(new SKColor(61, 69, 82, 50))
+                        LabelsPaint = new SolidColorPaint(new SKColor(148, 163, 184)),
+                        SeparatorsPaint = new SolidColorPaint(new SKColor(51, 65, 85, 80))
                     }
                 };
             }

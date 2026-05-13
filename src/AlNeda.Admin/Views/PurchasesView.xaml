@@ -5,19 +5,19 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
 
-    <Grid Margin="24,20,10,20">
+    <Grid Margin="6,0,6,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" /> <!-- Stats -->
             <RowDefinition Height="Auto" /> <!-- Actions -->
             <RowDefinition Height="*" />    <!-- Grid -->
         </Grid.RowDefinitions>
 
-        <Border Grid.RowSpan="3" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+        <Border Grid.RowSpan="3" Background="{StaticResource OverlayBgBrush}" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="100">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="4"
-                             Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
-                <TextBlock Text="جاري تحميل المشتريات..." Foreground="#FF8B949E"
+                             Foreground="{StaticResource PrimaryIndigoBrush}" Style="{StaticResource ModernProgressBar}" />
+                <TextBlock Text="جاري تحميل المشتريات..." Foreground="{StaticResource TextMutedBrush}"
                            HorizontalAlignment="Center" Margin="0,12,0,0" />
             </StackPanel>
         </Border>
@@ -32,30 +32,30 @@
 
             <Border Grid.Column="0" Margin="0,0,12,0" Style="{StaticResource CardStyle}" Padding="20">
                 <StackPanel>
-                    <TextBlock Text="إجمالي مشتريات الشهر" Foreground="#FF8B949E" FontSize="13" />
+                    <TextBlock Text="إجمالي مشتريات الشهر" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
-                        <TextBlock Text="320,500" FontSize="28" FontWeight="Bold" Foreground="White" />
-                        <TextBlock Text="📥" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                        <TextBlock Text="{Binding MonthlyPurchasesTotal, StringFormat={}{0:N0}}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource PrimaryIndigoDarkBrush}" />
+                        <TextBlock Text="&#xE8C7;" FontFamily="Segoe MDL2 Assets" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" Foreground="{StaticResource TextMutedBrush}" />
                     </Grid>
                 </StackPanel>
             </Border>
 
             <Border Grid.Column="1" Margin="6,0,6,0" Style="{StaticResource CardStyle}" Padding="20">
                 <StackPanel>
-                    <TextBlock Text="فواتير غير مدفوعة" Foreground="#FF8B949E" FontSize="13" />
+                    <TextBlock Text="فواتير غير مدفوعة" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
-                        <TextBlock Text="12" FontSize="28" FontWeight="Bold" Foreground="#FFFF5C5C" />
-                        <TextBlock Text="📄" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                        <TextBlock Text="{Binding UnpaidInvoicesCount}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource DangerBrush}" />
+                        <TextBlock Text="&#xE8C7;" FontFamily="Segoe MDL2 Assets" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" Foreground="{StaticResource TextMutedBrush}" />
                     </Grid>
                 </StackPanel>
             </Border>
 
             <Border Grid.Column="2" Margin="12,0,0,0" Style="{StaticResource CardStyle}" Padding="20">
                 <StackPanel>
-                    <TextBlock Text="المستحقات للموردين" Foreground="#FF8B949E" FontSize="13" />
+                    <TextBlock Text="المستحقات للموردين" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
-                        <TextBlock Text="85,000" FontSize="28" FontWeight="Bold" Foreground="#FFD29922" />
-                        <TextBlock Text="👥" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                        <TextBlock Text="{Binding SupplierDuesTotal, StringFormat={}{0:N0}}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource WarningBrush}" />
+                        <TextBlock Text="&#xE8C7;" FontFamily="Segoe MDL2 Assets" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" Foreground="{StaticResource TextMutedBrush}" />
                     </Grid>
                 </StackPanel>
             </Border>
@@ -73,7 +73,7 @@
                     <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource ModernTextBox}" Padding="35,0,12,0"
                              VerticalContentAlignment="Center" Tag="ابحث برقم الفاتورة أو المورد..."/>
-                    <TextBlock Text="🔍" Foreground="#FF8B949E" VerticalAlignment="Center" Margin="12,0,0,0" IsHitTestVisible="False" />
+                    <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="12,0,0,0" IsHitTestVisible="False" />
                 </Grid>
                 <Button Content="تحديث" Command="{Binding LoadCommand}" Height="44"
                         Style="{StaticResource SecondaryButtonStyle}" Margin="12,0,0,0" Padding="20,0" />
@@ -90,7 +90,7 @@
                       CellStyle="{StaticResource ModernDataGridCell}"
                       RowStyle="{StaticResource ModernDataGridRow}"
                       ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}"
-                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#FF21262D"
+                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{StaticResource BorderMutedBrush}"
                       AutoGenerateColumns="False" IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="رقم الفاتورة" Binding="{Binding InvoiceNumber}" Width="120" />
@@ -105,13 +105,13 @@
                                         <Style TargetType="Border">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Status}" Value="paid">
-                                                    <Setter Property="Background" Value="#FF1F3B2A" />
+                                                    <Setter Property="Background" Value="{StaticResource PrimaryMintGlassBrush}" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Status}" Value="partial">
-                                                    <Setter Property="Background" Value="#FF3B2D1A" />
+                                                    <Setter Property="Background" Value="{StaticResource WarningGlassBrush}" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Status}" Value="unpaid">
-                                                    <Setter Property="Background" Value="#FF3D1A1A" />
+                                                    <Setter Property="Background" Value="{StaticResource DangerGlassBrush}" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -122,15 +122,15 @@
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding Status}" Value="paid">
                                                         <Setter Property="Text" Value="مدفوعة" />
-                                                        <Setter Property="Foreground" Value="#FF55D66B" />
+                                                        <Setter Property="Foreground" Value="{StaticResource PrimaryMintDarkBrush}" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Status}" Value="partial">
                                                         <Setter Property="Text" Value="جزئية" />
-                                                        <Setter Property="Foreground" Value="#FFD29922" />
+                                                        <Setter Property="Foreground" Value="{StaticResource WarningBrush}" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Status}" Value="unpaid">
                                                         <Setter Property="Text" Value="غير مدفوعة" />
-                                                        <Setter Property="Foreground" Value="#FFFF5C5C" />
+                                                        <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -153,34 +153,34 @@
         </Border>
 
         <!-- Editor Overlay -->
-        <Border Grid.RowSpan="3" Background="#E60D1117"
+        <Border Grid.RowSpan="3" Background="{StaticResource OverlayBgBrush}"
                 Visibility="{Binding ShowEditor, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="200">
             <Border Style="{StaticResource CardStyle}" Width="520"
                     HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel>
-                    <TextBlock Text="فاتورة مشتريات جديدة" FontSize="20" FontWeight="Bold" Foreground="#FF55D66B" Margin="0,0,0,20" />
+                    <TextBlock Text="فاتورة مشتريات جديدة" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryIndigoBrush}" Margin="0,0,0,20" />
 
-                    <Border Background="#FF3D1A1A" CornerRadius="8" Padding="12,8" Margin="0,0,0,12"
+                    <Border Background="{StaticResource DangerGlassBrush}" CornerRadius="8" Padding="12,8" Margin="0,0,0,12"
                             Visibility="{Binding ValidationMessage, Converter={StaticResource StringToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <TextBlock Text="{Binding ValidationMessage}" Foreground="#FFFF5C5C" FontSize="12" />
+                        <TextBlock Text="{Binding ValidationMessage}" Foreground="{StaticResource DangerBrush}" FontSize="12" />
                     </Border>
 
                     <StackPanel Margin="0,0,0,12">
-                        <TextBlock Text="رقم الفاتورة" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                        <TextBlock Text="رقم الفاتورة" FontSize="12" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
                         <TextBox Text="{Binding InvoiceNumber, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{StaticResource ModernTextBox}" Height="44" />
                     </StackPanel>
 
                     <StackPanel Margin="0,0,0,12">
-                        <TextBlock Text="المورد" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                        <TextBlock Text="المورد" FontSize="12" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
                         <ComboBox ItemsSource="{Binding Suppliers}" SelectedItem="{Binding SelectedSupplier}"
                                   DisplayMemberPath="Name" Height="44" Style="{StaticResource ModernComboBox}" />
                     </StackPanel>
                     
                     <StackPanel Margin="0,0,0,12">
                         <Grid>
-                            <TextBlock Text="المنتجات" FontSize="12" Foreground="#FF8B949E" VerticalAlignment="Center" />
+                            <TextBlock Text="المنتجات" FontSize="12" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" />
                             <Button Content="+ إضافة منتج" Command="{Binding AddItemCommand}" HorizontalAlignment="Right" 
                                     Style="{StaticResource SecondaryButtonStyle}" Padding="8,4" FontSize="12" />
                         </Grid>
@@ -213,7 +213,7 @@
                     </StackPanel>
 
                     <StackPanel Margin="0,0,0,12">
-                        <TextBlock Text="المبلغ الإجمالي" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                        <TextBlock Text="المبلغ الإجمالي" FontSize="12" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
                         <TextBox Text="{Binding TotalAmount, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{StaticResource ModernTextBox}" Height="44" IsReadOnly="True" />
                     </StackPanel>

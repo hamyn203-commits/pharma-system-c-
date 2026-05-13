@@ -1,3 +1,4 @@
+using AlNeda.API.Authorization;
 using AlNeda.Core.Entities;
 using AlNeda.Core.Models;
 using AlNeda.DomainLogic;
@@ -10,7 +11,7 @@ namespace AlNeda.API.Controllers;
 
 [ApiController]
 [Route("api/payments")]
-[Authorize]
+[Authorize(Policy = AuthPolicies.Staff)]
 public class PaymentsController : ControllerBase
 {
     private readonly IDbContextFactory<Data.AppDbContext> _contextFactory;

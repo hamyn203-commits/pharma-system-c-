@@ -1,6 +1,7 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.IO;
 using System.Text.Json;
 using AlNeda.Core.Models;
 
@@ -38,9 +39,19 @@ public interface IAlNedaApiClient
     // Dashboard
     Task<DashboardStats?> GetDashboardStatsAsync();
     Task<List<SalesDataPoint>?> GetLast30DaysSalesAsync();
+    Task<DashboardAnalyticsDto?> GetDashboardAnalyticsAsync();
     Task<List<ProductAlertDto>?> GetLowStockProductsAsync();
     Task<List<ProductAlertDto>?> GetExpiringProductsAsync();
     Task<List<ProductAlertDto>?> GetExpiredProductsAsync();
+
+    // Marketing Offers
+    Task<List<MarketingOfferDto>> GetOffersAsync();
+    Task<MarketingOfferDto?> CreateOfferAsync(CreateMarketingOfferRequest request);
+    Task<MarketingOfferDto?> UpdateOfferAsync(int id, UpdateMarketingOfferRequest request);
+    Task<MarketingOfferDto?> PublishOfferAsync(int id);
+    Task<MarketingOfferDto?> PauseOfferAsync(int id);
+    Task<OffersAnalyticsSummaryDto?> GetOffersAnalyticsAsync();
+    Task<OfferImageUploadResponse?> UploadOfferImageAsync(string imagePath);
 
     // Categories
     Task<List<CategoryDto>> GetCategoriesAsync();
@@ -57,7 +68,7 @@ public interface IAlNedaApiClient
     Task DeleteProductAsync(int id);
 
     // Orders
-    Task<List<OrderDto>> GetOrdersAsync(string? status = null);
+    Task<List<OrderDto>> GetOrdersAsync(string? status = null, string? source = null);
     Task<OrderDto?> GetOrderByIdAsync(int id);
     Task<OrderDto?> CreateOrderAsync(CreateOrderRequest request);
     Task<OrderDto?> UpdateOrderStatusAsync(int id, string status);
@@ -84,6 +95,9 @@ public interface IAlNedaApiClient
     Task<PharmacyDto?> UpdatePharmacyAsync(UpdatePharmacyRequest request);
     Task DeletePharmacyAsync(int id);
     Task SetPharmacyStatusAsync(int id, string status);
+    Task<AppUserDto?> CreatePharmacyAppAccountAsync(int pharmacyId, CreatePharmacyAppAccountRequest request);
+    Task SetPharmacyAppAccountStatusAsync(int pharmacyId, bool isActive);
+    Task ResetPharmacyAppPasswordAsync(int pharmacyId, string password);
 
     // Suppliers
     Task<List<SupplierDto>> GetSuppliersAsync(string? search = null);
@@ -224,6 +238,14 @@ public class ApiClientService : IAlNedaApiClient, IDisposable
         return await response.Content.ReadFromJsonAsync<List<SalesDataPoint>>(_jsonOptions);
     }
 
+    public async Task<DashboardAnalyticsDto?> GetDashboardAnalyticsAsync()
+    {
+        EnsureAuthenticated();
+        var response = await _httpClient.GetAsync("api/dashboard/analytics");
+        await ThrowIfErrorAsync(response);
+        return await response.Content.ReadFromJsonAsync<DashboardAnalyticsDto>(_jsonOptions);
+    }
+
     public async Task<List<ProductAlertDto>?> GetLowStockProductsAsync()
     {
         EnsureAuthenticated();
@@ -246,6 +268,66 @@ public class ApiClientService : IAlNedaApiClient, IDisposable
         var response = await _httpClient.GetAsync("api/dashboard/alerts/expired");
         await ThrowIfErrorAsync(response);
         return await response.Content.ReadFromJsonAsync<List<ProductAlertDto>>(_jsonOptions);
+    }
+
+    // â”€â”€ Marketing Offers â”€â”€
+    public async Task<List<MarketingOfferDto>> GetOffersAsync()
+    {
+        EnsureAuthenticated();
+        var response = await _httpClient.GetAsync("api/admin/offers");
+        await ThrowIfErrorAsync(response);
+        return await response.Content.ReadFromJsonAsync<List<MarketingOfferDto>>(_jsonOptions) ?? [];
+    }
+
+    public async Task<MarketingOfferDto?> CreateOfferAsync(CreateMarketingOfferRequest request)
+    {
+        EnsureAuthenticated();
+        var response = await _httpClient.PostAsJsonAsync("api/admin/offers", request, _jsonOptions);
+        await ThrowIfErrorAsync(response);
+        return await response.Content.ReadFromJsonAsync<MarketingOfferDto>(_jsonOptions);
+    }
+
+    public async Task<MarketingOfferDto?> UpdateOfferAsync(int id, UpdateMarketingOfferRequest request)
+    {
+        EnsureAuthenticated();
+        var response = await _httpClient.PatchAsJsonAsync($"api/admin/offers/{id}", request, _jsonOptions);
+        await ThrowIfErrorAsync(response);
+        return await response.Content.ReadFromJsonAsync<MarketingOfferDto>(_jsonOptions);
+    }
+
+    public async Task<MarketingOfferDto?> PublishOfferAsync(int id)
+    {
+        EnsureAuthenticated();
+        var response = await _httpClient.PostAsync($"api/admin/offers/{id}/publish", null);
+        await ThrowIfErrorAsync(response);
+        return await response.Content.ReadFromJsonAsync<MarketingOfferDto>(_jsonOptions);
+    }
+
+    public async Task<MarketingOfferDto?> PauseOfferAsync(int id)
+    {
+        EnsureAuthenticated();
+        var response = await _httpClient.PostAsync($"api/admin/offers/{id}/pause", null);
+        await ThrowIfErrorAsync(response);
+        return await response.Content.ReadFromJsonAsync<MarketingOfferDto>(_jsonOptions);
+    }
+
+    public async Task<OffersAnalyticsSummaryDto?> GetOffersAnalyticsAsync()
+    {
+        EnsureAuthenticated();
+        var response = await _httpClient.GetAsync("api/admin/offers/analytics");
+        await ThrowIfErrorAsync(response);
+        return await response.Content.ReadFromJsonAsync<OffersAnalyticsSummaryDto>(_jsonOptions);
+    }
+
+    public async Task<OfferImageUploadResponse?> UploadOfferImageAsync(string imagePath)
+    {
+        EnsureAuthenticated();
+        await using var file = File.OpenRead(imagePath);
+        using var content = new MultipartFormDataContent();
+        content.Add(new StreamContent(file), "file", Path.GetFileName(imagePath));
+        var response = await _httpClient.PostAsync("api/admin/offers/upload-image", content);
+        await ThrowIfErrorAsync(response);
+        return await response.Content.ReadFromJsonAsync<OfferImageUploadResponse>(_jsonOptions);
     }
 
     // ── Categories ──
@@ -332,12 +414,17 @@ public class ApiClientService : IAlNedaApiClient, IDisposable
     }
 
     // ── Orders ──
-    public async Task<List<OrderDto>> GetOrdersAsync(string? status = null)
+    public async Task<List<OrderDto>> GetOrdersAsync(string? status = null, string? source = null)
     {
         EnsureAuthenticated();
         var url = "api/orders";
+        var query = new List<string>();
         if (!string.IsNullOrWhiteSpace(status))
-            url += $"?status={Uri.EscapeDataString(status)}";
+            query.Add($"status={Uri.EscapeDataString(status)}");
+        if (!string.IsNullOrWhiteSpace(source))
+            query.Add($"source={Uri.EscapeDataString(source)}");
+        if (query.Count > 0)
+            url += "?" + string.Join("&", query);
         var response = await _httpClient.GetAsync(url);
         await ThrowIfErrorAsync(response);
         return await response.Content.ReadFromJsonAsync<List<OrderDto>>(_jsonOptions) ?? [];
@@ -510,6 +597,28 @@ public class ApiClientService : IAlNedaApiClient, IDisposable
     {
         EnsureAuthenticated();
         var response = await _httpClient.PutAsJsonAsync($"api/pharmacies/{id}/status", new PharmacyStatusRequest { Status = status }, _jsonOptions);
+        await ThrowIfErrorAsync(response);
+    }
+
+    public async Task<AppUserDto?> CreatePharmacyAppAccountAsync(int pharmacyId, CreatePharmacyAppAccountRequest request)
+    {
+        EnsureAuthenticated();
+        var response = await _httpClient.PostAsJsonAsync($"api/pharmacies/{pharmacyId}/app-account", request, _jsonOptions);
+        await ThrowIfErrorAsync(response);
+        return await response.Content.ReadFromJsonAsync<AppUserDto>(_jsonOptions);
+    }
+
+    public async Task SetPharmacyAppAccountStatusAsync(int pharmacyId, bool isActive)
+    {
+        EnsureAuthenticated();
+        var response = await _httpClient.PutAsJsonAsync($"api/pharmacies/{pharmacyId}/app-account/status", new SetPharmacyAppAccountStatusRequest { IsActive = isActive }, _jsonOptions);
+        await ThrowIfErrorAsync(response);
+    }
+
+    public async Task ResetPharmacyAppPasswordAsync(int pharmacyId, string password)
+    {
+        EnsureAuthenticated();
+        var response = await _httpClient.PutAsJsonAsync($"api/pharmacies/{pharmacyId}/app-account/password", new ResetPharmacyAppPasswordRequest { Password = password }, _jsonOptions);
         await ThrowIfErrorAsync(response);
     }
 

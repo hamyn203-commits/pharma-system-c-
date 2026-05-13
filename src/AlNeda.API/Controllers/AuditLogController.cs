@@ -1,3 +1,4 @@
+using AlNeda.API.Authorization;
 using AlNeda.Core.Entities;
 using AlNeda.Core.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,7 @@ namespace AlNeda.API.Controllers;
 
 [ApiController]
 [Route("api/audit-logs")]
-[Authorize]
+[Authorize(Policy = AuthPolicies.Staff)]
 public class AuditLogController : ControllerBase
 {
     private readonly IDbContextFactory<Data.AppDbContext> _contextFactory;

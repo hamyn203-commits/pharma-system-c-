@@ -1,4 +1,5 @@
 using System.Text;
+using AlNeda.API.Authorization;
 using AlNeda.API.Middleware;
 using AlNeda.Core.Entities;
 using AlNeda.Data.Configuration;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,9 +87,68 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
             ClockSkew = TimeSpan.Zero
         };
+        options.Events = new JwtBearerEvents
+        {
+            OnChallenge = async context =>
+            {
+                context.HandleResponse();
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsJsonAsync(new AlNeda.Core.Models.ApiError
+                {
+                    Message = "يجب تسجيل الدخول",
+                    Code = "AUTH_REQUIRED"
+                });
+            },
+            OnForbidden = async context =>
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsJsonAsync(new AlNeda.Core.Models.ApiError
+                {
+                    Message = "غير مسموح بالوصول",
+                    Code = "FORBIDDEN"
+                });
+            }
+        };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    // واجهة الإدارة (WPF): أدوار الموظفين فقط — لا يشمل pharmacy.
+    options.AddPolicy(AuthPolicies.Staff, p => p.RequireRole("admin", "accountant", "rep"));
+    options.AddPolicy(AuthPolicies.PharmacyApp, p => p.RequireRole("pharmacy"));
+    options.AddPolicy(AuthPolicies.AdminOnly, p => p.RequireRole("admin"));
+});
+builder.Services.AddRateLimiter(options =>
+{
+    var isTesting = builder.Environment.IsEnvironment("Testing");
+    options.AddPolicy("login", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = isTesting ? 100 : 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
+    options.AddPolicy("offer-events", context =>
+    {
+        var pharmacyId = context.User.FindFirst("pharmacyId")?.Value
+            ?? context.User.FindFirst("PharmacyId")?.Value
+            ?? context.Connection.RemoteIpAddress?.ToString()
+            ?? "unknown";
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            pharmacyId,
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = isTesting ? 1000 : 120,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            });
+    });
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -134,8 +195,10 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 try
 {
     var dbFactory = app.Services.GetRequiredService<IDbContextFactory<AlNeda.Data.AppDbContext>>();
-    using var initDb = dbFactory.CreateDbContext();
-    await initDb.Database.EnsureCreatedAsync();
+    await using var initDb = await dbFactory.CreateDbContextAsync();
+    // الإنتاج/التكرار: EF Migrations. التطوير السريع بدون ملف DB: Migrate ينشئ الملف تلقائياً.
+    // قواعد قديمة أنشئت بـ EnsureCreated فقط (بدون __EFMigrationsHistory): راجع تعليمات baseline في README أو نفّذ Migrate على نسخة احتياطية ثم أدرج سجل الهجرة يدوياً عند الحاجة.
+    await initDb.Database.MigrateAsync();
 
     if (!await initDb.Users.AnyAsync())
     {
@@ -165,6 +228,8 @@ SeedDone:;
 catch (Exception ex)
 {
     var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    if (app.Environment.IsEnvironment("Testing"))
+        throw;
     logger.LogWarning(ex, "Database initialization skipped (will retry on first request)");
 }
 
@@ -177,8 +242,15 @@ app.UseSwaggerUI(options =>
 });
 
 app.UseCors();
+if (!app.Environment.IsEnvironment("Testing"))
+    app.UseRateLimiter();
+app.UseStaticFiles();
 app.UseAuthentication();
+app.UseMiddleware<MobileAccountStatusMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+/// <summary>يسمح بـ <c>WebApplicationFactory&lt;Program&gt;</c> في اختبارات التكامل.</summary>
+public partial class Program { }

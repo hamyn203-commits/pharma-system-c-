@@ -18,7 +18,13 @@ public class User : IEntity
     [MaxLength(20)]
     public string Role { get; set; } = "admin";
 
+    public int? PharmacyId { get; set; }
+
+    public Pharmacy? Pharmacy { get; set; }
+
     public bool IsActive { get; set; } = true;
+
+    public DateTime? LastLoginAt { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

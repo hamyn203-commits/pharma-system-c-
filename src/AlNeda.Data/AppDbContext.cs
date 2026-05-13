@@ -23,6 +23,9 @@ public class AppDbContext : DbContext
     public DbSet<Return> Returns => Set<Return>();
     public DbSet<ReturnItem> ReturnItems => Set<ReturnItem>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+    public DbSet<MarketingOffer> MarketingOffers => Set<MarketingOffer>();
+    public DbSet<OfferEvent> OfferEvents => Set<OfferEvent>();
+    public DbSet<MarketingOfferPharmacyTarget> MarketingOfferPharmacyTargets => Set<MarketingOfferPharmacyTarget>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -42,6 +45,30 @@ public class AppDbContext : DbContext
             e.Property(o => o.BalanceAfter).HasPrecision(18, 2);
             e.Property(o => o.AmountPaid).HasPrecision(18, 2);
             e.Property(o => o.RemainingAmount).HasPrecision(18, 2);
+            e.HasOne(o => o.SourceOffer).WithMany(o => o.Orders).HasForeignKey(o => o.SourceOfferId).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<MarketingOffer>(e =>
+        {
+            e.Property(o => o.OldPrice).HasPrecision(18, 2);
+            e.Property(o => o.NewPrice).HasPrecision(18, 2);
+            e.HasIndex(o => o.Status);
+            e.HasIndex(o => new { o.StartsAt, o.EndsAt });
+        });
+
+        modelBuilder.Entity<OfferEvent>(e =>
+        {
+            e.HasIndex(x => new { x.MarketingOfferId, x.PharmacyId, x.DeviceKey, x.EventDateKey, x.EventType, x.IsUniqueDailyImpression })
+                .IsUnique()
+                .HasFilter("EventType = 'impression' AND IsRejected = 0 AND IsUniqueDailyImpression = 1");
+            e.HasIndex(x => new { x.MarketingOfferId, x.EventType, x.OccurredAt });
+        });
+
+        modelBuilder.Entity<MarketingOfferPharmacyTarget>(e =>
+        {
+            e.HasIndex(x => new { x.MarketingOfferId, x.PharmacyId }).IsUnique();
+            e.HasOne(x => x.Offer).WithMany(o => o.PharmacyTargets).HasForeignKey(x => x.MarketingOfferId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(x => x.Pharmacy).WithMany().HasForeignKey(x => x.PharmacyId).OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<OrderItem>(e =>
@@ -96,6 +123,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<User>(e =>
         {
             e.HasIndex(u => u.Username).IsUnique();
+            e.HasOne(u => u.Pharmacy).WithMany().HasForeignKey(u => u.PharmacyId).OnDelete(DeleteBehavior.SetNull);
         });
 
         modelBuilder.Entity<Category>(e =>

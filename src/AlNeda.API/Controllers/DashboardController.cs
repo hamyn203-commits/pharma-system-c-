@@ -1,3 +1,4 @@
+using AlNeda.API.Authorization;
 using AlNeda.Core.Models;
 using AlNeda.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +8,8 @@ namespace AlNeda.API.Controllers;
 
 [ApiController]
 [Route("api/dashboard")]
-[Authorize]
+[Authorize(Policy = AuthPolicies.Staff)]
+[Tags("Dashboard")]
 public class DashboardController : ControllerBase
 {
     private readonly DashboardService _dashboardService;
@@ -31,6 +33,13 @@ public class DashboardController : ControllerBase
     {
         var sales = await _dashboardService.GetLast30DaysSalesAsync();
         return Ok(sales);
+    }
+
+    [HttpGet("analytics")]
+    public async Task<IActionResult> GetAnalytics()
+    {
+        var analytics = await _dashboardService.GetAnalyticsAsync();
+        return Ok(analytics);
     }
 
     [HttpGet("alerts/low-stock")]

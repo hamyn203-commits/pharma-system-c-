@@ -21,36 +21,57 @@ public class LegacyDbImporter
     public async Task<ImportResult> ImportAsync()
     {
         var errors = new List<string>();
-        int imported = 0, skipped = 0;
+        int imported = 0;
 
-        using var legacyConn = new SqliteConnection($"Data Source={_legacyDbPath}");
-        await legacyConn.OpenAsync();
+        try
+        {
+            using var legacyConn = new SqliteConnection($"Data Source={_legacyDbPath}");
+            await legacyConn.OpenAsync();
 
-        using var target = await _contextFactory.CreateDbContextAsync();
-        await target.Database.EnsureCreatedAsync();
+            using var target = await _contextFactory.CreateDbContextAsync();
+            await target.Database.EnsureCreatedAsync();
 
-        imported += await ImportUsersAsync(legacyConn, target, errors);
-        imported += await ImportCategoriesAsync(legacyConn, target, errors);
-        imported += await ImportSuppliersAsync(legacyConn, target, errors);
-        imported += await ImportProductsAsync(legacyConn, target, errors);
-        imported += await ImportPharmaciesAsync(legacyConn, target, errors);
-        imported += await ImportPurchasesAsync(legacyConn, target, errors);
-        imported += await ImportPurchaseItemsAsync(legacyConn, target, errors);
-        imported += await ImportOrdersAsync(legacyConn, target, errors);
-        imported += await ImportOrderItemsAsync(legacyConn, target, errors);
-        imported += await ImportOrderStatusHistoryAsync(legacyConn, target, errors);
-        imported += await ImportPaymentsAsync(legacyConn, target, errors);
-        imported += await ImportReturnsAsync(legacyConn, target, errors);
-        imported += await ImportReturnItemsAsync(legacyConn, target, errors);
-        imported += await ImportAuditLogsAsync(legacyConn, target, errors);
+            // Start an atomic transaction for the whole process
+            using var transaction = await target.Database.BeginTransactionAsync();
+            try
+            {
+                imported += await ImportUsersAsync(legacyConn, target, errors);
+                imported += await ImportCategoriesAsync(legacyConn, target, errors);
+                imported += await ImportSuppliersAsync(legacyConn, target, errors);
+                imported += await ImportProductsAsync(legacyConn, target, errors);
+                imported += await ImportPharmaciesAsync(legacyConn, target, errors);
+                imported += await ImportPurchasesAsync(legacyConn, target, errors);
+                imported += await ImportPurchaseItemsAsync(legacyConn, target, errors);
+                imported += await ImportOrdersAsync(legacyConn, target, errors);
+                imported += await ImportOrderItemsAsync(legacyConn, target, errors);
+                imported += await ImportOrderStatusHistoryAsync(legacyConn, target, errors);
+                imported += await ImportPaymentsAsync(legacyConn, target, errors);
+                imported += await ImportReturnsAsync(legacyConn, target, errors);
+                imported += await ImportReturnItemsAsync(legacyConn, target, errors);
+                imported += await ImportAuditLogsAsync(legacyConn, target, errors);
 
-        await target.SaveChangesAsync();
-        return new ImportResult(imported, skipped, errors);
+                await target.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                errors.Add($"Global Import Failure: {ex.Message}");
+                return new ImportResult(0, 0, errors);
+            }
+
+            return new ImportResult(imported, 0, errors);
+        }
+        catch (Exception ex)
+        {
+            errors.Add($"Connection Failure: {ex.Message}");
+            return new ImportResult(0, 0, errors);
+        }
     }
 
     private static decimal? ToDecimal(object? val) => val is DBNull or null ? null : Convert.ToDecimal(val);
     private static decimal ToDecimalDef(object? val, decimal def = 0) => ToDecimal(val) ?? def;
-    private static int ToInt(object? val) => Convert.ToInt32(val);
+    private static int ToInt(object? val) => val is DBNull or null ? 0 : Convert.ToInt32(val);
     private static string? ToStr(object? val) => val is DBNull or null ? null : Convert.ToString(val);
     private static string ToStrDef(object? val, string def = "") => ToStr(val) ?? def;
     private static DateTime ParseDate(object? val) => val is DBNull or null ? DateTime.Now : DateTime.TryParse(Convert.ToString(val), out var d) ? d : DateTime.Now;
@@ -62,6 +83,12 @@ public class LegacyDbImporter
         int count = 0;
         try
         {
+            if (!await TableExistsAsync(legacy, table))
+            {
+                errors.Add($"Skipped missing legacy table {table}");
+                return 0;
+            }
+
             using var cmd = legacy.CreateCommand();
             cmd.CommandText = $"SELECT * FROM [{table}]";
             using var reader = await cmd.ExecuteReaderAsync();
@@ -70,7 +97,12 @@ public class LegacyDbImporter
             {
                 try
                 {
-                    batch.Add(factory(reader));
+                    var item = factory(reader);
+                    if (item != null)
+                    {
+                        batch.Add(item);
+                    }
+                    
                     if (batch.Count >= BatchSize)
                     {
                         target.Set<T>().AddRange(batch);
@@ -81,7 +113,7 @@ public class LegacyDbImporter
                 }
                 catch (Exception ex)
                 {
-                    errors.Add($"{table}: {ex.Message}");
+                    errors.Add($"{table} row error: {ex.Message}");
                 }
             }
             if (batch.Count > 0)
@@ -93,9 +125,19 @@ public class LegacyDbImporter
         }
         catch (Exception ex)
         {
-            errors.Add($"Failed to read {table}: {ex.Message}");
+            errors.Add($"Failed to read table {table}: {ex.Message}");
+            throw; // Re-throw to trigger global rollback in ImportAsync
         }
         return count;
+    }
+
+    private static async Task<bool> TableExistsAsync(SqliteConnection legacy, string table)
+    {
+        using var cmd = legacy.CreateCommand();
+        cmd.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=$name";
+        cmd.Parameters.AddWithValue("$name", table);
+        var result = await cmd.ExecuteScalarAsync();
+        return Convert.ToInt32(result) > 0;
     }
 
     private async Task<int> ImportUsersAsync(SqliteConnection legacy, AppDbContext target, List<string> errors)
@@ -103,8 +145,8 @@ public class LegacyDbImporter
         return await BulkInsertAsync(legacy, target, "users", r => new User
         {
             Id = ToInt(r["id"]),
-            Username = ToStrDef(r["username"]),
-            Password = ToStrDef(r["password"]),
+            Username = ToStrDef(r["username"], "unknown"),
+            Password = ToStrDef(r["password"], ""),
             Role = ToStrDef(r["role"], "admin"),
             CreatedAt = ParseDate(r["created_at"])
         }, errors);
@@ -115,7 +157,7 @@ public class LegacyDbImporter
         return await BulkInsertAsync(legacy, target, "categories", r => new Category
         {
             Id = ToInt(r["id"]),
-            Name = ToStrDef(r["name"]),
+            Name = ToStrDef(r["name"], "غير مصنف"),
             CreatedAt = ParseDate(r["created_at"])
         }, errors);
     }
@@ -125,7 +167,7 @@ public class LegacyDbImporter
         return await BulkInsertAsync(legacy, target, "suppliers", r => new Supplier
         {
             Id = ToInt(r["id"]),
-            Name = ToStrDef(r["name"]),
+            Name = ToStrDef(r["name"], "مورد مجهول"),
             Phone = ToStrDef(r["phone"]),
             Address = ToStrDef(r["address"]),
             Company = ToStrDef(r["company"]),
@@ -140,7 +182,7 @@ public class LegacyDbImporter
         return await BulkInsertAsync(legacy, target, "products", r => new Product
         {
             Id = ToInt(r["id"]),
-            Name = ToStrDef(r["name"]),
+            Name = ToStrDef(r["name"], "منتج بدون اسم"),
             Barcode = ToStr(r["barcode"]),
             Category = ToStrDef(r["category"], "عام"),
             CategoryId = r["category_id"] is DBNull or null ? null : ToInt(r["category_id"]),
@@ -150,8 +192,8 @@ public class LegacyDbImporter
             ExpiryDate = ToStr(r["expiry_date"]),
             ImagePath = ToStr(r["image_path"]),
             ImageUrl = ToStr(r["image_url"]),
-            IsActive = ToInt(r["is_active"]),
-            ProductImagesJson = ToStrDef(r["product_images_json"]),
+            IsActive = ToBool(r["is_active"]) ? 1 : 0,
+            ProductImagesJson = ToStrDef(r["product_images_json"], "[]"),
             Description = ToStrDef(r["description"]),
             CreatedAt = ParseDate(r["created_at"]),
             UpdatedAt = ParseDate(r["updated_at"])
@@ -163,7 +205,7 @@ public class LegacyDbImporter
         return await BulkInsertAsync(legacy, target, "pharmacies", r => new Pharmacy
         {
             Id = ToInt(r["id"]),
-            Name = ToStrDef(r["name"]),
+            Name = ToStrDef(r["name"], "صيدلية غير معروفة"),
             Address = ToStrDef(r["address"]),
             Phone = ToStrDef(r["phone"]),
             Balance = ToDecimalDef(r["balance"]),
@@ -181,7 +223,7 @@ public class LegacyDbImporter
         return await BulkInsertAsync(legacy, target, "purchases", r => new Purchase
         {
             Id = ToInt(r["id"]),
-            InvoiceNumber = ToStrDef(r["invoice_number"]),
+            InvoiceNumber = ToStrDef(r["invoice_number"], "INV-000"),
             SupplierId = ToInt(r["supplier_id"]),
             TotalAmount = ToDecimalDef(r["total_amount"]),
             AmountPaid = ToDecimalDef(r["amount_paid"]),
@@ -210,7 +252,7 @@ public class LegacyDbImporter
         return await BulkInsertAsync(legacy, target, "orders", r => new Order
         {
             Id = ToInt(r["id"]),
-            OrderNumber = ToStrDef(r["order_number"]),
+            OrderNumber = ToStrDef(r["order_number"], "ORD-000"),
             PharmacyId = ToInt(r["pharmacy_id"]),
             TotalAmount = ToDecimalDef(r["total_amount"]),
             Discount = ToDecimalDef(r["discount"]),
@@ -251,8 +293,8 @@ public class LegacyDbImporter
         {
             Id = ToInt(r["id"]),
             OrderId = ToInt(r["order_id"]),
-            OldStatus = ToStrDef(r["old_status"]),
-            NewStatus = ToStrDef(r["new_status"]),
+            OldStatus = ToStrDef(r["old_status"], "unknown"),
+            NewStatus = ToStrDef(r["new_status"], "unknown"),
             Note = ToStrDef(r["note"]),
             CreatedAt = ParseDate(r["created_at"])
         }, errors);
@@ -280,7 +322,7 @@ public class LegacyDbImporter
         return await BulkInsertAsync(legacy, target, "returns", r => new Return
         {
             Id = ToInt(r["id"]),
-            ReturnNumber = ToStrDef(r["return_number"]),
+            ReturnNumber = ToStrDef(r["return_number"], "RET-000"),
             PharmacyId = ToInt(r["pharmacy_id"]),
             OrderId = r["order_id"] is DBNull or null ? null : ToInt(r["order_id"]),
             TotalAmount = ToDecimalDef(r["total_amount"]),
@@ -315,9 +357,9 @@ public class LegacyDbImporter
         {
             Id = ToInt(r["id"]),
             Username = ToStrDef(r["username"], "system"),
-            Action = ToStrDef(r["action"]),
-            Entity = ToStrDef(r["entity"]),
-            EntityId = ToStrDef(r["entity_id"]),
+            Action = ToStrDef(r["action"], "unknown"),
+            Entity = ToStrDef(r["entity"], "unknown"),
+            EntityId = ToStrDef(r["entity_id"], "0"),
             Details = ToStrDef(r["details"]),
             CreatedAt = ParseDate(r["created_at"])
         }, errors);

@@ -23,14 +23,14 @@
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="4"
                              Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
-                <TextBlock Text="جاري تحميل الكشف..." Foreground="#FF8B949E"
+                <TextBlock Text="جاري تحميل الكشف..." Foreground="{StaticResource TextMutedBrush}"
                            HorizontalAlignment="Center" Margin="0,12,0,0" />
             </StackPanel>
         </Border>
 
         <!-- Header -->
         <TextBlock Grid.Row="0" Text="كشف حساب الصيدلية" 
-                   FontSize="24" FontWeight="Bold" Foreground="#FFFFFFFF" 
+                   FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" 
                    Margin="0,0,0,16" />
 
         <!-- Search Bar -->
@@ -82,7 +82,7 @@
                         Margin="12,0,0,0"
                         Visibility="{Binding SelectedPharmacy, Converter={StaticResource NullToVisibilityConverter}}">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="الرصيد: " FontSize="14" Foreground="#FF8B949E" VerticalAlignment="Center" />
+                        <TextBlock Text="الرصيد: " FontSize="14" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" />
                         <TextBlock Text="{Binding SelectedPharmacy.Balance, StringFormat={}{0:N2}}" 
                                    FontSize="16" FontWeight="Bold" 
                                    Foreground="{Binding SelectedPharmacy.Balance, Converter={StaticResource BalanceColorConverter}}" 
@@ -107,15 +107,15 @@
                            Visibility="{Binding LedgerText, Converter={StaticResource StringEmptyToVisibilityConverter}, FallbackValue=Visible}">
                     <TextBlock Text="📋" FontSize="48" HorizontalAlignment="Center" Opacity="0.5" />
                     <TextBlock Text="اختر صيدلية واضغط 'عرض الكشف'" 
-                               FontSize="14" Foreground="#FF8B949E" 
+                               FontSize="14" Foreground="{StaticResource TextMutedBrush}" 
                                HorizontalAlignment="Center" Margin="0,12,0,0" />
                 </StackPanel>
             </Grid>
         </Border>
 
         <!-- Status Bar -->
-        <Border Grid.Row="3" Background="#FF21262D" CornerRadius="4" Padding="8,4" Margin="0,12,0,0">
-            <TextBlock Text="{Binding StatusMessage}" Foreground="#FF8B949E" FontSize="11" />
+        <Border Grid.Row="3" Background="{StaticResource PrimaryCyanGlassBrush}" CornerRadius="4" Padding="8,4" Margin="0,12,0,0">
+            <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource TextMutedBrush}" FontSize="11" />
         </Border>
     </Grid>
 </UserControl>

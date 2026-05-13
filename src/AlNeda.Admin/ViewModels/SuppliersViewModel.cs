@@ -20,6 +20,9 @@ public partial class SuppliersViewModel : ObservableObject
     [ObservableProperty] private string _searchText = "";
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private string _validationMessage = "";
+    [ObservableProperty] private int _totalSuppliers;
+    [ObservableProperty] private int _companiesCount;
+    [ObservableProperty] private decimal _totalSupplierBalance;
 
     public SuppliersViewModel(IAlNedaApiClient apiClient, IDialogService dialog)
     {
@@ -34,6 +37,7 @@ public partial class SuppliersViewModel : ObservableObject
         try
         {
             Suppliers = new ObservableCollection<SupplierDto>(await _apiClient.GetSuppliersAsync(SearchText));
+            UpdateStats();
         }
         catch (ApiException ex)
         {
@@ -49,6 +53,13 @@ public partial class SuppliersViewModel : ObservableObject
         ShowEditor = true;
     }
 
+    private void UpdateStats()
+    {
+        TotalSuppliers = Suppliers.Count;
+        CompaniesCount = Suppliers.Select(s => s.Company).Where(c => !string.IsNullOrWhiteSpace(c)).Distinct().Count();
+        TotalSupplierBalance = Suppliers.Sum(s => s.Balance);
+    }
+
     [RelayCommand]
     private void EditSelected()
     {
@@ -56,12 +67,12 @@ public partial class SuppliersViewModel : ObservableObject
         EditSupplier = new Supplier
         {
             Id = SelectedSupplier.Id,
-            Name = SelectedSupplier.Name,
-            Phone = SelectedSupplier.Phone,
-            Address = SelectedSupplier.Address,
-            Company = SelectedSupplier.Company,
+            Name = SelectedSupplier.Name ?? string.Empty,
+            Phone = SelectedSupplier.Phone ?? string.Empty,
+            Address = SelectedSupplier.Address ?? string.Empty,
+            Company = SelectedSupplier.Company ?? "غير محدد",
             Balance = SelectedSupplier.Balance,
-            Notes = SelectedSupplier.Notes
+            Notes = SelectedSupplier.Notes ?? string.Empty
         };
         ShowEditor = true;
     }

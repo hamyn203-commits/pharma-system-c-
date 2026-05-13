@@ -17,7 +17,7 @@
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="4"
                              Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
-                <TextBlock Text="جاري التحميل..." Foreground="#FF8B949E"
+                <TextBlock Text="جاري التحميل..." Foreground="{StaticResource TextMutedBrush}"
                            HorizontalAlignment="Center" Margin="0,12,0,0" />
             </StackPanel>
         </Border>
@@ -36,7 +36,7 @@
                     <ItemsControl ItemsSource="{Binding Backups}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Background="Transparent" Padding="16,12" BorderBrush="#FF21262D" BorderThickness="0,0,0,1">
+                                <Border Background="Transparent" Padding="16,12" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="0,0,0,1">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
@@ -54,7 +54,7 @@
                                             <Button Content="🔄 استرجاع"
                                                     Command="{Binding DataContext.RestoreBackupCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                     CommandParameter="{Binding}"
-                                                    Background="#FF21262D" Foreground="#FF8B949E"
+                                                    Background="{StaticResource PrimaryCyanGlassBrush}" Foreground="{StaticResource TextMutedBrush}"
                                                     BorderThickness="0" Padding="12,6" Margin="0,0,8,0"
                                                     Cursor="Hand">
                                                 <Button.Template>
@@ -74,7 +74,7 @@
                                             <Button Content="🗑️ حذف"
                                                     Command="{Binding DataContext.DeleteBackupCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                     CommandParameter="{Binding}"
-                                                    Background="#FF21262D" Foreground="#FF8B949E"
+                                                    Background="{StaticResource PrimaryCyanGlassBrush}" Foreground="{StaticResource TextMutedBrush}"
                                                     BorderThickness="0" Padding="12,6"
                                                     Cursor="Hand">
                                                 <Button.Template>
@@ -102,8 +102,8 @@
                 <!-- Empty state -->
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
                            Visibility="{Binding Backups.Length, Converter={StaticResource InverseBoolToVisibilityConverter}, FallbackValue=Collapsed}">
-                    <TextBlock Text="📦" FontSize="48" HorizontalAlignment="Center" Opacity="0.5" />
-                    <TextBlock Text="لا توجد نسخ احتياطية" FontSize="14" Foreground="#FF8B949E" HorizontalAlignment="Center" Margin="0,12,0,0" />
+                    <TextBlock Text="&#xE7B8;" FontFamily="Segoe MDL2 Assets" FontSize="48" HorizontalAlignment="Center" Opacity="0.5" />
+                    <TextBlock Text="لا توجد نسخ احتياطية" FontSize="14" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,12,0,0" />
                 </StackPanel>
             </Grid>
         </Border>

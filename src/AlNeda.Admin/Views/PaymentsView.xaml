@@ -17,7 +17,7 @@
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="4"
                              Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
-                <TextBlock Text="جاري تحميل التحصيلات..." Foreground="#FF8B949E"
+                <TextBlock Text="جاري تحميل التحصيلات..." Foreground="{StaticResource TextMutedBrush}"
                            HorizontalAlignment="Center" Margin="0,12,0,0" />
             </StackPanel>
         </Border>
@@ -32,7 +32,7 @@
 
             <Border Grid.Column="0" Margin="0,0,12,0" Style="{StaticResource CardStyle}" Padding="20">
                 <StackPanel>
-                    <TextBlock Text="تحصيلات اليوم" Foreground="#FF8B949E" FontSize="13" />
+                    <TextBlock Text="تحصيلات اليوم" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
                         <TextBlock Text="12,500" FontSize="28" FontWeight="Bold" Foreground="White" />
                         <TextBlock Text="💵" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
@@ -42,20 +42,20 @@
 
             <Border Grid.Column="1" Margin="6,0,6,0" Style="{StaticResource CardStyle}" Padding="20">
                 <StackPanel>
-                    <TextBlock Text="تحصيلات الشهر" Foreground="#FF8B949E" FontSize="13" />
+                    <TextBlock Text="تحصيلات الشهر" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
                         <TextBlock Text="285,400" FontSize="28" FontWeight="Bold" Foreground="#FF55D66B" />
-                        <TextBlock Text="📈" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                        <TextBlock Text="&#xE9D2;" FontFamily="Segoe MDL2 Assets" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
                     </Grid>
                 </StackPanel>
             </Border>
 
             <Border Grid.Column="2" Margin="12,0,0,0" Style="{StaticResource CardStyle}" Padding="20">
                 <StackPanel>
-                    <TextBlock Text="إجمالي النقدية" Foreground="#FF8B949E" FontSize="13" />
+                    <TextBlock Text="إجمالي النقدية" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
                         <TextBlock Text="1,240,000" FontSize="28" FontWeight="Bold" Foreground="#FFD29922" />
-                        <TextBlock Text="💰" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                        <TextBlock Text="&#xE8C7;" FontFamily="Segoe MDL2 Assets" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
                     </Grid>
                 </StackPanel>
             </Border>
@@ -81,7 +81,7 @@
                       CellStyle="{StaticResource ModernDataGridCell}"
                       RowStyle="{StaticResource ModernDataGridRow}"
                       ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}"
-                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#FF21262D"
+                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{StaticResource BorderMutedBrush}"
                       AutoGenerateColumns="False" IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="الصيدلية" Binding="{Binding PharmacyName}" Width="*" />
@@ -108,25 +108,25 @@
                     </Border>
 
                     <StackPanel Margin="0,0,0,12">
-                        <TextBlock Text="الصيدلية" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                        <TextBlock Text="الصيدلية" FontSize="12" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
                         <ComboBox ItemsSource="{Binding Pharmacies}" SelectedValue="{Binding SelectedPharmacyId}"
                                   SelectedValuePath="Id" DisplayMemberPath="Name" Height="44" Style="{StaticResource ModernComboBox}" />
                     </StackPanel>
 
                     <StackPanel Margin="0,0,0,12">
-                        <TextBlock Text="المبلغ" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                        <TextBlock Text="المبلغ" FontSize="12" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
                         <TextBox Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{StaticResource ModernTextBox}" Height="44" />
                     </StackPanel>
 
                     <StackPanel Margin="0,0,0,12">
-                        <TextBlock Text="طريقة التحصيل" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                        <TextBlock Text="طريقة التحصيل" FontSize="12" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
                         <ComboBox ItemsSource="{Binding PaymentTypes}" SelectedItem="{Binding PaymentType}"
                                   Height="44" Style="{StaticResource ModernComboBox}" />
                     </StackPanel>
 
                     <StackPanel Margin="0,0,0,16">
-                        <TextBlock Text="ملاحظات إضافية" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                        <TextBlock Text="ملاحظات إضافية" FontSize="12" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
                         <TextBox Text="{Binding PaymentNotes}" Style="{StaticResource ModernTextBox}" Height="44" />
                     </StackPanel>
 

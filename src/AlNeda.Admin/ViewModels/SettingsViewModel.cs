@@ -42,6 +42,8 @@ public partial class SettingsViewModel : ObservableObject
     public List<string> AlertMethods { get; } = ["نافذة منبثقة", "إشعار داخلي", "كلاهما"];
     public List<string> BackupIntervals { get; } = ["يومي", "أسبوعي", "شهري"];
     public List<string> Roles { get; } = ["admin", "accountant", "rep"];
+    public List<string> Currencies { get; } = ["EGP", "USD", "SAR", "AED"];
+    public List<string> ReportRanges { get; } = ["اليوم", "آخر 7 أيام", "آخر 30 يوم", "الشهر الحالي", "السنة الحالية"];
 
     public SettingsViewModel(SettingsService settingsService, UserService userService, IDialogService dialog, IDbContextFactory<Data.AppDbContext> dbFactory, IAlNedaApiClient apiClient)
     {
@@ -160,6 +162,47 @@ public partial class SettingsViewModel : ObservableObject
                 System.Diagnostics.Process.Start(processPath);
                 System.Windows.Application.Current.Shutdown();
             }
+        }
+    }
+
+    [RelayCommand]
+    private async Task SaveSelectedUserCredentialsAsync()
+    {
+        if (SelectedUser == null)
+        {
+            Status = "اختر مستخدما من جدول المستخدمين أولا.";
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(UserPassword) && UserPassword != ConfirmPassword)
+        {
+            Status = "كلمة المرور وتأكيدها غير متطابقين.";
+            return;
+        }
+
+        await _userService.UpdateUserAsync(SelectedUser, string.IsNullOrWhiteSpace(UserPassword) ? null : UserPassword);
+        UserPassword = "";
+        ConfirmPassword = "";
+        await LoadDataAsync();
+        Status = "تم تحديث بيانات المستخدم بنجاح.";
+    }
+
+    [RelayCommand]
+    private async Task RunHealthCheckAsync()
+    {
+        try
+        {
+            await using var db = await _dbFactory.CreateDbContextAsync();
+            var canConnect = await db.Database.CanConnectAsync();
+            var dbExists = File.Exists(CurrentSettings.DbPath);
+            var backupPathReady = !string.IsNullOrWhiteSpace(CurrentSettings.BackupPath);
+            Status = canConnect && dbExists && backupPathReady
+                ? "فحص النظام مكتمل: قاعدة البيانات والنسخ الاحتياطي جاهزان."
+                : "فحص النظام مكتمل مع وجود بنود تحتاج مراجعة.";
+        }
+        catch (Exception ex)
+        {
+            Status = $"فشل فحص النظام: {ex.Message}";
         }
     }
 

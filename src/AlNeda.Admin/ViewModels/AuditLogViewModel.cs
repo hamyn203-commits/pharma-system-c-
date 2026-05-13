@@ -41,7 +41,7 @@ public partial class AuditLogViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            // Error handling can be added here
+            Serilog.Log.Error(ex, "Failed to load audit logs");
         }
         finally
         {

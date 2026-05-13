@@ -60,6 +60,22 @@ public class Order : IEntity
 
     public string PaymentNotes { get; set; } = string.Empty;
 
+    [MaxLength(20)]
+    public string Source { get; set; } = "admin";
+
+    public int? SourceOfferId { get; set; }
+
+    [ForeignKey(nameof(SourceOfferId))]
+    public MarketingOffer? SourceOffer { get; set; }
+
+    public string ClientNotes { get; set; } = string.Empty;
+
+    public DateTime? MobileCreatedAt { get; set; }
+
+    public DateTime? CancellationRequestedAt { get; set; }
+
+    public string CancellationReason { get; set; } = string.Empty;
+
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();

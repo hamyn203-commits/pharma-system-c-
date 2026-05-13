@@ -24,6 +24,7 @@ public partial class OrdersViewModel : ObservableObject
     [ObservableProperty] private string _statusMessage = "";
 
     [ObservableProperty] private string _statusFilter = "";
+    [ObservableProperty] private string _sourceFilter = "";
     [ObservableProperty] private string _searchText = "";
     [ObservableProperty] private string _barcodeSearch = "";
     [ObservableProperty] private DateTime _filterFrom = DateTime.Today.AddMonths(-1);
@@ -48,6 +49,7 @@ public partial class OrdersViewModel : ObservableObject
     [ObservableProperty] private int _totalOrdersCount;
 
     public string[] StatusFilters { get; } = ["", "pending", "reviewed", "in_store", "with_driver", "on_the_way", "delivered", "postponed", "cancelled"];
+    public string[] SourceFilters { get; } = ["", "admin", "mobile"];
     public string[] DiscountTypes { get; } = ["value", "percent"];
 
     public static string StatusDisplayName(string s) => s switch
@@ -73,6 +75,7 @@ public partial class OrdersViewModel : ObservableObject
 
     partial void OnSearchTextChanged(string value) => ApplyFilter();
     partial void OnStatusFilterChanged(string value) => ApplyFilter();
+    partial void OnSourceFilterChanged(string value) => ApplyFilter();
     partial void OnFilterFromChanged(DateTime value) => ApplyFilter();
     partial void OnFilterToChanged(DateTime value) => ApplyFilter();
 
@@ -84,6 +87,8 @@ public partial class OrdersViewModel : ObservableObject
         {
             if (o is not OrderDto order) return false;
             if (!string.IsNullOrEmpty(StatusFilter) && !order.Status.Equals(StatusFilter, StringComparison.OrdinalIgnoreCase))
+                return false;
+            if (!string.IsNullOrEmpty(SourceFilter) && !order.Source.Equals(SourceFilter, StringComparison.OrdinalIgnoreCase))
                 return false;
             if (order.CreatedAt < FilterFrom || order.CreatedAt > FilterTo.AddDays(1))
                 return false;
@@ -128,6 +133,30 @@ public partial class OrdersViewModel : ObservableObject
     private async Task RefreshAsync()
     {
         await LoadAsync();
+    }
+
+    [RelayCommand]
+    private Task QuickReviewAsync(OrderDto? order)
+    {
+        if (order == null) return Task.CompletedTask;
+        SelectedOrder = order;
+        return TransitionStatusAsync("reviewed");
+    }
+
+    [RelayCommand]
+    private Task QuickPrepareAsync(OrderDto? order)
+    {
+        if (order == null) return Task.CompletedTask;
+        SelectedOrder = order;
+        return TransitionStatusAsync("in_store");
+    }
+
+    [RelayCommand]
+    private Task SendToDriverAsync(OrderDto? order)
+    {
+        if (order == null) return Task.CompletedTask;
+        SelectedOrder = order;
+        return TransitionStatusAsync("with_driver");
     }
 
     private void RecalcKpis()
@@ -207,9 +236,13 @@ public partial class OrdersViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task PrintDetailOrderAsync()
+    private Task PrintDetailOrderAsync()
     {
-        if (SelectedDetailOrder == null) { StatusMessage = "الرجاء اختيار طلب"; return; }
+        if (SelectedDetailOrder == null) 
+        { 
+            StatusMessage = "الرجاء اختيار طلب"; 
+            return Task.CompletedTask; 
+        }
         try
         {
             if (_printingService.PrintOrder(SelectedDetailOrder))
@@ -218,6 +251,7 @@ public partial class OrdersViewModel : ObservableObject
                 StatusMessage = "تم إلغاء الطباعة";
         }
         catch (Exception ex) { StatusMessage = $"خطأ: {ex.Message}"; }
+        return Task.CompletedTask;
     }
 
     [RelayCommand]

@@ -14,6 +14,12 @@ public class OrderDto
     public decimal BalanceBefore { get; set; }
     public decimal BalanceAfter { get; set; }
     public string Status { get; set; } = "pending";
+    public string Source { get; set; } = "admin";
+    public int? SourceOfferId { get; set; }
+    public string ClientNotes { get; set; } = string.Empty;
+    public DateTime? MobileCreatedAt { get; set; }
+    public DateTime? CancellationRequestedAt { get; set; }
+    public string CancellationReason { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public List<OrderItemDto> Items { get; set; } = [];
 }

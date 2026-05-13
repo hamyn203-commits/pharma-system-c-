@@ -19,7 +19,9 @@ public class AuthService
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
 
-        var user = await db.Users.FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
+        var user = await db.Users
+            .Include(u => u.Pharmacy)
+            .FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
         if (user == null)
         {
             Serilog.Log.Warning("Login failed: User '{Username}' not found", username);
@@ -30,18 +32,29 @@ public class AuthService
         // but since this is a new project structure, we transition to PBKDF2.
         if (string.IsNullOrEmpty(user.PasswordSalt))
         {
-            // Fallback to old SHA256 check
             var legacyHash = LegacyHash(password);
-            if (user.Password == legacyHash || user.Password == password)
+            if (user.Password == legacyHash)
             {
-                Serilog.Log.Information("Upgrading legacy password for user '{Username}'", username);
-                // Upgrade user to new hash
+                Serilog.Log.Information("Upgrading legacy SHA256 password for user '{Username}'", username);
                 var (newHash, newSalt) = HashPassword(password);
                 user.Password = newHash;
                 user.PasswordSalt = newSalt;
+                user.LastLoginAt = DateTime.Now;
+                if (user.Role == "pharmacy" && user.Pharmacy != null)
+                    user.Pharmacy.LastLoginAt = user.LastLoginAt;
                 await db.SaveChangesAsync();
                 return user;
             }
+
+            // رفض كلمات المرور المخزنة كنص صريح — يجب إعادة تعيين كلمة المرور من الإدارة
+            if (string.Equals(user.Password, password, StringComparison.Ordinal))
+            {
+                Serilog.Log.Warning(
+                    "Login rejected: user '{Username}' has plaintext password in database; reset password required",
+                    username);
+                return null;
+            }
+
             Serilog.Log.Warning("Login failed: Legacy password mismatch for user '{Username}'", username);
             return null;
         }
@@ -51,6 +64,11 @@ public class AuthService
             Serilog.Log.Warning("Login failed: Password mismatch for user '{Username}'", username);
             return null;
         }
+
+        user.LastLoginAt = DateTime.Now;
+        if (user.Role == "pharmacy" && user.Pharmacy != null)
+            user.Pharmacy.LastLoginAt = user.LastLoginAt;
+        await db.SaveChangesAsync();
 
         Serilog.Log.Information("Login successful for user '{Username}'", username);
         return user;

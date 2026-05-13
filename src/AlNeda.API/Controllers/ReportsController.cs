@@ -1,3 +1,4 @@
+using AlNeda.API.Authorization;
 using AlNeda.Core.Entities;
 using AlNeda.Data;
 using AlNeda.Services.Export;
@@ -9,7 +10,7 @@ namespace AlNeda.API.Controllers;
 
 [ApiController]
 [Route("api/reports")]
-[Authorize]
+[Authorize(Policy = AuthPolicies.Staff)]
 public class ReportsController : ControllerBase
 {
     private readonly IReportExporter _reporter;

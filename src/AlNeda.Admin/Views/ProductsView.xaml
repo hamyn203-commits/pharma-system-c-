@@ -11,25 +11,40 @@
         <conv:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
     </UserControl.Resources>
 
-    <Grid Margin="24,20,10,20">
+    <Grid Margin="6,0,6,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!-- Loading Overlay -->
-        <Border Grid.RowSpan="2" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+        <Border Grid.RowSpan="3" Background="{StaticResource OverlayBgBrush}" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="100">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="4"
-                             Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
-                <TextBlock Text="جاري تحميل المنتجات..." Foreground="#FF8B949E"
+                             Foreground="{StaticResource PrimaryIndigoBrush}" Style="{StaticResource ModernProgressBar}" />
+                <TextBlock Text="جاري تحميل المنتجات..." Foreground="{StaticResource TextSecondaryBrush}"
                            HorizontalAlignment="Center" Margin="0,12,0,0" />
             </StackPanel>
         </Border>
 
+
+        <Grid Grid.Row="0" Margin="0,0,0,18">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Style="{StaticResource CardStyle}" Padding="18" Margin="0,0,10,0"><StackPanel><TextBlock Text="إجمالي المنتجات" Foreground="{StaticResource TextMutedBrush}" FontSize="12" /><TextBlock Text="{Binding TotalProducts}" Foreground="{StaticResource PrimaryIndigoDarkBrush}" FontSize="28" FontWeight="Bold" Margin="0,6,0,0" /></StackPanel></Border>
+            <Border Grid.Column="1" Style="{StaticResource CardStyle}" Padding="18" Margin="5,0"><StackPanel><TextBlock Text="المنتجات النشطة" Foreground="{StaticResource TextMutedBrush}" FontSize="12" /><TextBlock Text="{Binding ActiveProducts}" Foreground="{StaticResource PrimaryCyanDarkBrush}" FontSize="28" FontWeight="Bold" Margin="0,6,0,0" /></StackPanel></Border>
+            <Border Grid.Column="2" Style="{StaticResource CardStyle}" Padding="18" Margin="5,0"><StackPanel><TextBlock Text="مخزون منخفض" Foreground="{StaticResource TextMutedBrush}" FontSize="12" /><TextBlock Text="{Binding LowStockProducts}" Foreground="{StaticResource WarningBrush}" FontSize="28" FontWeight="Bold" Margin="0,6,0,0" /></StackPanel></Border>
+            <Border Grid.Column="3" Style="{StaticResource CardStyle}" Padding="18" Margin="10,0,0,0"><StackPanel><TextBlock Text="قيمة المخزون" Foreground="{StaticResource TextMutedBrush}" FontSize="12" /><TextBlock Text="{Binding InventoryValue, StringFormat={}{0:N0}}" Foreground="{StaticResource DangerBrush}" FontSize="28" FontWeight="Bold" Margin="0,6,0,0" /></StackPanel></Border>
+        </Grid>
         <!-- Toolbar -->
-        <Grid Grid.Row="0" Margin="0,0,0,16">
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="16" Margin="0,0,0,16">
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -40,12 +55,12 @@
                 <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource ModernTextBox}" Width="280" Height="40"
                          VerticalContentAlignment="Center" />
-                <Button Content="🔍 بحث" Command="{Binding SearchCommand}" Height="40"
+                <Button Content="بحث" Command="{Binding SearchCommand}" Height="40"
                         Style="{StaticResource SecondaryButtonStyle}" Margin="10,0,0,0" Padding="20,0" />
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,10,0">
-                <TextBlock Text="📷" FontSize="18" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <TextBlock Text="&#xE8C8;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextMutedBrush}" FontSize="18" VerticalAlignment="Center" Margin="0,0,8,0" />
                 <TextBox Text="{Binding BarcodeSearch, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource ModernTextBox}" Width="160" Height="40"
                          VerticalContentAlignment="Center"
@@ -55,15 +70,16 @@
             <Button Grid.Column="2" Content="+ إضافة منتج جديد" Command="{Binding NewProductCommand}"
                     Style="{StaticResource PrimaryButtonStyle}" Height="40" Padding="20,0" />
         </Grid>
+        </Border>
 
         <!-- DataGrid -->
-        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="0">
+        <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="0">
             <DataGrid ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}"
                       Style="{StaticResource ModernDataGrid}"
                       CellStyle="{StaticResource ModernDataGridCell}"
                       RowStyle="{StaticResource ModernDataGridRow}"
                       ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}"
-                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#FF21262D">
+                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{StaticResource BorderMutedBrush}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50">
                         <DataGridTextColumn.HeaderStyle>
@@ -79,10 +95,10 @@
                     <DataGridTemplateColumn Header="الكمية" Width="80">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Border Background="#FF21262D"
+                                <Border Background="{StaticResource PrimaryCyanGlassBrush}"
                                         CornerRadius="6" Padding="8,3" HorizontalAlignment="Left">
                                     <TextBlock Text="{Binding Quantity}" FontSize="12" FontWeight="SemiBold"
-                                               Foreground="#FFFFFFFF" />
+                                               Foreground="{StaticResource TextPrimaryBrush}" />
                                 </Border>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -95,7 +111,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <Button Content="✏️" FontSize="12" Padding="8,4"
                                             Command="{Binding DataContext.EditSelectedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            Background="#FF21262D" Foreground="#FF8B949E" BorderThickness="0" Cursor="Hand">
+                                            Background="{StaticResource PrimaryCyanGlassBrush}" Foreground="{StaticResource TextMutedBrush}" BorderThickness="0" Cursor="Hand">
                                         <Button.Template>
                                             <ControlTemplate TargetType="Button">
                                                 <Border x:Name="B" Background="{TemplateBinding Background}"
@@ -104,7 +120,7 @@
                                                 </Border>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="B" Property="Background" Value="#FF316DCA" />
+                                                        <Setter TargetName="B" Property="Background" Value="{StaticResource PrimaryIndigoBrush}" />
                                                         <Setter Property="Foreground" Value="White" />
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
@@ -114,7 +130,7 @@
                                     <Button Content="🗑️" FontSize="12" Padding="8,4" Margin="4,0,0,0"
                                             Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             CommandParameter="{Binding}"
-                                            Background="#FF21262D" Foreground="#FF8B949E" BorderThickness="0" Cursor="Hand">
+                                            Background="{StaticResource PrimaryCyanGlassBrush}" Foreground="{StaticResource TextMutedBrush}" BorderThickness="0" Cursor="Hand">
                                         <Button.Template>
                                             <ControlTemplate TargetType="Button">
                                                 <Border x:Name="B" Background="{TemplateBinding Background}"
@@ -123,7 +139,7 @@
                                                 </Border>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="B" Property="Background" Value="#FFFF5C5C" />
+                                                        <Setter TargetName="B" Property="Background" Value="{StaticResource DangerBrush}" />
                                                         <Setter Property="Foreground" Value="White" />
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
@@ -139,7 +155,7 @@
         </Border>
 
         <!-- Editor Overlay -->
-        <Border Grid.RowSpan="2" Background="#E60D1117"
+        <Border Grid.RowSpan="3" Background="{StaticResource OverlayBgBrush}"
                 Visibility="{Binding ShowEditor, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="200">
             <Border Style="{StaticResource CardStyle}" Width="560" Padding="0"
@@ -150,15 +166,16 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <!-- Header -->
-                    <Border Grid.Row="0" Background="#FF1C2128" CornerRadius="16,16,0,0" Padding="24,20">
+                    <Border Grid.Row="0" Background="{StaticResource PrimaryCyanGlassBrush}" CornerRadius="16,16,0,0" Padding="24,20">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock FontSize="20" VerticalAlignment="Center">
-                                <Run Text="📦" /><Run Text=" " /><Run Text="إضافة / تعديل منتج" FontWeight="Bold" Foreground="#FF55D66B" />
+                                <Run Text="إضافة / تعديل منتج" FontWeight="Bold" Foreground="{StaticResource PrimaryIndigoBrush}" />
                             </TextBlock>
                         </StackPanel>
                     </Border>
@@ -166,11 +183,11 @@
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                         <StackPanel Margin="24,20">
                             <!-- Validation Message -->
-                            <Border Background="#FF3D1A1A" CornerRadius="8" Padding="12,8" Margin="0,0,0,16"
+                            <Border Background="{StaticResource DangerGlassBrush}" CornerRadius="8" Padding="12,8" Margin="0,0,0,16"
                                     Visibility="{Binding ValidationMessage, Converter={StaticResource StringToVisibilityConverter}, FallbackValue=Collapsed}">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="⚠️ " />
-                                    <TextBlock Text="{Binding ValidationMessage}" Foreground="#FFFF5C5C" FontSize="12" VerticalAlignment="Center" />
+                                    <TextBlock Text="&#xE7BA; " FontFamily="Segoe MDL2 Assets" />
+                                    <TextBlock Text="{Binding ValidationMessage}" Foreground="{StaticResource DangerBrush}" FontSize="12" VerticalAlignment="Center" />
                                 </StackPanel>
                             </Border>
 
@@ -257,14 +274,14 @@
                 </ScrollViewer>
 
                     <!-- Footer / Buttons -->
-                    <Border Grid.Row="2" Background="#FF161B22" CornerRadius="0,0,16,16" Padding="24,16">
+                    <Border Grid.Row="2" Background="{StaticResource CardBgBrush}" CornerRadius="0,0,16,16" Padding="24,16">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="16" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0" Content="حفظ التغييرات ✅" Command="{Binding SaveCommand}"
+                            <Button Grid.Column="0" Content="حفظ التغييرات" Command="{Binding SaveCommand}"
                                     Style="{StaticResource PrimaryButtonStyle}" Height="48" />
                             <Button Grid.Column="2" Content="إلغاء ✖" Command="{Binding CancelEditCommand}"
                                     Style="{StaticResource DangerButtonStyle}" Height="48" />

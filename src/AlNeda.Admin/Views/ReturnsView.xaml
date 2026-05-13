@@ -17,7 +17,7 @@
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="4"
                              Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
-                <TextBlock Text="جاري تحميل المرتجعات..." Foreground="#FF8B949E"
+                <TextBlock Text="جاري تحميل المرتجعات..." Foreground="{StaticResource TextMutedBrush}"
                            HorizontalAlignment="Center" Margin="0,12,0,0" />
             </StackPanel>
         </Border>
@@ -32,7 +32,7 @@
 
             <Border Grid.Column="0" Margin="0,0,12,0" Style="{StaticResource CardStyle}" Padding="20">
                 <StackPanel>
-                    <TextBlock Text="مرتجعات اليوم" Foreground="#FF8B949E" FontSize="13" />
+                    <TextBlock Text="مرتجعات اليوم" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
                         <TextBlock Text="5" FontSize="28" FontWeight="Bold" Foreground="White" />
                         <TextBlock Text="🔄" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
@@ -42,7 +42,7 @@
 
             <Border Grid.Column="1" Margin="6,0,6,0" Style="{StaticResource CardStyle}" Padding="20">
                 <StackPanel>
-                    <TextBlock Text="إجمالي مبالغ المرتجعات" Foreground="#FF8B949E" FontSize="13" />
+                    <TextBlock Text="إجمالي مبالغ المرتجعات" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
                         <TextBlock Text="4,200" FontSize="28" FontWeight="Bold" Foreground="#FFFF5C5C" />
                         <TextBlock Text="💵" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
@@ -52,7 +52,7 @@
 
             <Border Grid.Column="2" Margin="12,0,0,0" Style="{StaticResource CardStyle}" Padding="20">
                 <StackPanel>
-                    <TextBlock Text="طلبات معلقة" Foreground="#FF8B949E" FontSize="13" />
+                    <TextBlock Text="طلبات معلقة" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
                         <TextBlock Text="2" FontSize="28" FontWeight="Bold" Foreground="#FFD29922" />
                         <TextBlock Text="⏳" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
@@ -81,7 +81,7 @@
                       CellStyle="{StaticResource ModernDataGridCell}"
                       RowStyle="{StaticResource ModernDataGridRow}"
                       ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}"
-                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#FF21262D"
+                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{StaticResource BorderMutedBrush}"
                       AutoGenerateColumns="False" IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="رقم المرتجع" Binding="{Binding ReturnNumber}" Width="120" />
@@ -150,14 +150,14 @@
                     </Border>
 
                     <StackPanel Margin="0,0,0,12">
-                        <TextBlock Text="الصيدلية" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                        <TextBlock Text="الصيدلية" FontSize="12" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
                         <ComboBox ItemsSource="{Binding Pharmacies}" SelectedItem="{Binding SelectedPharmacy}"
                                   DisplayMemberPath="Name" Height="44" Style="{StaticResource ModernComboBox}" />
                     </StackPanel>
                     
                     <StackPanel Margin="0,0,0,12">
                         <Grid>
-                            <TextBlock Text="المنتجات" FontSize="12" Foreground="#FF8B949E" VerticalAlignment="Center" />
+                            <TextBlock Text="المنتجات" FontSize="12" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" />
                             <Button Content="+ إضافة منتج" Command="{Binding AddItemCommand}" HorizontalAlignment="Right" 
                                     Style="{StaticResource SecondaryButtonStyle}" Padding="8,4" FontSize="12" />
                         </Grid>
@@ -190,19 +190,19 @@
                     </StackPanel>
 
                     <StackPanel Margin="0,0,0,12">
-                        <TextBlock Text="المبلغ" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                        <TextBlock Text="المبلغ" FontSize="12" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
                         <TextBox Text="{Binding TotalAmount, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{StaticResource ModernTextBox}" Height="44" IsReadOnly="True" />
                     </StackPanel>
 
                     <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
                         <StackPanel Width="230" Margin="0,0,12,0">
-                            <TextBlock Text="نوع المرتجع" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                            <TextBlock Text="نوع المرتجع" FontSize="12" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
                             <ComboBox ItemsSource="{Binding ReturnTypes}" SelectedItem="{Binding ReturnType}"
                                       Height="44" Style="{StaticResource ModernComboBox}" />
                         </StackPanel>
                         <StackPanel Width="230">
-                            <TextBlock Text="سبب المرتجع" FontSize="12" Foreground="#FF8B949E" Margin="0,0,0,6" />
+                            <TextBlock Text="سبب المرتجع" FontSize="12" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
                             <TextBox Text="{Binding Reason}" Style="{StaticResource ModernTextBox}" Height="44" />
                         </StackPanel>
                     </StackPanel>

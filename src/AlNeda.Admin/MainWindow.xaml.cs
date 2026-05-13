@@ -29,6 +29,7 @@ public partial class MainWindow : Window
         _navButtons["payments"] = NavPayments;
         _navButtons["returns"] = NavReturns;
         _navButtons["statements"] = NavStatements;
+        _navButtons["offers"] = NavOffers;
         _navButtons["reports"] = NavReports;
         _navButtons["audit"] = NavAudit;
         _navButtons["backup"] = NavBackup;
@@ -67,11 +68,19 @@ public partial class MainWindow : Window
 
     private async void StartClock()
     {
+        var ticks = 0;
         while (true)
         {
             try
             {
-                ClockText.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                var now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                ClockText.Text = now;
+                ViewModel.FooterClock = now;
+
+                if (ticks == 0 || ticks % 10 == 0)
+                    await ViewModel.RefreshFooterHealthAsync();
+
+                ticks++;
             }
             catch { }
             await Task.Delay(1000);

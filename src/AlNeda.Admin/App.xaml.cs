@@ -102,6 +102,8 @@ public partial class App : Application
             services.AddTransient<ViewModels.PaymentsViewModel>();
             services.AddTransient<ViewModels.ReturnsViewModel>();
             services.AddTransient<ViewModels.AccountStatementViewModel>();
+            services.AddTransient<ViewModels.OffersDashboardViewModel>();
+            services.AddTransient<ViewModels.OffersViewModel>();
             services.AddTransient<ViewModels.ReportsViewModel>();
             services.AddTransient<ViewModels.AuditLogViewModel>();
             services.AddTransient<ViewModels.BackupViewModel>();
@@ -110,6 +112,7 @@ public partial class App : Application
 
             services.AddTransient<LoginWindow>();
             services.AddTransient<MainWindow>();
+            services.AddTransient<Views.OffersDashboardWindow>();
 
             Services = services.BuildServiceProvider();
 

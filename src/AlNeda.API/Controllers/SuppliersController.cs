@@ -1,3 +1,4 @@
+using AlNeda.API.Authorization;
 using AlNeda.Core.Entities;
 using AlNeda.Core.Models;
 using AlNeda.Services;
@@ -9,7 +10,7 @@ namespace AlNeda.API.Controllers;
 
 [ApiController]
 [Route("api/suppliers")]
-[Authorize]
+[Authorize(Policy = AuthPolicies.Staff)]
 public class SuppliersController : ControllerBase
 {
     private readonly IDbContextFactory<Data.AppDbContext> _contextFactory;
@@ -62,12 +63,12 @@ public class SuppliersController : ControllerBase
         await using var db = await _contextFactory.CreateDbContextAsync();
         var supplier = new Supplier
         {
-            Name = request.Name.Trim(),
-            Phone = request.Phone,
-            Address = request.Address,
-            Company = request.Company,
+            Name = request.Name?.Trim() ?? string.Empty,
+            Phone = request.Phone ?? string.Empty,
+            Address = request.Address ?? string.Empty,
+            Company = request.Company ?? "غير محدد",
             Balance = request.Balance,
-            Notes = request.Notes,
+            Notes = request.Notes ?? string.Empty,
             CreatedAt = DateTime.Now
         };
         db.Suppliers.Add(supplier);
@@ -94,12 +95,12 @@ public class SuppliersController : ControllerBase
         var s = await db.Suppliers.FindAsync(id);
         if (s == null) return NotFound(new { message = "المورد غير موجود" });
 
-        s.Name = request.Name.Trim();
-        s.Phone = request.Phone;
-        s.Address = request.Address;
-        s.Company = request.Company;
+        s.Name = request.Name?.Trim() ?? string.Empty;
+        s.Phone = request.Phone ?? string.Empty;
+        s.Address = request.Address ?? string.Empty;
+        s.Company = request.Company ?? "غير محدد";
         s.Balance = request.Balance;
-        s.Notes = request.Notes;
+        s.Notes = request.Notes ?? string.Empty;
         await db.SaveChangesAsync();
 
         var username = User.Identity?.Name ?? "system";

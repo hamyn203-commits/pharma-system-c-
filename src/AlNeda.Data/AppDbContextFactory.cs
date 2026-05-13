@@ -7,8 +7,9 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
     public AppDbContext CreateDbContext(string[] args)
     {
+        var designDb = Path.Combine(Path.GetTempPath(), "alneda_ef_design.db");
         var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseSqlite("Data Source=D:\\New folder (3)\\pharmacy.db")
+            .UseSqlite($"Data Source={designDb}")
             .Options;
 
         return new AppDbContext(options);

@@ -1,3 +1,4 @@
+using AlNeda.API.Authorization;
 using AlNeda.Core.Entities;
 using AlNeda.Core.Models;
 using AlNeda.Services;
@@ -9,7 +10,8 @@ namespace AlNeda.API.Controllers;
 
 [ApiController]
 [Route("api/products")]
-[Authorize]
+[Authorize(Policy = AuthPolicies.Staff)]
+[Tags("Products")]
 public class ProductsController : ControllerBase
 {
     private readonly IDbContextFactory<Data.AppDbContext> _contextFactory;

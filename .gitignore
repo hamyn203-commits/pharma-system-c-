@@ -41,6 +41,10 @@ TestResults/
 publish/
 *.pubxml
 
+## Local run artifacts ##
+api_run.err
+build_warnings.txt
+
 ## Database files (don't commit the actual DB) ##
 *.db
 *.db-shm

@@ -36,7 +36,7 @@
             <DataTemplate.Triggers>
                 <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
                     <Setter TargetName="CardBorder" Property="Background" Value="{StaticResource GlassCardBrush}" />
-                    <Setter TargetName="CardBorder" Property="BorderBrush" Value="{StaticResource PrimaryGreenBrush}" />
+                    <Setter TargetName="CardBorder" Property="BorderBrush" Value="{StaticResource PrimaryIndigoBrush}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
                     <Setter TargetName="CardBorder" Property="Background" Value="#1AFFFFFF" />
@@ -117,7 +117,7 @@
         <!-- ═══════════════════════════════════════════════════════════ -->
         <Border Grid.Column="0" Style="{StaticResource CardStyle}" Padding="16" VerticalAlignment="Top">
             <StackPanel>
-                <TextBlock Text="التقارير المالية" FontSize="16" FontWeight="Bold" Foreground="{StaticResource PrimaryGreenBrush}" Margin="0,0,0,16" />
+                <TextBlock Text="التقارير المالية" FontSize="16" FontWeight="Bold" Foreground="{StaticResource PrimaryIndigoBrush}" Margin="0,0,0,16" />
                 <ListBox ItemsSource="{Binding ReportTypes}" SelectedItem="{Binding SelectedReportType}"
                          Background="Transparent" BorderThickness="0"
                          ItemTemplate="{StaticResource ReportTypeCard}"
@@ -152,7 +152,7 @@
                         <StackPanel Orientation="Horizontal" Margin="0,0,16,0">
                             <TextBlock Text="من:" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" Margin="0,0,8,0" />
                             <DatePicker SelectedDate="{Binding FilterFrom}"
-                                         Background="#FF0D1117" Foreground="#FFFFFFFF"
+                                         Background="{StaticResource CardBgBrush}" Foreground="{StaticResource TextPrimaryBrush}"
                                          BorderBrush="{StaticResource BorderMutedBrush}"
                                          Height="36" FontSize="12" />
                         </StackPanel>
@@ -160,7 +160,7 @@
                         <StackPanel Orientation="Horizontal" Margin="0,0,16,0">
                             <TextBlock Text="إلى:" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" Margin="0,0,8,0" />
                             <DatePicker SelectedDate="{Binding FilterTo}"
-                                         Background="#FF0D1117" Foreground="#FFFFFFFF"
+                                         Background="{StaticResource CardBgBrush}" Foreground="{StaticResource TextPrimaryBrush}"
                                          BorderBrush="{StaticResource BorderMutedBrush}"
                                          Height="36" FontSize="12" />
                         </StackPanel>
@@ -188,11 +188,11 @@
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Border Width="36" Height="36" CornerRadius="10" Background="{StaticResource StatCardGreenGradient}">
-                                    <TextBlock Text="💰" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    <TextBlock Text="&#xE8C7;" FontFamily="Segoe MDL2 Assets" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Border>
                                 <StackPanel VerticalAlignment="Center" Margin="12,0,0,0">
                                     <TextBlock Text="إجمالي الإيرادات" FontSize="10" Foreground="{StaticResource TextMutedBrush}" />
-                                    <TextBlock Text="{Binding TotalRevenue, StringFormat={}{0:N2} ر.س}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryGreenBrush}" />
+                                    <TextBlock Text="{Binding TotalRevenue, StringFormat={}{0:N2} ر.س}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryIndigoBrush}" />
                                 </StackPanel>
                             </StackPanel>
                             <Border CornerRadius="6" Padding="6,2" Margin="0,8,0,0" HorizontalAlignment="Left"
@@ -210,11 +210,11 @@
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Border Width="36" Height="36" CornerRadius="10" Background="{StaticResource StatCardBlueGradient}">
-                                    <TextBlock Text="📈" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    <TextBlock Text="&#xE9D2;" FontFamily="Segoe MDL2 Assets" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Border>
                                 <StackPanel VerticalAlignment="Center" Margin="12,0,0,0">
                                     <TextBlock Text="صافي الربح" FontSize="10" Foreground="{StaticResource TextMutedBrush}" />
-                                    <TextBlock Text="{Binding NetProfit, StringFormat={}{0:N2} ر.س}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryBlueLightBrush}" />
+                                    <TextBlock Text="{Binding NetProfit, StringFormat={}{0:N2} ر.س}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryCyanBrush}" />
                                 </StackPanel>
                             </StackPanel>
                             <Border CornerRadius="6" Padding="6,2" Margin="0,8,0,0" HorizontalAlignment="Left"
@@ -249,7 +249,7 @@
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Border Width="36" Height="36" CornerRadius="10" Background="{StaticResource StatCardPurpleGradient}">
-                                    <TextBlock Text="📦" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    <TextBlock Text="&#xE7B8;" FontFamily="Segoe MDL2 Assets" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Border>
                                 <StackPanel VerticalAlignment="Center" Margin="12,0,0,0">
                                     <TextBlock Text="الطلبات" FontSize="10" Foreground="{StaticResource TextMutedBrush}" />
@@ -419,7 +419,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Grid.Column="0" Text="{Binding Period}" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" />
                                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding NetRevenue, StringFormat={}صافي: {0:N2} ر.س}" FontSize="14" FontWeight="Bold" Foreground="{StaticResource PrimaryGreenBrush}" />
+                                                    <TextBlock Text="{Binding NetRevenue, StringFormat={}صافي: {0:N2} ر.س}" FontSize="14" FontWeight="Bold" Foreground="{StaticResource PrimaryIndigoBrush}" />
                                                     <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
                                                         <TextBlock Text="{Binding GrossRevenue, StringFormat='إجمالي: {0:N2}'}" FontSize="10" Foreground="{StaticResource TextMutedBrush}" />
                                                         <TextBlock Text=" | " FontSize="10" Foreground="{StaticResource TextMutedBrush}" />
@@ -642,7 +642,7 @@
             <Border Grid.Row="2" Background="{StaticResource OverlayBgBrush}" CornerRadius="20"
                     Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <StackPanel VerticalAlignment="Center">
-                    <ProgressBar IsIndeterminate="True" Width="240" Height="4" Style="{StaticResource ModernProgressBar}" Foreground="{StaticResource PrimaryGreenBrush}" />
+                    <ProgressBar IsIndeterminate="True" Width="240" Height="4" Style="{StaticResource ModernProgressBar}" Foreground="{StaticResource PrimaryIndigoBrush}" />
                     <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,16,0,0" FontSize="13" />
                 </StackPanel>
             </Border>

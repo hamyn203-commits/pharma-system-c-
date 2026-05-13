@@ -16,7 +16,7 @@
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="4"
                              Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
-                <TextBlock Text="جاري تحميل السجل..." Foreground="#FF8B949E"
+                <TextBlock Text="جاري تحميل السجل..." Foreground="{StaticResource TextMutedBrush}"
                            HorizontalAlignment="Center" Margin="0,12,0,0" />
             </StackPanel>
         </Border>
@@ -29,16 +29,16 @@
             <TextBlock Grid.Column="0" Text="سجل العمليات" FontSize="22" FontWeight="Bold" Foreground="#FF55D66B" VerticalAlignment="Center" />
             
             <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <TextBlock Text="المستخدم:" VerticalAlignment="Center" Foreground="#FF8B949E" Margin="0,0,8,0" />
+                <TextBlock Text="المستخدم:" VerticalAlignment="Center" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,8,0" />
                 <TextBox Text="{Binding SearchUsername, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Width="150" Height="40" Margin="0,0,16,0" />
                 
-                <TextBlock Text="من:" VerticalAlignment="Center" Foreground="#FF8B949E" Margin="0,0,8,0" />
+                <TextBlock Text="من:" VerticalAlignment="Center" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,8,0" />
                 <DatePicker SelectedDate="{Binding FromDate, UpdateSourceTrigger=PropertyChanged}" Width="130" Height="40" Margin="0,0,16,0" />
                 
-                <TextBlock Text="إلى:" VerticalAlignment="Center" Foreground="#FF8B949E" Margin="0,0,8,0" />
+                <TextBlock Text="إلى:" VerticalAlignment="Center" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,8,0" />
                 <DatePicker SelectedDate="{Binding ToDate, UpdateSourceTrigger=PropertyChanged}" Width="130" Height="40" Margin="0,0,16,0" />
                 
-                <Button Content="بحث 🔍" Command="{Binding LoadCommand}" Style="{StaticResource SecondaryButtonStyle}" Height="40" Padding="16,0" />
+                <Button Content="بحث" Command="{Binding LoadCommand}" Style="{StaticResource SecondaryButtonStyle}" Height="40" Padding="16,0" />
             </StackPanel>
         </Grid>
         <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="0">
@@ -47,7 +47,7 @@
                       CellStyle="{StaticResource ModernDataGridCell}"
                       RowStyle="{StaticResource ModernDataGridRow}"
                       ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}"
-                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#FF21262D"
+                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{StaticResource BorderMutedBrush}"
                       AutoGenerateColumns="False" IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50" />

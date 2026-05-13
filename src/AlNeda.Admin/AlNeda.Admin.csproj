@@ -15,6 +15,8 @@
     <Company>AlNeda Systems</Company>
     <Description>نظام إدارة مخزن الأدوية والصيدليات - نظام سطح مكتب احترافي</Description>
     <Copyright>Copyright © 2025 AlNeda Systems</Copyright>
+    <!-- LiveCharts / SkiaSharp WPF لا يزال يستهدف net461 — تحذير التوافق فقط -->
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,10 +26,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.15" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.15" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.15" />
-    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.16" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.16" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.16" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="9.0.16" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
     <PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />

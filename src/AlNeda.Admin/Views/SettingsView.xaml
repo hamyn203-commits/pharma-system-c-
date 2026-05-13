@@ -1,406 +1,191 @@
 <UserControl x:Class="AlNeda.Admin.Views.SettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             mc:Ignorable="d" 
-             d:DesignHeight="900" d:DesignWidth="1100">
+             mc:Ignorable="d"
+             d:DesignHeight="900" d:DesignWidth="1100"
+             FlowDirection="RightToLeft">
 
     <UserControl.Resources>
-        <!-- Tab Icon Mapping -->
         <Style x:Key="SettingsTabItem" TargetType="TabItem">
-            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
-                        <Border x:Name="TabBorder"
-                                Background="Transparent"
-                                Padding="28,14"
-                                Margin="0,0,4,0"
-                                CornerRadius="14,14,0,0"
-                                Cursor="Hand"
-                                BorderThickness="0">
+                        <Border x:Name="TabBorder" Background="#18243A" BorderBrush="{StaticResource BorderDefaultBrush}"
+                                BorderThickness="1" CornerRadius="14" Padding="18,12" Margin="0,0,8,8">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock x:Name="TabIcon" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center" />
-                                <TextBlock x:Name="TabLabel" Text="{TemplateBinding Header}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                <TextBlock x:Name="TabIcon" FontFamily="Segoe MDL2 Assets" FontSize="15" Margin="0,0,10,0" />
+                                <TextBlock x:Name="TabLabel" Text="{TemplateBinding Header}" FontSize="13" />
                             </StackPanel>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="TabBorder" Property="Background" Value="#FF161B22" />
-                                <Setter TargetName="TabLabel" Property="Foreground" Value="#FFFFFFFF" />
+                                <Setter TargetName="TabBorder" Property="Background" Value="{StaticResource PrimaryIndigoGlassBrush}" />
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="{StaticResource PrimaryIndigoBrush}" />
+                                <Setter TargetName="TabLabel" Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+                                <Setter TargetName="TabIcon" Property="Foreground" Value="{StaticResource PrimaryIndigoLightBrush}" />
                             </Trigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsMouseOver" Value="True" />
-                                    <Condition Property="IsSelected" Value="False" />
-                                </MultiTrigger.Conditions>
-                                <Setter TargetName="TabBorder" Property="Background" Value="#1AFFFFFF" />
-                                <Setter TargetName="TabLabel" Property="Foreground" Value="#FFD1D5DB" />
-                            </MultiTrigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsSelected" Value="False" />
-                                </MultiTrigger.Conditions>
-                                <Setter TargetName="TabLabel" Property="Foreground" Value="#FF8B949E" />
-                            </MultiTrigger>
-                            <Trigger Property="Tag" Value="general">
-                                <Setter TargetName="TabIcon" Property="Text" Value="⚙️" />
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="{StaticResource PrimaryCyanBrush}" />
                             </Trigger>
-                            <Trigger Property="Tag" Value="database">
-                                <Setter TargetName="TabIcon" Property="Text" Value="💾" />
-                            </Trigger>
-                            <Trigger Property="Tag" Value="users">
-                                <Setter TargetName="TabIcon" Property="Text" Value="👥" />
-                            </Trigger>
-                            <Trigger Property="Tag" Value="notifications">
-                                <Setter TargetName="TabIcon" Property="Text" Value="🔔" />
-                            </Trigger>
-                            <Trigger Property="Tag" Value="backup">
-                                <Setter TargetName="TabIcon" Property="Text" Value="🛡️" />
-                            </Trigger>
+                            <Trigger Property="Tag" Value="general"><Setter TargetName="TabIcon" Property="Text" Value="&#xE713;" /></Trigger>
+                            <Trigger Property="Tag" Value="account"><Setter TargetName="TabIcon" Property="Text" Value="&#xE77B;" /></Trigger>
+                            <Trigger Property="Tag" Value="security"><Setter TargetName="TabIcon" Property="Text" Value="&#xE72E;" /></Trigger>
+                            <Trigger Property="Tag" Value="database"><Setter TargetName="TabIcon" Property="Text" Value="&#xE74E;" /></Trigger>
+                            <Trigger Property="Tag" Value="users"><Setter TargetName="TabIcon" Property="Text" Value="&#xE716;" /></Trigger>
+                            <Trigger Property="Tag" Value="notifications"><Setter TargetName="TabIcon" Property="Text" Value="&#xEA8F;" /></Trigger>
+                            <Trigger Property="Tag" Value="backup"><Setter TargetName="TabIcon" Property="Text" Value="&#xE83D;" /></Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
-        <!-- Toggle Row Style -->
-        <Style x:Key="ToggleRowStyle" TargetType="Border">
-            <Setter Property="Background" Value="#0DFFFFFF" />
-            <Setter Property="CornerRadius" Value="14" />
-            <Setter Property="Padding" Value="20,16" />
-            <Setter Property="Margin" Value="0,0,0,12" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="{StaticResource BorderMutedBrush}" />
-            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
-            <Style.Triggers>
-                <EventTrigger RoutedEvent="MouseEnter">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.005" Duration="0:0:0.1" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-                <EventTrigger RoutedEvent="MouseLeave">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1" Duration="0:0:0.1" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </Style.Triggers>
+        <Style x:Key="SettingsPanel" TargetType="Border" BasedOn="{StaticResource SettingsCardStyle}">
+            <Setter Property="Background" Value="#FF121C2E" />
+            <Setter Property="BorderBrush" Value="#FF31415F" />
+            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="Padding" Value="22" />
         </Style>
 
-        <!-- Gradient Backgrounds for Sections -->
-        <LinearGradientBrush x:Key="SectionGeneralGradient" StartPoint="0,0" EndPoint="1,0">
-            <GradientStop Color="#1A10B981" Offset="0" />
-            <GradientStop Color="#0A000000" Offset="1" />
-        </LinearGradientBrush>
-        <LinearGradientBrush x:Key="SectionDbGradient" StartPoint="0,0" EndPoint="1,0">
-            <GradientStop Color="#1A3B82F6" Offset="0" />
-            <GradientStop Color="#0A000000" Offset="1" />
-        </LinearGradientBrush>
-        <LinearGradientBrush x:Key="SectionUsersGradient" StartPoint="0,0" EndPoint="1,0">
-            <GradientStop Color="#1A8B5CF6" Offset="0" />
-            <GradientStop Color="#0A000000" Offset="1" />
-        </LinearGradientBrush>
-        <LinearGradientBrush x:Key="SectionNotifGradient" StartPoint="0,0" EndPoint="1,0">
-            <GradientStop Color="#1AF59E0B" Offset="0" />
-            <GradientStop Color="#0A000000" Offset="1" />
-        </LinearGradientBrush>
-        <LinearGradientBrush x:Key="SectionBackupGradient" StartPoint="0,0" EndPoint="1,0">
-            <GradientStop Color="#1AEF4444" Offset="0" />
-            <GradientStop Color="#0A000000" Offset="1" />
-        </LinearGradientBrush>
+        <Style x:Key="SettingRow" TargetType="Border">
+            <Setter Property="Background" Value="#FF18243A" />
+            <Setter Property="BorderBrush" Value="#FF2B3A56" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="16,14" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+        </Style>
+
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+
+        <Style x:Key="MutedText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
     </UserControl.Resources>
 
-    <Grid Margin="32,24">
+    <Grid Margin="28,22">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <!-- HEADER                                                      -->
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <Grid Grid.Row="0" Margin="0,0,0,28">
-            <StackPanel>
-                <TextBlock Text="الإعدادات المتقدمة" Style="{StaticResource PageTitle}" />
-                <TextBlock Text="تخصيص تجربة الاستخدام وإدارة إعدادات النظام" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,4,0,0" FontSize="13" />
-            </StackPanel>
-            <Border HorizontalAlignment="Left" Background="{StaticResource CardBgBrush}" CornerRadius="12" Padding="16,10" BorderBrush="{StaticResource BorderMutedBrush}" BorderThickness="1">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="🟢" FontSize="10" Margin="0,0,8,0" VerticalAlignment="Center" />
-                    <TextBlock Text="{Binding Status, FallbackValue='النظام جاهز'}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" VerticalAlignment="Center" />
+        <Border Grid.Row="0" Background="{StaticResource DashboardHeroGradient}" CornerRadius="22" Padding="24" Margin="0,0,0,18">
+            <Grid>
+                <StackPanel>
+                    <TextBlock Text="الإعدادات المتقدمة" FontSize="30" FontWeight="Bold" Foreground="White" />
+                    <TextBlock Text="تحكم كامل في الحسابات، الأمان، النظام، التنبيهات، النسخ الاحتياطي، والتقارير"
+                               Foreground="#E6FFFFFF" FontSize="13" Margin="0,6,0,0" />
                 </StackPanel>
-            </Border>
-        </Grid>
+                <Button Content="فحص النظام" Command="{Binding RunHealthCheckCommand}"
+                        Style="{StaticResource SecondaryButtonStyle}" Width="130" Height="42"
+                        HorizontalAlignment="Left" VerticalAlignment="Center" />
+            </Grid>
+        </Border>
 
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <!-- TABS                                                        -->
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0"
-                     SelectedIndex="0">
-            <TabControl.Resources>
-                <Style TargetType="TabPanel">
-                    <Setter Property="Margin" Value="0,0,0,0" />
-                </Style>
-            </TabControl.Resources>
-
-            <!-- ════════════════════════ -->
-            <!-- TAB 1: GENERAL           -->
-            <!-- ════════════════════════ -->
-            <TabItem Style="{StaticResource SettingsTabItem}" Header="عام" Tag="general">
-                <ScrollViewer Margin="0,20,0,0" VerticalScrollBarVisibility="Auto">
-                    <StackPanel MaxWidth="740" HorizontalAlignment="Left">
-                        <!-- Appearance -->
-                        <Border Style="{StaticResource SettingsCardStyle}" Margin="0,0,0,20">
+        <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0">
+            <TabItem Header="عام" Tag="general" Style="{StaticResource SettingsTabItem}">
+                <ScrollViewer Margin="0,12,0,0" VerticalScrollBarVisibility="Auto">
+                    <UniformGrid Columns="2">
+                        <Border Style="{StaticResource SettingsPanel}" Margin="0,0,12,12">
                             <StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                                    <Border Width="36" Height="36" CornerRadius="10" Background="{StaticResource StatCardGreenGradient}" Margin="0,0,14,0">
-                                        <TextBlock Text="🎨" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    </Border>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="المظهر واللغة" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
-                                        <TextBlock Text="تخصيص واجهة المستخدم حسب تفضيلاتك" FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0" />
-                                    </StackPanel>
-                                </StackPanel>
-
-                                <Grid Margin="0,0,0,20">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="20" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0">
-                                        <TextBlock Text="لغة التطبيق" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
-                                        <ComboBox ItemsSource="{Binding Languages}" SelectedItem="{Binding CurrentSettings.Language}" Style="{StaticResource ModernComboBox}" Height="44" />
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2">
-                                        <TextBlock Text="الثيم المفضل" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
-                                        <ComboBox ItemsSource="{Binding Themes}" SelectedItem="{Binding CurrentSettings.Theme}" Style="{StaticResource ModernComboBox}" Height="44" />
-                                    </StackPanel>
-                                </Grid>
-
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="20" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0">
-                                        <TextBlock Text="نوع الخط" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
-                                        <ComboBox ItemsSource="{Binding Fonts}" SelectedItem="{Binding CurrentSettings.FontFamily}" Style="{StaticResource ModernComboBox}" Height="44" />
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2">
-                                        <TextBlock Text="{Binding CurrentSettings.FontSize, StringFormat='حجم الخط ‏({0}px)'}" Style="{StaticResource CardTitle}" Margin="0,0,0,16" />
-                                        <Border Background="#FF0D1117" CornerRadius="12" Padding="14,4" BorderBrush="{StaticResource BorderMutedBrush}" BorderThickness="1">
-                                            <Slider Minimum="12" Maximum="20" Value="{Binding CurrentSettings.FontSize}" TickFrequency="1" IsSnapToTickEnabled="True"
-                                                    VerticalAlignment="Center" Foreground="{StaticResource PrimaryGreenBrush}" />
-                                        </Border>
-                                    </StackPanel>
-                                </Grid>
+                                <TextBlock Text="هوية النظام" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
+                                <TextBlock Text="بيانات تظهر في التقارير والطباعة والفواتير" Style="{StaticResource MutedText}" Margin="0,4,0,18" />
+                                <TextBlock Text="اسم المخزن / الشركة" Style="{StaticResource FieldLabel}" />
+                                <TextBox Text="{Binding CurrentSettings.CompanyName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="44" Margin="0,0,0,14" />
+                                <TextBlock Text="اسم الفرع" Style="{StaticResource FieldLabel}" />
+                                <TextBox Text="{Binding CurrentSettings.BranchName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="44" Margin="0,0,0,14" />
+                                <TextBlock Text="العملة الافتراضية" Style="{StaticResource FieldLabel}" />
+                                <ComboBox ItemsSource="{Binding Currencies}" SelectedItem="{Binding CurrentSettings.DefaultCurrency}" Style="{StaticResource ModernComboBox}" Height="44" />
                             </StackPanel>
                         </Border>
 
-                        <!-- System Behavior -->
-                        <Border Style="{StaticResource SettingsCardStyle}">
+                        <Border Style="{StaticResource SettingsPanel}" Margin="12,0,0,12">
                             <StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                                    <Border Width="36" Height="36" CornerRadius="10" Background="{StaticResource StatCardBlueGradient}" Margin="0,0,14,0">
-                                        <TextBlock Text="⚡" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    </Border>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="سلوك النظام" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
-                                        <TextBlock Text="إعدادات التشغيل والسلوك الافتراضي" FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0" />
-                                    </StackPanel>
-                                </StackPanel>
-
-                                <Border Style="{StaticResource ToggleRowStyle}">
+                                <TextBlock Text="تجربة الاستخدام" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
+                                <TextBlock Text="تحكم في شكل البرنامج وسلوكه اليومي" Style="{StaticResource MutedText}" Margin="0,4,0,18" />
+                                <Border Style="{StaticResource SettingRow}">
                                     <Grid>
                                         <StackPanel>
-                                            <TextBlock Text="بدء التشغيل مع Windows" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,4" />
-                                            <TextBlock Text="سيتم فتح البرنامج تلقائياً عند تشغيل الجهاز" FontSize="11" Foreground="{StaticResource TextMutedBrush}" />
+                                            <TextBlock Text="قائمة جانبية مضغوطة" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                            <TextBlock Text="تجعل مساحة العمل أكبر في الشاشات الصغيرة" Style="{StaticResource MutedText}" />
                                         </StackPanel>
-                                        <CheckBox IsChecked="{Binding CurrentSettings.StartWithWindows}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                        <CheckBox IsChecked="{Binding CurrentSettings.CompactSidebar}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
                                     </Grid>
                                 </Border>
-
-                                <Border Style="{StaticResource ToggleRowStyle}">
+                                <Border Style="{StaticResource SettingRow}">
                                     <Grid>
                                         <StackPanel>
-                                            <TextBlock Text="التحديثات التلقائية" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,4" />
-                                            <TextBlock Text="التحقق من وجود إصدارات جديدة عند بدء التشغيل" FontSize="11" Foreground="{StaticResource TextMutedBrush}" />
+                                            <TextBlock Text="حركات الداش بورد" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                            <TextBlock Text="تفعيل تأثيرات 3D والحركة داخل كروت لوحة التحكم" Style="{StaticResource MutedText}" />
                                         </StackPanel>
-                                        <CheckBox IsChecked="{Binding CurrentSettings.CheckUpdatesOnStartup}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                        <CheckBox IsChecked="{Binding CurrentSettings.ShowDashboardAnimations}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
                                     </Grid>
                                 </Border>
+                                <TextBlock Text="الثيم" Style="{StaticResource FieldLabel}" />
+                                <ComboBox ItemsSource="{Binding Themes}" SelectedItem="{Binding CurrentSettings.Theme}" Style="{StaticResource ModernComboBox}" Height="44" />
                             </StackPanel>
                         </Border>
-                    </StackPanel>
+                    </UniformGrid>
                 </ScrollViewer>
             </TabItem>
 
-            <!-- ════════════════════════ -->
-            <!-- TAB 2: DATABASE          -->
-            <!-- ════════════════════════ -->
-            <TabItem Style="{StaticResource SettingsTabItem}" Header="قاعدة البيانات" Tag="database">
-                <ScrollViewer Margin="0,20,0,0" VerticalScrollBarVisibility="Auto">
-                    <StackPanel MaxWidth="740" HorizontalAlignment="Left">
-                        <!-- Connection -->
-                        <Border Style="{StaticResource SettingsCardStyle}" Margin="0,0,0,20">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                                    <Border Width="36" Height="36" CornerRadius="10" Background="{StaticResource StatCardBlueGradient}" Margin="0,0,14,0">
-                                        <TextBlock Text="🔗" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    </Border>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="اتصال البيانات" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
-                                        <TextBlock Text="إعدادات الاتصال ومسار قاعدة البيانات" FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0" />
-                                    </StackPanel>
-                                </StackPanel>
-
-                                <TextBlock Text="مسار ملف قاعدة البيانات" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
-                                <Grid Margin="0,0,0,20">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="12" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox Text="{Binding CurrentSettings.DbPath}" IsReadOnly="True" Style="{StaticResource ModernTextBox}" Height="44" />
-                                    <Button Grid.Column="2" Content="🔍 تغيير المسار" Command="{Binding BrowseDatabaseCommand}" Style="{StaticResource SecondaryButtonStyle}" Padding="20,0" Height="44" Foreground="#FFFFFFFF" />
-                                </Grid>
-
-                                <TextBlock Text="عنوان اتصال الخادم (API Base URL)" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
-                                <TextBox Text="{Binding CurrentSettings.ApiBaseUrl, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="44" Margin="0,0,0,20" />
-
-                                <!-- DB Stats & Actions -->
-                                <Border Background="{StaticResource GlassCardBrush}" CornerRadius="16" Padding="24" Margin="0,0,0,4"
-                                        BorderBrush="{StaticResource GlassBorderBrush}" BorderThickness="1">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                            <Border Width="44" Height="44" CornerRadius="12" Background="{StaticResource StatCardBlueGradient}">
-                                                <TextBlock Text="🗄️" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                            </Border>
-                                            <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
-                                                <TextBlock Text="حجم قاعدة البيانات" Foreground="{StaticResource TextMutedBrush}" FontSize="11" />
-                                                <TextBlock Text="{Binding DbSize, FallbackValue='0 MB'}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource PrimaryBlueLightBrush}" />
-                                            </StackPanel>
-                                        </StackPanel>
-                                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                            <Button Content="🔌 اختبار الاتصال" Command="{Binding TestConnectionCommand}"
-                                                    Style="{StaticResource TransparentButtonStyle}" Foreground="{StaticResource PrimaryGreenBrush}" FontWeight="SemiBold" Margin="0,0,20,0" />
-                                            <Button Content="🧹 ضغط وتنظيف" Command="{Binding VacuumDbCommand}"
-                                                    Style="{StaticResource TransparentButtonStyle}" Foreground="{StaticResource WarningBrush}" FontWeight="SemiBold" />
-                                        </StackPanel>
-                                    </Grid>
-                                </Border>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-
-            <!-- ════════════════════════ -->
-            <!-- TAB 3: USERS             -->
-            <!-- ════════════════════════ -->
-            <TabItem Style="{StaticResource SettingsTabItem}" Header="المستخدمين" Tag="users">
-                <Grid Margin="0,20,0,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <!-- Header Bar -->
-                    <Border Grid.Row="0" Style="{StaticResource SettingsCardStyle}" Padding="20,16" Margin="0,0,0,16">
-                        <Grid>
-                            <StackPanel>
-                                <TextBlock Text="إدارة صلاحيات الوصول" FontSize="15" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
-                                <TextBlock Text="إضافة وتعديل وإدارة حسابات الموظفين" FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0" />
-                            </StackPanel>
-                            <Button Content="➕ مستخدم جديد" Command="{Binding NewUserAsyncCommand}"
-                                    Style="{StaticResource PrimaryButtonStyle}" Padding="24,0" Height="40" HorizontalAlignment="Left" />
-                        </Grid>
+            <TabItem Header="الحساب" Tag="account" Style="{StaticResource SettingsTabItem}">
+                <Grid Margin="0,12,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.1*" />
+                        <ColumnDefinition Width="18" />
+                        <ColumnDefinition Width="0.9*" />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" Style="{StaticResource SettingsPanel}">
+                        <StackPanel>
+                            <TextBlock Text="بيانات المستخدم" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
+                            <TextBlock Text="اختر مستخدما من الجدول ثم عدل الاسم أو الدور أو كلمة المرور" Style="{StaticResource MutedText}" Margin="0,4,0,18" />
+                            <TextBlock Text="اسم المستخدم" Style="{StaticResource FieldLabel}" />
+                            <TextBox Text="{Binding SelectedUser.Username, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="44" Margin="0,0,0,14" />
+                            <TextBlock Text="الدور الوظيفي" Style="{StaticResource FieldLabel}" />
+                            <ComboBox ItemsSource="{Binding Roles}" SelectedItem="{Binding SelectedUser.Role}" Style="{StaticResource ModernComboBox}" Height="44" Margin="0,0,0,14" />
+                            <TextBlock Text="كلمة مرور جديدة" Style="{StaticResource FieldLabel}" />
+                            <TextBox Text="{Binding UserPassword, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="44" Margin="0,0,0,14" />
+                            <TextBlock Text="تأكيد كلمة المرور" Style="{StaticResource FieldLabel}" />
+                            <TextBox Text="{Binding ConfirmPassword, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="44" Margin="0,0,0,18" />
+                            <Button Content="حفظ بيانات المستخدم" Command="{Binding SaveSelectedUserCredentialsCommand}" Style="{StaticResource PrimaryButtonStyle}" Height="44" />
+                        </StackPanel>
                     </Border>
 
-                    <!-- Users Table -->
-                    <Border Grid.Row="1" Style="{StaticResource SettingsCardStyle}" Padding="0">
+                    <Border Grid.Column="2" Style="{StaticResource SettingsPanel}" Padding="0">
                         <DataGrid ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}"
                                   Style="{StaticResource ModernDataGrid}"
                                   ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}"
                                   CellStyle="{StaticResource ModernDataGridCell}"
                                   RowStyle="{StaticResource ModernDataGridRow}">
                             <DataGrid.Columns>
-                                <DataGridTemplateColumn Header="المستخدم" Width="*">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal" Margin="8,0">
-                                                <Border Width="32" Height="32" CornerRadius="8" Background="{StaticResource StatCardPurpleGradient}" Margin="0,0,12,0">
-                                                    <TextBlock Text="👤" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                </Border>
-                                                <StackPanel VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding Username}" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-
-                                <DataGridTemplateColumn Header="الدور" Width="140">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border CornerRadius="10" Padding="12,4" HorizontalAlignment="Left">
-                                                <Border.Style>
-                                                    <Style TargetType="Border">
-                                                        <Setter Property="Background" Value="{StaticResource PrimaryBlueGlassBrush}" />
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding Role}" Value="admin">
-                                                                <Setter Property="Background" Value="{StaticResource PrimaryGreenGlassBrush}" />
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Role}" Value="rep">
-                                                                <Setter Property="Background" Value="{StaticResource WarningGlassBrush}" />
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Border.Style>
-                                                <TextBlock Text="{Binding Role}" FontSize="12" FontWeight="Bold">
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="TextBlock">
-                                                            <Setter Property="Foreground" Value="{StaticResource PrimaryBlueLightBrush}" />
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding Role}" Value="admin">
-                                                                    <Setter Property="Foreground" Value="{StaticResource PrimaryGreenBrush}" />
-                                                                </DataTrigger>
-                                                                <DataTrigger Binding="{Binding Role}" Value="rep">
-                                                                    <Setter Property="Foreground" Value="{StaticResource WarningBrush}" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBlock.Style>
-                                                </TextBlock>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-
-                                <DataGridTextColumn Header="تاريخ الإنشاء" Binding="{Binding CreatedAt, StringFormat={}{0:yyyy/MM/dd}}" Width="160" />
-
-                                <DataGridTemplateColumn Header="الإجراءات" Width="120">
+                                <DataGridTextColumn Header="المستخدم" Binding="{Binding Username}" Width="*" />
+                                <DataGridTextColumn Header="الدور" Binding="{Binding Role}" Width="110" />
+                                <DataGridTemplateColumn Header="" Width="90">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <Button Content="✏️" Command="{Binding DataContext.EditSelectedUserAsyncCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        Style="{StaticResource WindowButtonStyle}" ToolTip="تعديل" />
-                                                <Button Content="🗑️" Command="{Binding DataContext.DeleteUserCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        CommandParameter="{Binding}" Style="{StaticResource CloseButtonStyle}" Margin="8,0,0,0" ToolTip="حذف" />
+                                                <Button Command="{Binding DataContext.EditSelectedUserAsyncCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        Style="{StaticResource WindowButtonStyle}" ToolTip="تعديل">
+                                                    <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" />
+                                                </Button>
+                                                <Button Command="{Binding DataContext.DeleteUserCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}" Style="{StaticResource CloseButtonStyle}" Margin="6,0,0,0" ToolTip="حذف">
+                                                    <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" />
+                                                </Button>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -411,196 +196,245 @@
                 </Grid>
             </TabItem>
 
-            <!-- ════════════════════════ -->
-            <!-- TAB 4: NOTIFICATIONS     -->
-            <!-- ════════════════════════ -->
-            <TabItem Style="{StaticResource SettingsTabItem}" Header="الإشعارات" Tag="notifications">
-                <ScrollViewer Margin="0,20,0,0" VerticalScrollBarVisibility="Auto">
-                    <StackPanel MaxWidth="740" HorizontalAlignment="Left">
-                        <!-- Inventory Alerts -->
-                        <Border Style="{StaticResource SettingsCardStyle}" Margin="0,0,0,20">
+            <TabItem Header="الأمان" Tag="security" Style="{StaticResource SettingsTabItem}">
+                <ScrollViewer Margin="0,12,0,0" VerticalScrollBarVisibility="Auto">
+                    <UniformGrid Columns="2">
+                        <Border Style="{StaticResource SettingsPanel}" Margin="0,0,12,12">
                             <StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                                    <Border Width="36" Height="36" CornerRadius="10" Background="{StaticResource StatCardAmberGradient}" Margin="0,0,14,0">
-                                        <TextBlock Text="📦" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    </Border>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="تنبيهات المخزون" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
-                                        <TextBlock Text="إدارة التنبيهات المتعلقة بالمخزون والأدوية" FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0" />
-                                    </StackPanel>
-                                </StackPanel>
-
-                                <!-- Expiry Alert -->
-                                <Border Style="{StaticResource ToggleRowStyle}">
-                                    <StackPanel>
-                                        <Grid Margin="0,0,0,14">
-                                            <StackPanel>
-                                                <TextBlock Text="تنبيه انتهاء الصلاحية" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,4" />
-                                                <TextBlock Text="إظهار تنبيه عند قرب انتهاء صلاحية الأدوية" FontSize="11" Foreground="{StaticResource TextMutedBrush}" />
-                                            </StackPanel>
-                                            <CheckBox IsChecked="{Binding CurrentSettings.ExpiryAlertEnabled}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                                        </Grid>
-                                        <Border Background="#FF0D1117" CornerRadius="12" Padding="16" IsEnabled="{Binding CurrentSettings.ExpiryAlertEnabled}" Opacity="0.9">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="تنبيه قبل انتهاء الصلاحية بـ:" VerticalAlignment="Center" Margin="0,0,12,0" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" />
-                                                <Border Background="#FF161B22" CornerRadius="8" Padding="8,0" BorderBrush="{StaticResource BorderMutedBrush}" BorderThickness="1">
-                                                    <TextBox Text="{Binding CurrentSettings.ExpiryDaysThreshold}" Width="70" Style="{StaticResource ModernTextBox}" Height="36" TextAlignment="Center" />
-                                                </Border>
-                                                <TextBlock Text="يوم" VerticalAlignment="Center" Margin="8,0,0,0" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
-                                            </StackPanel>
-                                        </Border>
-                                    </StackPanel>
-                                </Border>
-
-                                <!-- Low Stock Alert -->
-                                <Border Style="{StaticResource ToggleRowStyle}">
-                                    <StackPanel>
-                                        <Grid Margin="0,0,0,14">
-                                            <StackPanel>
-                                                <TextBlock Text="تنبيه نفاد الكمية" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,4" />
-                                                <TextBlock Text="إظهار تنبيه عند وصول المخزون للحد الأدنى" FontSize="11" Foreground="{StaticResource TextMutedBrush}" />
-                                            </StackPanel>
-                                            <CheckBox IsChecked="{Binding CurrentSettings.LowStockAlertEnabled}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                                        </Grid>
-                                        <Border Background="#FF0D1117" CornerRadius="12" Padding="16" IsEnabled="{Binding CurrentSettings.LowStockAlertEnabled}" Opacity="0.9">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="الحد الأدنى للكمية:" VerticalAlignment="Center" Margin="0,0,12,0" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" />
-                                                <Border Background="#FF161B22" CornerRadius="8" Padding="8,0" BorderBrush="{StaticResource BorderMutedBrush}" BorderThickness="1">
-                                                    <TextBox Text="{Binding CurrentSettings.LowStockThreshold}" Width="70" Style="{StaticResource ModernTextBox}" Height="36" TextAlignment="Center" />
-                                                </Border>
-                                                <TextBlock Text="وحدة" VerticalAlignment="Center" Margin="8,0,0,0" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
-                                            </StackPanel>
-                                        </Border>
-                                    </StackPanel>
-                                </Border>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Alert Method -->
-                        <Border Style="{StaticResource SettingsCardStyle}">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                                    <Border Width="36" Height="36" CornerRadius="10" Background="{StaticResource StatCardPurpleGradient}" Margin="0,0,14,0">
-                                        <TextBlock Text="🔊" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    </Border>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="طريقة التنبيه" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
-                                        <TextBlock Text="تفضيلات الإشعارات وطريقة العرض" FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0" />
-                                    </StackPanel>
-                                </StackPanel>
-
-                                <TextBlock Text="طريقة العرض المفضلة" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
-                                <ComboBox ItemsSource="{Binding AlertMethods}" SelectedItem="{Binding CurrentSettings.AlertMethod}" Style="{StaticResource ModernComboBox}" Height="44" Margin="0,0,0,20" />
-
-                                <Border Style="{StaticResource ToggleRowStyle}" Margin="0">
+                                <TextBlock Text="حماية الجلسة" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
+                                <TextBlock Text="إعدادات تمنع الاستخدام غير المصرح به عند ترك الجهاز" Style="{StaticResource MutedText}" Margin="0,4,0,18" />
+                                <Border Style="{StaticResource SettingRow}">
                                     <Grid>
                                         <StackPanel>
-                                            <TextBlock Text="تشغيل صوت عند التنبيه" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,4" />
-                                            <TextBlock Text="إصدار صوت تنبيه مسموع عند وصول إشعار جديد" FontSize="11" Foreground="{StaticResource TextMutedBrush}" />
+                                            <TextBlock Text="قفل تلقائي للجلسة" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                            <TextBlock Text="يقفل البرنامج بعد مدة عدم نشاط" Style="{StaticResource MutedText}" />
                                         </StackPanel>
-                                        <CheckBox IsChecked="{Binding CurrentSettings.PlaySoundOnAlert}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                        <CheckBox IsChecked="{Binding CurrentSettings.EnableSessionLock}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                    </Grid>
+                                </Border>
+                                <TextBlock Text="مدة عدم النشاط بالدقائق" Style="{StaticResource FieldLabel}" />
+                                <TextBox Text="{Binding CurrentSettings.SessionTimeoutMinutes, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="44" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource SettingsPanel}" Margin="12,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="سياسات الحماية" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
+                                <TextBlock Text="قواعد تحمي البيانات والعمليات الحساسة" Style="{StaticResource MutedText}" Margin="0,4,0,18" />
+                                <Border Style="{StaticResource SettingRow}">
+                                    <Grid>
+                                        <StackPanel>
+                                            <TextBlock Text="كلمات مرور قوية" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                            <TextBlock Text="يفرض كلمة مرور أقوى عند تغيير بيانات المستخدم" Style="{StaticResource MutedText}" />
+                                        </StackPanel>
+                                        <CheckBox IsChecked="{Binding CurrentSettings.RequireStrongPasswords}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                    </Grid>
+                                </Border>
+                                <Border Style="{StaticResource SettingRow}">
+                                    <Grid>
+                                        <StackPanel>
+                                            <TextBlock Text="إخفاء الأرقام المالية الحساسة" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                            <TextBlock Text="مفيد عند مشاركة الشاشة أو العمل أمام العملاء" Style="{StaticResource MutedText}" />
+                                        </StackPanel>
+                                        <CheckBox IsChecked="{Binding CurrentSettings.MaskSensitiveFinancials}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                    </Grid>
+                                </Border>
+                                <Border Style="{StaticResource SettingRow}">
+                                    <Grid>
+                                        <StackPanel>
+                                            <TextBlock Text="تأكيد قبل الحذف" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                            <TextBlock Text="يقلل أخطاء حذف المنتجات أو الحسابات بالخطأ" Style="{StaticResource MutedText}" />
+                                        </StackPanel>
+                                        <CheckBox IsChecked="{Binding CurrentSettings.ConfirmBeforeDelete}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
                                     </Grid>
                                 </Border>
                             </StackPanel>
                         </Border>
-                    </StackPanel>
+                    </UniformGrid>
                 </ScrollViewer>
             </TabItem>
 
-            <!-- ════════════════════════ -->
-            <!-- TAB 5: BACKUP            -->
-            <!-- ════════════════════════ -->
-            <TabItem Style="{StaticResource SettingsTabItem}" Header="النسخ الاحتياطي" Tag="backup">
-                <ScrollViewer Margin="0,20,0,0" VerticalScrollBarVisibility="Auto">
-                    <StackPanel MaxWidth="740" HorizontalAlignment="Left">
-                        <!-- Auto Backup -->
-                        <Border Style="{StaticResource SettingsCardStyle}" Margin="0,0,0,20">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                                    <Border Width="36" Height="36" CornerRadius="10" Background="#1AEF4444" Margin="0,0,14,0">
-                                        <TextBlock Text="🛡️" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    </Border>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="الأمان والحفظ" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
-                                        <TextBlock Text="إعدادات النسخ الاحتياطي التلقائي واليدوي" FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0" />
-                                    </StackPanel>
-                                </StackPanel>
+            <TabItem Header="قاعدة البيانات" Tag="database" Style="{StaticResource SettingsTabItem}">
+                <ScrollViewer Margin="0,12,0,0" VerticalScrollBarVisibility="Auto">
+                    <Border Style="{StaticResource SettingsPanel}">
+                        <StackPanel>
+                            <TextBlock Text="الاتصال والبيانات" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
+                            <TextBlock Text="تحكم في مسار قاعدة البيانات والخادم وفحص سلامة الاتصال" Style="{StaticResource MutedText}" Margin="0,4,0,18" />
+                            <TextBlock Text="مسار قاعدة البيانات" Style="{StaticResource FieldLabel}" />
+                            <Grid Margin="0,0,0,14">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="12" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding CurrentSettings.DbPath}" Style="{StaticResource ModernTextBox}" Height="44" />
+                                <Button Grid.Column="2" Content="تغيير" Command="{Binding BrowseDatabaseCommand}" Style="{StaticResource SecondaryButtonStyle}" Width="100" />
+                            </Grid>
+                            <TextBlock Text="API Base URL" Style="{StaticResource FieldLabel}" />
+                            <TextBox Text="{Binding CurrentSettings.ApiBaseUrl, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="44" Margin="0,0,0,14" />
+                            <TextBlock Text="مسار ملفات السجل" Style="{StaticResource FieldLabel}" />
+                            <TextBox Text="{Binding CurrentSettings.LogsPath, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="44" Margin="0,0,0,18" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="اختبار الاتصال" Command="{Binding TestConnectionCommand}" Style="{StaticResource PrimaryButtonStyle}" Width="140" Margin="0,0,12,0" />
+                                <Button Content="ضغط وتنظيف القاعدة" Command="{Binding VacuumDbCommand}" Style="{StaticResource SecondaryButtonStyle}" Width="170" />
+                                <TextBlock Text="{Binding DbSize, StringFormat=حجم القاعدة: {0}}" Foreground="{StaticResource PrimaryCyanLightBrush}" FontWeight="Bold" Margin="22,0,0,0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </ScrollViewer>
+            </TabItem>
 
-                                <Border Style="{StaticResource ToggleRowStyle}">
+            <TabItem Header="المستخدمين" Tag="users" Style="{StaticResource SettingsTabItem}">
+                <Grid Margin="0,12,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Style="{StaticResource SettingsPanel}" Margin="0,0,0,12">
+                        <Grid>
+                            <StackPanel>
+                                <TextBlock Text="إدارة المستخدمين" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
+                                <TextBlock Text="إضافة وتعديل وحذف حسابات الموظفين" Style="{StaticResource MutedText}" />
+                            </StackPanel>
+                            <Button Content="مستخدم جديد" Command="{Binding NewUserAsyncCommand}" Style="{StaticResource PrimaryButtonStyle}" Width="130" HorizontalAlignment="Left" />
+                        </Grid>
+                    </Border>
+                    <Border Grid.Row="1" Style="{StaticResource SettingsPanel}" Padding="0">
+                        <DataGrid ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}"
+                                  Style="{StaticResource ModernDataGrid}"
+                                  ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}"
+                                  CellStyle="{StaticResource ModernDataGridCell}"
+                                  RowStyle="{StaticResource ModernDataGridRow}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="المستخدم" Binding="{Binding Username}" Width="*" />
+                                <DataGridTextColumn Header="الدور" Binding="{Binding Role}" Width="140" />
+                                <DataGridTextColumn Header="تاريخ الإنشاء" Binding="{Binding CreatedAt, StringFormat={}{0:yyyy/MM/dd}}" Width="160" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="الإشعارات" Tag="notifications" Style="{StaticResource SettingsTabItem}">
+                <ScrollViewer Margin="0,12,0,0" VerticalScrollBarVisibility="Auto">
+                    <UniformGrid Columns="2">
+                        <Border Style="{StaticResource SettingsPanel}" Margin="0,0,12,12">
+                            <StackPanel>
+                                <TextBlock Text="تنبيهات المخزون" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
+                                <TextBlock Text="تحديد متى ينبهك البرنامج عن الصلاحية والكميات" Style="{StaticResource MutedText}" Margin="0,4,0,18" />
+                                <Border Style="{StaticResource SettingRow}">
                                     <Grid>
-                                        <StackPanel>
-                                            <TextBlock Text="النسخ الاحتياطي التلقائي" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,4" />
-                                            <TextBlock Text="حفظ نسخة احتياطية من البيانات بشكل دوري" FontSize="11" Foreground="{StaticResource TextMutedBrush}" />
-                                        </StackPanel>
-                                        <CheckBox IsChecked="{Binding CurrentSettings.AutoBackupEnabled}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                        <TextBlock Text="تنبيه انتهاء الصلاحية" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                        <CheckBox IsChecked="{Binding CurrentSettings.ExpiryAlertEnabled}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
                                     </Grid>
                                 </Border>
-
-                                <Rectangle Style="{StaticResource SectionDivider}" />
-
-                                <StackPanel IsEnabled="{Binding CurrentSettings.AutoBackupEnabled}" Opacity="{Binding CurrentSettings.AutoBackupEnabled, Converter={StaticResource BoolToOpacityConverter}, FallbackValue=1}">
-                                    <TextBlock Text="تكرار النسخ الاحتياطي" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
-                                    <ComboBox ItemsSource="{Binding BackupIntervals}" SelectedItem="{Binding CurrentSettings.BackupInterval}"
-                                              Style="{StaticResource ModernComboBox}" Height="44" Margin="0,0,0,20" />
-
-                                    <TextBlock Text="مسار حفظ النسخ الاحتياطية" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
-                                    <Grid Margin="0,0,0,4">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="12" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBox Text="{Binding CurrentSettings.BackupPath}" Style="{StaticResource ModernTextBox}" Height="44" />
-                                        <Button Grid.Column="2" Content="📁 اختيار مجلد" Style="{StaticResource SecondaryButtonStyle}" Padding="20,0" Height="44" Foreground="#FFFFFFFF" />
+                                <TextBlock Text="عدد الأيام قبل انتهاء الصلاحية" Style="{StaticResource FieldLabel}" />
+                                <TextBox Text="{Binding CurrentSettings.ExpiryDaysThreshold, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="44" Margin="0,0,0,14" />
+                                <Border Style="{StaticResource SettingRow}">
+                                    <Grid>
+                                        <TextBlock Text="تنبيه انخفاض الكمية" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                        <CheckBox IsChecked="{Binding CurrentSettings.LowStockAlertEnabled}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
                                     </Grid>
-                                </StackPanel>
+                                </Border>
+                                <TextBlock Text="الحد الأدنى للكمية" Style="{StaticResource FieldLabel}" />
+                                <TextBox Text="{Binding CurrentSettings.LowStockThreshold, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="44" />
                             </StackPanel>
                         </Border>
 
-                        <!-- Manual Backup CTA -->
-                        <Border Style="{StaticResource SettingsCardStyle}" Background="#FF1A1F26" BorderBrush="{StaticResource DangerGlassBrush}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" Width="52" Height="52" CornerRadius="14" Background="{StaticResource DangerGlassBrush}">
-                                    <TextBlock Text="⚠️" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <Border Style="{StaticResource SettingsPanel}" Margin="12,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="طريقة التنبيه" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
+                                <TextBlock Text="تحديد شكل الإشعار والصوت والتنبيهات المالية" Style="{StaticResource MutedText}" Margin="0,4,0,18" />
+                                <TextBlock Text="طريقة العرض" Style="{StaticResource FieldLabel}" />
+                                <ComboBox ItemsSource="{Binding AlertMethods}" SelectedItem="{Binding CurrentSettings.AlertMethod}" Style="{StaticResource ModernComboBox}" Height="44" Margin="0,0,0,14" />
+                                <Border Style="{StaticResource SettingRow}">
+                                    <Grid>
+                                        <TextBlock Text="تشغيل صوت التنبيه" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                        <CheckBox IsChecked="{Binding CurrentSettings.PlaySoundOnAlert}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                    </Grid>
                                 </Border>
-                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0">
-                                    <TextBlock Text="إنشاء نسخة احتياطية فورية" FontSize="16" FontWeight="Bold" Foreground="{StaticResource DangerBrush}" />
-                                    <TextBlock Text="احفظ بياناتك الآن بشكل كامل وآمن" FontSize="12" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0" />
-                                </StackPanel>
-                                <Button Grid.Column="2" Content="🛡️ ابدأ النسخ الآن" Command="{Binding CreateBackupCommand}"
-                                        Style="{StaticResource DangerButtonStyle}" Padding="28,0" Height="48" FontWeight="Bold" />
-                            </Grid>
+                                <Border Style="{StaticResource SettingRow}">
+                                    <Grid>
+                                        <TextBlock Text="تنبيه التحصيلات المتأخرة" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                        <CheckBox IsChecked="{Binding CurrentSettings.PendingPaymentsAlertEnabled}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                    </Grid>
+                                </Border>
+                                <TextBlock Text="حد التنبيه المالي" Style="{StaticResource FieldLabel}" />
+                                <TextBox Text="{Binding CurrentSettings.PendingPaymentsThreshold, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="44" />
+                            </StackPanel>
                         </Border>
-                    </StackPanel>
+                    </UniformGrid>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="النسخ والتقارير" Tag="backup" Style="{StaticResource SettingsTabItem}">
+                <ScrollViewer Margin="0,12,0,0" VerticalScrollBarVisibility="Auto">
+                    <UniformGrid Columns="2">
+                        <Border Style="{StaticResource SettingsPanel}" Margin="0,0,12,12">
+                            <StackPanel>
+                                <TextBlock Text="النسخ الاحتياطي" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
+                                <TextBlock Text="حفظ نسخة آمنة من بياناتك بشكل يدوي أو تلقائي" Style="{StaticResource MutedText}" Margin="0,4,0,18" />
+                                <Border Style="{StaticResource SettingRow}">
+                                    <Grid>
+                                        <TextBlock Text="نسخ احتياطي تلقائي" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                        <CheckBox IsChecked="{Binding CurrentSettings.AutoBackupEnabled}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                    </Grid>
+                                </Border>
+                                <TextBlock Text="تكرار النسخ" Style="{StaticResource FieldLabel}" />
+                                <ComboBox ItemsSource="{Binding BackupIntervals}" SelectedItem="{Binding CurrentSettings.BackupInterval}" Style="{StaticResource ModernComboBox}" Height="44" Margin="0,0,0,14" />
+                                <TextBlock Text="عدد النسخ المحتفظ بها" Style="{StaticResource FieldLabel}" />
+                                <TextBox Text="{Binding CurrentSettings.BackupRetentionCount, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="44" Margin="0,0,0,14" />
+                                <TextBlock Text="مسار النسخ الاحتياطي" Style="{StaticResource FieldLabel}" />
+                                <TextBox Text="{Binding CurrentSettings.BackupPath, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="44" Margin="0,0,0,18" />
+                                <Button Content="إنشاء نسخة الآن" Command="{Binding CreateBackupCommand}" Style="{StaticResource DangerButtonStyle}" Height="44" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SettingsPanel}" Margin="12,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="التقارير والطباعة" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
+                                <TextBlock Text="إعدادات ترفع جودة التقارير والفواتير" Style="{StaticResource MutedText}" Margin="0,4,0,18" />
+                                <Border Style="{StaticResource SettingRow}">
+                                    <Grid>
+                                        <TextBlock Text="تصدير التقارير تلقائيا" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                        <CheckBox IsChecked="{Binding CurrentSettings.AutoExportReports}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                    </Grid>
+                                </Border>
+                                <TextBlock Text="النطاق الافتراضي للتقارير" Style="{StaticResource FieldLabel}" />
+                                <ComboBox ItemsSource="{Binding ReportRanges}" SelectedItem="{Binding CurrentSettings.DefaultReportRange}" Style="{StaticResource ModernComboBox}" Height="44" Margin="0,0,0,14" />
+                                <Border Style="{StaticResource SettingRow}">
+                                    <Grid>
+                                        <StackPanel>
+                                            <TextBlock Text="إظهار بيانات الشركة في الطباعة" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                            <TextBlock Text="يضيف اسم المخزن والفرع في رأس الفاتورة والتقارير" Style="{StaticResource MutedText}" />
+                                        </StackPanel>
+                                        <CheckBox IsChecked="{Binding CurrentSettings.PrintCompanyHeader}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                    </Grid>
+                                </Border>
+                                <Border Style="{StaticResource SettingRow}">
+                                    <Grid>
+                                        <StackPanel>
+                                            <TextBlock Text="سجل تدقيق العمليات" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                            <TextBlock Text="تسجيل التعديلات والحذف والعمليات المهمة" Style="{StaticResource MutedText}" />
+                                        </StackPanel>
+                                        <CheckBox IsChecked="{Binding CurrentSettings.EnableAuditTrail}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </UniformGrid>
                 </ScrollViewer>
             </TabItem>
         </TabControl>
 
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <!-- BOTTOM ACTION BAR                                          -->
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <Border Grid.Row="2" Background="{StaticResource CardBgBrush}" CornerRadius="20" Padding="24,16"
-                BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1.5" Margin="0,20,0,0"
+        <Border Grid.Row="2" Background="#FF121C2E" CornerRadius="18" Padding="20,14"
+                BorderBrush="#FF31415F" BorderThickness="1.5" Margin="0,18,0,0"
                 Effect="{StaticResource CardShadow}">
             <Grid>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Border Width="28" Height="28" CornerRadius="8" Background="{StaticResource StatCardGreenGradient}" Margin="0,0,12,0">
-                        <TextBlock Text="✓" FontSize="14" Foreground="{StaticResource PrimaryGreenBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" />
-                    </Border>
-                    <TextBlock Text="{Binding Status, FallbackValue='النظام جاهز'}" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" FontSize="13" />
-                </StackPanel>
+                <TextBlock Text="{Binding Status, FallbackValue=جاهز}" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" />
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                    <Button Content="🔄 إعادة تشغيل" Command="{Binding RestartAppCommand}"
-                            Style="{StaticResource TransparentButtonStyle}" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,20,0" FontSize="13" />
-                    <Button Content="↩️ استعادة الافتراضي" Command="{Binding ResetDefaultsCommand}"
-                            Style="{StaticResource TransparentButtonStyle}" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,24,0" FontSize="13" />
-                    <Button Content="💾 حفظ الإعدادات" Command="{Binding SaveCommand}"
-                            Style="{StaticResource PrimaryButtonStyle}" Width="180" Height="44" FontWeight="Bold" />
+                    <Button Content="إعادة تشغيل" Command="{Binding RestartAppCommand}" Style="{StaticResource SecondaryButtonStyle}" Width="120" Margin="0,0,12,0" />
+                    <Button Content="استعادة الافتراضي" Command="{Binding ResetDefaultsCommand}" Style="{StaticResource DangerButtonStyle}" Width="145" Margin="0,0,12,0" />
+                    <Button Content="حفظ الإعدادات" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButtonStyle}" Width="155" />
                 </StackPanel>
             </Grid>
         </Border>

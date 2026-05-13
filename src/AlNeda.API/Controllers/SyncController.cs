@@ -1,3 +1,4 @@
+using AlNeda.API.Authorization;
 using AlNeda.Core.Entities;
 using AlNeda.Core.Models;
 using AlNeda.Data.UnitOfWork;
@@ -9,7 +10,7 @@ namespace AlNeda.API.Controllers;
 
 [ApiController]
 [Route("api/sync")]
-[Authorize]
+[Authorize(Policy = AuthPolicies.Staff)]
 public class SyncController : ControllerBase
 {
     private readonly IUnitOfWorkFactory _uowFactory;

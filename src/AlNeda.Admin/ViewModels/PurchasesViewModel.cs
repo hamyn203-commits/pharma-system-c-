@@ -24,6 +24,9 @@ public partial class PurchasesViewModel : ObservableObject
     [ObservableProperty] private string _invoiceNumber = "";
     [ObservableProperty] private decimal _totalAmount;
     [ObservableProperty] private string _validationMessage = "";
+    [ObservableProperty] private decimal _monthlyPurchasesTotal;
+    [ObservableProperty] private int _unpaidInvoicesCount;
+    [ObservableProperty] private decimal _supplierDuesTotal;
 
     public PurchasesViewModel(IAlNedaApiClient apiClient, IDialogService dialog)
     {
@@ -42,6 +45,7 @@ public partial class PurchasesViewModel : ObservableObject
             Suppliers = new ObservableCollection<SupplierDto>(supps);
             var prods = await _apiClient.GetProductsAsync();
             Products = new ObservableCollection<ProductDto>(prods);
+            UpdateStats();
         }
         catch (ApiException ex)
         {
@@ -58,6 +62,15 @@ public partial class PurchasesViewModel : ObservableObject
         InvoiceNumber = "";
         SelectedSupplier = null;
         ShowEditor = true;
+    }
+
+    private void UpdateStats()
+    {
+        MonthlyPurchasesTotal = Purchases
+            .Where(p => p.CreatedAt.Month == DateTime.Now.Month && p.CreatedAt.Year == DateTime.Now.Year)
+            .Sum(p => p.TotalAmount);
+        UnpaidInvoicesCount = Purchases.Count(p => !string.Equals(p.Status, "paid", StringComparison.OrdinalIgnoreCase));
+        SupplierDuesTotal = Purchases.Sum(p => p.RemainingAmount);
     }
 
     [RelayCommand]

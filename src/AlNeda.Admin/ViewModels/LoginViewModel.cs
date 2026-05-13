@@ -76,7 +76,8 @@ public partial class LoginViewModel : ObservableObject
             var result = await _apiClient.LoginAsync(Username.Trim(), Password);
             if (result?.User != null)
             {
-                if (!string.IsNullOrEmpty(SelectedRole) && result.User.Role.ToLower() != SelectedRole.ToLower())
+                if (!string.IsNullOrEmpty(SelectedRole) && 
+                    !string.Equals(result.User.Role, SelectedRole, StringComparison.OrdinalIgnoreCase))
                 {
                     ErrorMessage = $"هذا المستخدم ليس لديه صلاحية {SelectedRole}";
                     return;
@@ -89,14 +90,21 @@ public partial class LoginViewModel : ObservableObject
                 ErrorMessage = "اسم المستخدم أو كلمة المرور غير صحيحة";
             }
         }
+        catch (ApiException apiEx)
+        {
+            ErrorMessage = apiEx.ErrorResponse != null 
+                ? $"خطأ من الخادم: {apiEx.ErrorResponse.Message}" 
+                : $"خطأ في الاتصال (رمز: {apiEx.StatusCode})";
+            Serilog.Log.Warning(apiEx, "API Login error");
+        }
         catch (HttpRequestException)
         {
             ErrorMessage = "تعذر الاتصال بالخادم. تأكد من تشغيل الخدمة";
         }
         catch (Exception ex)
         {
-            Serilog.Log.Error(ex, "Login failed");
-            ErrorMessage = $"خطأ: {ex.Message}";
+            Serilog.Log.Error(ex, "Login failed unexpectedly");
+            ErrorMessage = $"خطأ غير متوقع: {ex.Message}";
         }
         finally
         {

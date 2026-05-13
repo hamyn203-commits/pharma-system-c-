@@ -16,7 +16,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="👤 بيانات المستخدم" FontSize="24" FontWeight="Bold" Foreground="White" Margin="0,0,0,24"/>
+            <TextBlock Text="بيانات المستخدم" FontSize="24" FontWeight="Bold" Foreground="White" Margin="0,0,0,24"/>
 
             <StackPanel Grid.Row="1">
                 <TextBlock Text="اسم المستخدم" Foreground="#8B949E" Margin="0,0,0,8"/>
@@ -44,7 +44,7 @@
                         </Style>
                     </Button.Resources>
                 </Button>
-                <Button Grid.Column="1" Content="✅ حفظ التغييرات" Command="{Binding SaveCommand}" Background="#238636" Foreground="White" Padding="0,12" BorderThickness="0">
+                <Button Grid.Column="1" Content="حفظ التغييرات" Command="{Binding SaveCommand}" Background="#238636" Foreground="White" Padding="0,12" BorderThickness="0">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="8"/>

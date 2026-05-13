@@ -1,3 +1,4 @@
+using AlNeda.API.Authorization;
 using AlNeda.Core.Entities;
 using AlNeda.Core.Models;
 using AlNeda.Services;
@@ -9,7 +10,7 @@ namespace AlNeda.API.Controllers;
 
 [ApiController]
 [Route("api/categories")]
-[Authorize]
+[Authorize(Policy = AuthPolicies.Staff)]
 public class CategoriesController : ControllerBase
 {
     private readonly IDbContextFactory<Data.AppDbContext> _contextFactory;

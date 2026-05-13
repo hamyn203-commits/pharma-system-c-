@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Net.Http;
 using AlNeda.Admin.Services;
 using AlNeda.Admin.Services.ApiClient;
 using AlNeda.Core.Entities;
@@ -22,6 +23,10 @@ public partial class ProductsViewModel : ObservableObject
     [ObservableProperty] private bool _showEditor;
     [ObservableProperty] private Product _editProduct = new();
     [ObservableProperty] private string _validationMessage = "";
+    [ObservableProperty] private int _totalProducts;
+    [ObservableProperty] private int _activeProducts;
+    [ObservableProperty] private int _lowStockProducts;
+    [ObservableProperty] private decimal _inventoryValue;
 
     public ProductsViewModel(IAlNedaApiClient apiClient, IDialogService dialog)
     {
@@ -38,6 +43,7 @@ public partial class ProductsViewModel : ObservableObject
             Products = new ObservableCollection<ProductDto>(await _apiClient.GetProductsAsync(SearchText));
             var cats = await _apiClient.GetCategoriesAsync();
             Categories = new ObservableCollection<CategoryDto>(cats);
+            UpdateStats();
         }
         catch (ApiException ex)
         {
@@ -48,6 +54,14 @@ public partial class ProductsViewModel : ObservableObject
 
     [RelayCommand]
     private async Task SearchAsync() => await LoadAsync();
+
+    private void UpdateStats()
+    {
+        TotalProducts = Products.Count;
+        ActiveProducts = Products.Count(p => p.IsActive == 1);
+        LowStockProducts = Products.Count(p => p.Quantity <= 10);
+        InventoryValue = Products.Sum(p => p.Quantity * p.UnitPrice);
+    }
 
     [RelayCommand]
     private async Task SearchByBarcodeAsync()
@@ -86,18 +100,18 @@ public partial class ProductsViewModel : ObservableObject
         EditProduct = new Product
         {
             Id = SelectedProduct.Id,
-            Name = SelectedProduct.Name,
+            Name = SelectedProduct.Name ?? string.Empty,
             Barcode = SelectedProduct.Barcode,
             CategoryId = SelectedProduct.CategoryId,
-            Category = SelectedProduct.CategoryName ?? SelectedProduct.Category,
-            Company = SelectedProduct.Company,
+            Category = SelectedProduct.CategoryName ?? SelectedProduct.Category ?? "عام",
+            Company = SelectedProduct.Company ?? "غير محدد",
             Quantity = SelectedProduct.Quantity,
             UnitPrice = SelectedProduct.UnitPrice,
             ExpiryDate = SelectedProduct.ExpiryDate,
             ImagePath = SelectedProduct.ImagePath,
             ImageUrl = SelectedProduct.ImageUrl,
             IsActive = SelectedProduct.IsActive,
-            Description = SelectedProduct.Description,
+            Description = SelectedProduct.Description ?? string.Empty,
         };
         ShowEditor = true;
     }
@@ -162,14 +176,23 @@ public partial class ProductsViewModel : ObservableObject
             ShowEditor = false;
             await LoadAsync();
         }
-        catch (ApiException ex)
+        catch (ApiException apiEx)
         {
-            ValidationMessage = ex.Message;
+            ValidationMessage = apiEx.ErrorResponse != null ? $"خطأ من الخادم: {apiEx.ErrorResponse.Message}" : $"خطأ في الاتصال (رمز: {apiEx.StatusCode})";
+            Serilog.Log.Warning(apiEx, "API Save error");
+        }
+        catch (HttpRequestException)
+        {
+            ValidationMessage = "تعذر الاتصال بالخادم. تأكد من تشغيل الخدمة";
         }
         catch (Exception ex)
         {
-            ValidationMessage = $"خطأ: {ex.Message}";
+            ValidationMessage = $"خطأ غير متوقع: {ex.Message}";
             Serilog.Log.Error(ex, "Failed to save product");
+        }
+        finally
+        {
+            IsLoading = false;
         }
     }
 

@@ -1,0 +1,29 @@
+أوامر تشغيل برنامج مخزن الندا من CMD
+====================================
+
+1) افتح CMD داخل فولدر المشروع:
+
+cd /d "D:\New folder (3)"
+
+
+2) شغل الخادم API أولاً:
+
+dotnet run --project "src\AlNeda.API\AlNeda.API.csproj" --urls "http://localhost:5000"
+
+
+3) افتح CMD جديد داخل نفس فولدر المشروع:
+
+cd /d "D:\New folder (3)"
+
+
+4) شغل برنامج الإدارة:
+
+dotnet run --project "src\AlNeda.Admin\AlNeda.Admin.csproj"
+
+
+ملاحظات مهمة:
+- لازم تسيب نافذة الـ API مفتوحة طول ما البرنامج شغال.
+- رابط الـ API المحلي:
+  http://localhost:5000
+- صفحة Swagger لاختبار الـ API:
+  http://localhost:5000/swagger

@@ -15,7 +15,7 @@ namespace AlNeda.Data.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.15");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
 
             modelBuilder.Entity("AlNeda.Core.Entities.AuditLog", b =>
                 {
@@ -115,6 +115,167 @@ namespace AlNeda.Data.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("AlNeda.Core.Entities.MarketingOffer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AudienceRule")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("DiscountPercent")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("EndsAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(400)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("NewPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("OfferType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("OldPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("QuantityLimit")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("RemainingQuantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("StartsAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Subtitle")
+                        .IsRequired()
+                        .HasMaxLength(260)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(180)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("StartsAt", "EndsAt");
+
+                    b.ToTable("MarketingOffers");
+                });
+
+            modelBuilder.Entity("AlNeda.Core.Entities.MarketingOfferPharmacyTarget", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MarketingOfferId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PharmacyId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PharmacyId");
+
+                    b.HasIndex("MarketingOfferId", "PharmacyId")
+                        .IsUnique();
+
+                    b.ToTable("MarketingOfferPharmacyTargets");
+                });
+
+            modelBuilder.Entity("AlNeda.Core.Entities.OfferEvent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("DeviceId")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DeviceKey")
+                        .IsRequired()
+                        .HasMaxLength(220)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EventDateKey")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsRejected")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsUniqueDailyImpression")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MarketingOfferId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("OccurredAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PharmacyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("RejectionReason")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("UsedDeviceFallback")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PharmacyId");
+
+                    b.HasIndex("MarketingOfferId", "EventType", "OccurredAt");
+
+                    b.HasIndex("MarketingOfferId", "PharmacyId", "DeviceKey", "EventDateKey", "EventType", "IsUniqueDailyImpression")
+                        .IsUnique()
+                        .HasFilter("EventType = 'impression' AND IsRejected = 0 AND IsUniqueDailyImpression = 1");
+
+                    b.ToTable("OfferEvents");
+                });
+
             modelBuilder.Entity("AlNeda.Core.Entities.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -132,6 +293,17 @@ namespace AlNeda.Data.Migrations
                     b.Property<decimal>("BalanceBefore")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CancellationReason")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CancellationRequestedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ClientNotes")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
@@ -160,6 +332,9 @@ namespace AlNeda.Data.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("LastStatusUpdate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("MobileCreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Notes")
@@ -192,6 +367,14 @@ namespace AlNeda.Data.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("SourceOfferId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -204,6 +387,8 @@ namespace AlNeda.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PharmacyId");
+
+                    b.HasIndex("SourceOfferId");
 
                     b.ToTable("Orders");
                 });
@@ -680,6 +865,9 @@ namespace AlNeda.Data.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("LastLoginAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -689,6 +877,9 @@ namespace AlNeda.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("PharmacyId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -702,10 +893,50 @@ namespace AlNeda.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PharmacyId");
+
                     b.HasIndex("Username")
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("AlNeda.Core.Entities.MarketingOfferPharmacyTarget", b =>
+                {
+                    b.HasOne("AlNeda.Core.Entities.MarketingOffer", "Offer")
+                        .WithMany("PharmacyTargets")
+                        .HasForeignKey("MarketingOfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AlNeda.Core.Entities.Pharmacy", "Pharmacy")
+                        .WithMany()
+                        .HasForeignKey("PharmacyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Offer");
+
+                    b.Navigation("Pharmacy");
+                });
+
+            modelBuilder.Entity("AlNeda.Core.Entities.OfferEvent", b =>
+                {
+                    b.HasOne("AlNeda.Core.Entities.MarketingOffer", "Offer")
+                        .WithMany("Events")
+                        .HasForeignKey("MarketingOfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AlNeda.Core.Entities.Pharmacy", "Pharmacy")
+                        .WithMany()
+                        .HasForeignKey("PharmacyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Offer");
+
+                    b.Navigation("Pharmacy");
                 });
 
             modelBuilder.Entity("AlNeda.Core.Entities.Order", b =>
@@ -716,7 +947,14 @@ namespace AlNeda.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AlNeda.Core.Entities.MarketingOffer", "SourceOffer")
+                        .WithMany("Orders")
+                        .HasForeignKey("SourceOfferId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("Pharmacy");
+
+                    b.Navigation("SourceOffer");
                 });
 
             modelBuilder.Entity("AlNeda.Core.Entities.OrderItem", b =>
@@ -842,9 +1080,28 @@ namespace AlNeda.Data.Migrations
                     b.Navigation("Return");
                 });
 
+            modelBuilder.Entity("AlNeda.Core.Entities.User", b =>
+                {
+                    b.HasOne("AlNeda.Core.Entities.Pharmacy", "Pharmacy")
+                        .WithMany()
+                        .HasForeignKey("PharmacyId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Pharmacy");
+                });
+
             modelBuilder.Entity("AlNeda.Core.Entities.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("AlNeda.Core.Entities.MarketingOffer", b =>
+                {
+                    b.Navigation("Events");
+
+                    b.Navigation("Orders");
+
+                    b.Navigation("PharmacyTargets");
                 });
 
             modelBuilder.Entity("AlNeda.Core.Entities.Order", b =>
