@@ -8,8 +8,10 @@ public class PharmacyDto
     public string? Phone { get; set; }
     public decimal Balance { get; set; }
     public string AccountStatus { get; set; } = "active";
+    public string? OwnerName { get; set; }
     public bool HasAppAccount { get; set; }
     public bool IsAppAccountActive { get; set; }
+    public string? AppUsername { get; set; }
     public DateTime? AppLastLoginAt { get; set; }
     public int AppOrdersCount { get; set; }
     public DateTime CreatedAt { get; set; }
@@ -22,6 +24,11 @@ public class CreatePharmacyRequest
     public string? Phone { get; set; }
     public decimal Balance { get; set; }
     public string AccountStatus { get; set; } = "active";
+
+    // Auto-create app account when admin adds a pharmacy
+    public string? OwnerName { get; set; }
+    public string? Username { get; set; }
+    public string? Password { get; set; }
 }
 
 public class UpdatePharmacyRequest
@@ -32,6 +39,7 @@ public class UpdatePharmacyRequest
     public string? Phone { get; set; }
     public decimal Balance { get; set; }
     public string AccountStatus { get; set; } = "active";
+    public string? OwnerName { get; set; }
 }
 
 public class PharmacyStatusRequest

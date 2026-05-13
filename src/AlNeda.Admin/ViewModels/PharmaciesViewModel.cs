@@ -16,6 +16,7 @@ public partial class PharmaciesViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<PharmacyDto> _pharmacies = [];
     [ObservableProperty] private PharmacyDto? _selectedPharmacy;
     [ObservableProperty] private bool _showEditor;
+    [ObservableProperty] private bool _isNewPharmacy = true;
     [ObservableProperty] private Pharmacy _editPharmacy = new();
     [ObservableProperty] private string _searchText = "";
     [ObservableProperty] private bool _isLoading;
@@ -23,6 +24,12 @@ public partial class PharmaciesViewModel : ObservableObject
     [ObservableProperty] private string _appUsername = "";
     [ObservableProperty] private string _appPassword = "";
     [ObservableProperty] private bool _showAppAccountEditor;
+    [ObservableProperty] private bool _showPendingOnly;
+
+    // Editor fields for manual pharmacy creation
+    [ObservableProperty] private string _editOwnerName = "";
+    [ObservableProperty] private string _editAppUsername = "";
+    [ObservableProperty] private string _editAppPassword = "";
 
     public PharmaciesViewModel(IAlNedaApiClient apiClient, IDialogService dialog)
     {
@@ -32,6 +39,7 @@ public partial class PharmaciesViewModel : ObservableObject
 
     public int TotalPharmacies => Pharmacies.Count;
     public int ActivePharmacies => Pharmacies.Count(x => string.Equals(x.AccountStatus, "active", StringComparison.OrdinalIgnoreCase));
+    public int PendingPharmacies => Pharmacies.Count(x => string.Equals(x.AccountStatus, "pending", StringComparison.OrdinalIgnoreCase));
     public decimal TotalDebt => Pharmacies.Where(x => x.Balance > 0).Sum(x => x.Balance);
     public bool HasNoPharmacies => !IsLoading && Pharmacies.Count == 0;
 
@@ -41,7 +49,9 @@ public partial class PharmaciesViewModel : ObservableObject
         IsLoading = true;
         try
         {
-            Pharmacies = new ObservableCollection<PharmacyDto>(await _apiClient.GetPharmaciesAsync(SearchText));
+            var statusFilter = ShowPendingOnly ? "pending" : null;
+            Pharmacies = new ObservableCollection<PharmacyDto>(
+                await _apiClient.GetPharmaciesAsync(SearchText, statusFilter));
         }
         catch (ApiException ex)
         {
@@ -54,16 +64,27 @@ public partial class PharmaciesViewModel : ObservableObject
     {
         OnPropertyChanged(nameof(TotalPharmacies));
         OnPropertyChanged(nameof(ActivePharmacies));
+        OnPropertyChanged(nameof(PendingPharmacies));
         OnPropertyChanged(nameof(TotalDebt));
         OnPropertyChanged(nameof(HasNoPharmacies));
     }
 
     partial void OnIsLoadingChanged(bool value) => OnPropertyChanged(nameof(HasNoPharmacies));
 
+    partial void OnShowPendingOnlyChanged(bool value)
+    {
+        _ = LoadAsync();
+    }
+
     [RelayCommand]
     private void NewPharmacy()
     {
-        EditPharmacy = new Pharmacy { AccountStatus = "pending" };
+        IsNewPharmacy = true;
+        EditPharmacy = new Pharmacy { AccountStatus = "active" };
+        EditOwnerName = "";
+        EditAppUsername = "";
+        EditAppPassword = "";
+        ValidationMessage = "";
         ShowEditor = true;
     }
 
@@ -71,15 +92,21 @@ public partial class PharmaciesViewModel : ObservableObject
     private void EditSelected()
     {
         if (SelectedPharmacy == null) return;
+        IsNewPharmacy = false;
         EditPharmacy = new Pharmacy
         {
             Id = SelectedPharmacy.Id,
             Name = SelectedPharmacy.Name ?? string.Empty,
             Address = SelectedPharmacy.Address ?? string.Empty,
             Phone = SelectedPharmacy.Phone ?? string.Empty,
+            OwnerName = SelectedPharmacy.OwnerName,
             Balance = SelectedPharmacy.Balance,
             AccountStatus = SelectedPharmacy.AccountStatus ?? "active"
         };
+        EditOwnerName = SelectedPharmacy.OwnerName ?? "";
+        EditAppUsername = "";
+        EditAppPassword = "";
+        ValidationMessage = "";
         ShowEditor = true;
     }
 
@@ -97,10 +124,15 @@ public partial class PharmaciesViewModel : ObservableObject
             ValidationMessage = "الرصيد لا يمكن أن يكون سالباً";
             return;
         }
+        if (IsNewPharmacy && !string.IsNullOrWhiteSpace(EditAppPassword) && EditAppPassword.Length < 8)
+        {
+            ValidationMessage = "كلمة المرور للتطبيق يجب ألا تقل عن 8 أحرف";
+            return;
+        }
 
         try
         {
-            if (EditPharmacy.Id == 0)
+            if (IsNewPharmacy)
             {
                 var request = new CreatePharmacyRequest
                 {
@@ -108,7 +140,10 @@ public partial class PharmaciesViewModel : ObservableObject
                     Address = EditPharmacy.Address,
                     Phone = EditPharmacy.Phone,
                     Balance = EditPharmacy.Balance,
-                    AccountStatus = EditPharmacy.AccountStatus
+                    AccountStatus = "active",
+                    OwnerName = EditOwnerName?.Trim(),
+                    Username = string.IsNullOrWhiteSpace(EditAppUsername) ? null : EditAppUsername.Trim(),
+                    Password = string.IsNullOrWhiteSpace(EditAppPassword) ? null : EditAppPassword
                 };
                 await _apiClient.CreatePharmacyAsync(request);
                 _dialog.ShowMessage("تم إضافة الصيدلية بنجاح", "نجاح");
@@ -122,7 +157,8 @@ public partial class PharmaciesViewModel : ObservableObject
                     Address = EditPharmacy.Address,
                     Phone = EditPharmacy.Phone,
                     Balance = EditPharmacy.Balance,
-                    AccountStatus = EditPharmacy.AccountStatus
+                    AccountStatus = EditPharmacy.AccountStatus,
+                    OwnerName = EditOwnerName?.Trim()
                 };
                 await _apiClient.UpdatePharmacyAsync(request);
                 _dialog.ShowMessage("تم تحديث الصيدلية بنجاح", "نجاح");
@@ -192,6 +228,24 @@ public partial class PharmaciesViewModel : ObservableObject
         {
             await _apiClient.SetPharmacyStatusAsync(pharmacy.Id, "blocked");
             await LoadAsync();
+        }
+        catch (ApiException ex)
+        {
+            _dialog.ShowError(ex.Message, "خطأ");
+        }
+    }
+
+    [RelayCommand]
+    private async Task DeletePharmacyAsync(PharmacyDto? pharmacy)
+    {
+        if (pharmacy == null) return;
+        if (!_dialog.Confirm($"هل تريد حذف الصيدلية '{pharmacy.Name}' نهائياً؟ لا يمكن التراجع عن هذا الإجراء.")) return;
+
+        try
+        {
+            await _apiClient.DeletePharmacyAsync(pharmacy.Id);
+            await LoadAsync();
+            _dialog.ShowMessage("تم حذف الصيدلية بنجاح", "نجاح");
         }
         catch (ApiException ex)
         {

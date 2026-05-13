@@ -31,6 +31,12 @@ public class Pharmacy : IEntity
     [MaxLength(200)]
     public string? DeviceId { get; set; }
 
+    [MaxLength(200)]
+    public string? OwnerName { get; set; }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool IsApproved => string.Equals(AccountStatus, "active", StringComparison.OrdinalIgnoreCase);
+
     public ICollection<Order> Orders { get; set; } = new List<Order>();
     public ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }

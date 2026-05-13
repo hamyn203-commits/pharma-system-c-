@@ -59,6 +59,10 @@ public class MobileController : ControllerBase
     public async Task<IActionResult> Products([FromQuery] string? search)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
+
+        var approvalCheck = await EnsurePharmacyApprovedAsync(db);
+        if (approvalCheck != null) return approvalCheck;
+
         var showUnavailable = GetMobileSettings().ShowUnavailableProducts;
         var query = db.Products.Include(p => p.CategoryObj).Where(p => p.IsActive == 1);
         if (!showUnavailable)
@@ -78,6 +82,10 @@ public class MobileController : ControllerBase
     public async Task<IActionResult> Product(int id)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
+
+        var approvalCheck = await EnsurePharmacyApprovedAsync(db);
+        if (approvalCheck != null) return approvalCheck;
+
         var showUnavailable = GetMobileSettings().ShowUnavailableProducts;
         var product = await db.Products.Include(p => p.CategoryObj)
             .FirstOrDefaultAsync(p => p.Id == id && p.IsActive == 1 && (showUnavailable || p.Quantity > 0));
@@ -556,6 +564,22 @@ public class MobileController : ControllerBase
             ?? User.FindFirst("PharmacyId")?.Value
             ?? User.FindFirst("pharmacy_id")?.Value;
         return int.TryParse(value, out var id) ? id : null;
+    }
+
+    private async Task<bool> IsPharmacyApprovedAsync(Data.AppDbContext db, int pharmacyId)
+    {
+        var pharmacy = await db.Pharmacies.FindAsync(pharmacyId);
+        return pharmacy != null && pharmacy.IsApproved;
+    }
+
+    private async Task<IActionResult?> EnsurePharmacyApprovedAsync(Data.AppDbContext db)
+    {
+        var pid = GetPharmacyId();
+        if (pid == null) return PharmacyNotLinked();
+        if (!await IsPharmacyApprovedAsync(db, pid.Value))
+            return StatusCode(StatusCodes.Status403Forbidden,
+                Error("حسابك في انتظار موافقة إدارة المخزن", "ACCOUNT_PENDING"));
+        return null;
     }
 
     private MobileSettingsDto GetMobileSettings()

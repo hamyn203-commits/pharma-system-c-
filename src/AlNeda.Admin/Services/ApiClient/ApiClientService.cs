@@ -89,7 +89,7 @@ public interface IAlNedaApiClient
     Task<PagedResult<AuditLogDto>> GetAuditLogsAsync(AuditLogFilterRequest filter);
 
     // Pharmacies
-    Task<List<PharmacyDto>> GetPharmaciesAsync(string? search = null);
+    Task<List<PharmacyDto>> GetPharmaciesAsync(string? search = null, string? status = null);
     Task<PharmacyDto?> GetPharmacyByIdAsync(int id);
     Task<PharmacyDto?> CreatePharmacyAsync(CreatePharmacyRequest request);
     Task<PharmacyDto?> UpdatePharmacyAsync(UpdatePharmacyRequest request);
@@ -551,12 +551,17 @@ public class ApiClientService : IAlNedaApiClient, IDisposable
     }
 
     // ── Pharmacies ──
-    public async Task<List<PharmacyDto>> GetPharmaciesAsync(string? search = null)
+    public async Task<List<PharmacyDto>> GetPharmaciesAsync(string? search = null, string? status = null)
     {
         EnsureAuthenticated();
         var url = "api/pharmacies";
+        var query = new List<string>();
         if (!string.IsNullOrWhiteSpace(search))
-            url += $"?search={Uri.EscapeDataString(search)}";
+            query.Add($"search={Uri.EscapeDataString(search)}");
+        if (!string.IsNullOrWhiteSpace(status))
+            query.Add($"status={Uri.EscapeDataString(status)}");
+        if (query.Count > 0)
+            url += "?" + string.Join("&", query);
         var response = await _httpClient.GetAsync(url);
         await ThrowIfErrorAsync(response);
         return await response.Content.ReadFromJsonAsync<List<PharmacyDto>>(_jsonOptions) ?? [];
