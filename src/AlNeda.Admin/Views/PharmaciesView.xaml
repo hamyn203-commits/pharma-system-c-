@@ -5,30 +5,30 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
-        <Style x:Key="PharmacyMetricCard" TargetType="Border" BasedOn="{StaticResource CardStyle}">
-            <Setter Property="Padding" Value="20" />
-            <Setter Property="MinHeight" Value="96" />
-            <Setter Property="Margin" Value="0,0,14,0" />
+        <Style x:Key="MetricCard" TargetType="Border" BasedOn="{StaticResource CardStyle}">
+            <Setter Property="Padding" Value="18" />
+            <Setter Property="MinHeight" Value="86" />
+            <Setter Property="Margin" Value="0,0,12,0" />
         </Style>
 
         <Style x:Key="ActionBtn" TargetType="Button" BasedOn="{StaticResource ActionButtonStyle}">
-            <Setter Property="Width" Value="36" />
-            <Setter Property="Height" Value="30" />
-            <Setter Property="Margin" Value="3,0" />
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Margin" Value="2,0" />
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontSize" Value="11" />
         </Style>
 
-        <Style x:Key="FilterToggleButton" TargetType="ToggleButton">
-            <Setter Property="Height" Value="34" />
-            <Setter Property="Padding" Value="16,0" />
+        <Style x:Key="FilterToggleBtn" TargetType="ToggleButton">
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Padding" Value="14,0" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
-                        <Border x:Name="Bg" Background="#20FFFFFF" CornerRadius="8" BorderThickness="1" BorderBrush="#30FFFFFF">
+                        <Border x:Name="Bg" Background="#20FFFFFF" CornerRadius="7" BorderThickness="1" BorderBrush="#30FFFFFF">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
                                               RecognizesAccessKey="True" />
                         </Border>
@@ -45,9 +45,16 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+        </Style>
     </UserControl.Resources>
 
-    <Grid Margin="24,18,24,20">
+    <Grid Margin="20,14,20,14">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -55,22 +62,21 @@
         </Grid.RowDefinitions>
 
         <!-- Loading overlay -->
-        <Border Grid.RowSpan="3"
-                Background="#E60D1117"
+        <Border Grid.RowSpan="3" Background="#E60D1117"
                 Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="100">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <ProgressBar IsIndeterminate="True" Width="220" Height="4"
+                <ProgressBar IsIndeterminate="True" Width="200" Height="4"
                              Foreground="{StaticResource SuccessBrush}"
                              Style="{StaticResource ModernProgressBar}" />
                 <TextBlock Text="جاري تحميل الصيدليات..."
                            Foreground="{StaticResource TextMutedBrush}"
-                           HorizontalAlignment="Center" Margin="0,12,0,0" />
+                           HorizontalAlignment="Center" Margin="0,10,0,0" />
             </StackPanel>
         </Border>
 
-        <!-- Header -->
-        <Border Grid.Row="0" Style="{StaticResource CardStyle}" Padding="20" Margin="0,0,0,16">
+        <!-- ═══ Row 0: Header ═══ -->
+        <Border Grid.Row="0" Style="{StaticResource CardStyle}" Padding="18" Margin="0,0,0,12">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -79,75 +85,79 @@
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock Text="إدارة الصيدليات"
                                Foreground="{StaticResource TextPrimaryBrush}"
-                               FontSize="26" FontWeight="Bold" />
+                               FontSize="22" FontWeight="Bold" />
                     <TextBlock Text="إضافة، اعتماد، متابعة، وحذف حسابات الصيدليات وتطبيق الصيدلي"
                                Foreground="{StaticResource TextMutedBrush}"
-                               FontSize="13" Margin="0,6,0,0" />
+                               FontSize="12" Margin="0,4,0,0" />
                 </StackPanel>
-                <Button Grid.Column="1" Content="إضافة صيدلية جديدة +"
+                <Button Grid.Column="1" Content="+ إضافة صيدلية"
                         Command="{Binding NewPharmacyCommand}"
                         Style="{StaticResource PrimaryButtonStyle}"
-                        Height="44" Padding="26,0" VerticalAlignment="Center" />
+                        Height="40" Padding="22,0" VerticalAlignment="Center" />
             </Grid>
         </Border>
 
-        <!-- KPI + Filter -->
-        <Grid Grid.Row="1" Margin="0,0,0,16">
+        <!-- ═══ Row 1: KPI + Search/Filter ═══ -->
+        <Grid Grid.Row="1" Margin="0,0,0,12">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!-- KPI Cards -->
-            <UniformGrid Grid.Row="0" Columns="4" Margin="0,0,0,14">
-                <Border Style="{StaticResource PharmacyMetricCard}">
+            <!-- KPI row -->
+            <UniformGrid Grid.Row="0" Columns="4" Margin="0,0,0,10">
+                <!-- Total -->
+                <Border Style="{StaticResource MetricCard}">
                     <Grid>
                         <StackPanel>
-                            <TextBlock Text="إجمالي الصيدليات" Foreground="{StaticResource TextMutedBrush}" FontSize="12" />
+                            <TextBlock Text="إجمالي" Foreground="{StaticResource TextMutedBrush}" FontSize="11" />
                             <TextBlock Text="{Binding TotalPharmacies, StringFormat={}{0:N0}}"
-                                       Foreground="{StaticResource TextPrimaryBrush}" FontSize="28" FontWeight="Bold" Margin="0,6,0,0" />
+                                       Foreground="{StaticResource TextPrimaryBrush}" FontSize="24" FontWeight="Bold" Margin="0,4,0,0" />
                         </StackPanel>
                         <TextBlock Text="&#xE821;" FontFamily="Segoe MDL2 Assets"
-                                   Foreground="#6638BDF8" FontSize="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                                   Foreground="#6638BDF8" FontSize="22" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     </Grid>
                 </Border>
-                <Border Style="{StaticResource PharmacyMetricCard}">
+                <!-- Active -->
+                <Border Style="{StaticResource MetricCard}">
                     <Grid>
                         <StackPanel>
-                            <TextBlock Text="نشطة" Foreground="{StaticResource TextMutedBrush}" FontSize="12" />
+                            <TextBlock Text="نشطة" Foreground="{StaticResource TextMutedBrush}" FontSize="11" />
                             <TextBlock Text="{Binding ActivePharmacies, StringFormat={}{0:N0}}"
-                                       Foreground="{StaticResource SuccessBrush}" FontSize="28" FontWeight="Bold" Margin="0,6,0,0" />
+                                       Foreground="{StaticResource SuccessBrush}" FontSize="24" FontWeight="Bold" Margin="0,4,0,0" />
                         </StackPanel>
                         <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets"
-                                   Foreground="#6631D0AA" FontSize="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                                   Foreground="#6631D0AA" FontSize="22" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     </Grid>
                 </Border>
-                <Border Style="{StaticResource PharmacyMetricCard}">
+                <!-- Pending -->
+                <Border Style="{StaticResource MetricCard}">
                     <Grid>
                         <StackPanel>
-                            <TextBlock Text="قيد المراجعة" Foreground="{StaticResource TextMutedBrush}" FontSize="12" />
+                            <TextBlock Text="قيد المراجعة" Foreground="{StaticResource TextMutedBrush}" FontSize="11" />
                             <TextBlock Text="{Binding PendingPharmacies, StringFormat={}{0:N0}}"
-                                       Foreground="{StaticResource WarningBrush}" FontSize="28" FontWeight="Bold" Margin="0,6,0,0" />
+                                       Foreground="{StaticResource WarningBrush}" FontSize="24" FontWeight="Bold" Margin="0,4,0,0" />
                         </StackPanel>
                         <TextBlock Text="&#xE7FB;" FontFamily="Segoe MDL2 Assets"
-                                   Foreground="#66F59E0B" FontSize="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                                   Foreground="#66F59E0B" FontSize="22" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     </Grid>
                 </Border>
-                <Border Style="{StaticResource PharmacyMetricCard}" Margin="0">
+                <!-- Debt -->
+                <Border Style="{StaticResource MetricCard}" Margin="0">
                     <Grid>
                         <StackPanel>
-                            <TextBlock Text="إجمالي المستحقات" Foreground="{StaticResource TextMutedBrush}" FontSize="12" />
+                            <TextBlock Text="المستحقات" Foreground="{StaticResource TextMutedBrush}" FontSize="11" />
                             <TextBlock Text="{Binding TotalDebt, StringFormat={}{0:N0}}"
-                                       Foreground="{StaticResource DangerBrush}" FontSize="28" FontWeight="Bold" Margin="0,6,0,0" />
+                                       Foreground="{StaticResource DangerBrush}" FontSize="24" FontWeight="Bold" Margin="0,4,0,0" />
                         </StackPanel>
                         <TextBlock Text="&#xE8C7;" FontFamily="Segoe MDL2 Assets"
-                                   Foreground="#66FB7185" FontSize="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                                   Foreground="#66FB7185" FontSize="22" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     </Grid>
                 </Border>
             </UniformGrid>
 
-            <!-- Search + Filter bar -->
-            <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="14">
+            <!-- Search + Filter -->
+            <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="12">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -156,35 +166,30 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Grid Height="40">
+                    <Grid Height="36">
                         <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{StaticResource ModernTextBox}"
-                                 Padding="40,0,14,0" VerticalContentAlignment="Center"
-                                 Tag="ابحث عن صيدلية بالاسم أو رقم الهاتف..." />
+                                 Padding="36,0,12,0" VerticalContentAlignment="Center"
+                                 Tag="ابحث بالاسم أو رقم الهاتف..." />
                         <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets"
                                    Foreground="{StaticResource TextMutedBrush}"
                                    VerticalAlignment="Center" HorizontalAlignment="Left"
-                                   Margin="0,0,12,0" IsHitTestVisible="False" />
+                                   Margin="0,0,10,0" IsHitTestVisible="False" />
                     </Grid>
 
                     <Button Grid.Column="1" Content="بحث" Command="{Binding LoadCommand}"
-                            Style="{StaticResource PrimaryButtonStyle}"
-                            Height="40" MinWidth="100" Margin="10,0,0,0" />
-
+                            Style="{StaticResource PrimaryButtonStyle}" Height="36" MinWidth="80" Margin="8,0,0,0" />
                     <Button Grid.Column="2" Content="تحديث" Command="{Binding LoadCommand}"
-                            Style="{StaticResource SecondaryButtonStyle}"
-                            Height="40" MinWidth="90" Margin="8,0,0,0" />
-
+                            Style="{StaticResource SecondaryButtonStyle}" Height="36" MinWidth="76" Margin="6,0,0,0" />
                     <ToggleButton Grid.Column="3" Content="قيد المراجعة فقط"
                                   IsChecked="{Binding ShowPendingOnly}"
-                                  Style="{StaticResource FilterToggleButton}"
-                                  Margin="10,0,0,0" />
+                                  Style="{StaticResource FilterToggleBtn}" Margin="8,0,0,0" />
                 </Grid>
             </Border>
         </Grid>
 
-        <!-- DataGrid -->
-        <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="8" ClipToBounds="True">
+        <!-- ═══ Row 2: DataGrid (fills remaining height) ═══ -->
+        <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="6" ClipToBounds="True">
             <Grid>
                 <DataGrid ItemsSource="{Binding Pharmacies}"
                           SelectedItem="{Binding SelectedPharmacy}"
@@ -195,14 +200,15 @@
                           GridLinesVisibility="None"
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
-                          RowHeight="54"
+                          RowHeight="48"
                           HeadersVisibility="Column"
                           HorizontalScrollBarVisibility="Auto"
-                          VerticalScrollBarVisibility="Auto">
+                          VerticalScrollBarVisibility="Auto"
+                          MinHeight="200">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50" />
+                        <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="44" MinWidth="44" />
 
-                        <DataGridTemplateColumn Header="اسم الصيدلية" Width="2*">
+                        <DataGridTemplateColumn Header="اسم الصيدلية" Width="*" MinWidth="140">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel VerticalAlignment="Center">
@@ -211,17 +217,17 @@
                                                    FontWeight="SemiBold" />
                                         <TextBlock Text="{Binding OwnerName}"
                                                    Foreground="{StaticResource TextMutedBrush}"
-                                                   FontSize="11" Margin="0,3,0,0"
+                                                   FontSize="10" Margin="0,2,0,0"
                                                    TextTrimming="CharacterEllipsis" />
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTextColumn Header="الهاتف" Binding="{Binding Phone}" Width="120" />
-                        <DataGridTextColumn Header="المالك" Binding="{Binding OwnerName}" Width="1*" />
+                        <DataGridTextColumn Header="الهاتف" Binding="{Binding Phone}" Width="110" MinWidth="90" />
+                        <DataGridTextColumn Header="المالك" Binding="{Binding OwnerName}" Width="0.6*" MinWidth="80" />
 
-                        <DataGridTemplateColumn Header="الرصيد" Width="100">
+                        <DataGridTemplateColumn Header="الرصيد" Width="80" MinWidth="70">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Balance, StringFormat={}{0:N2}}"
@@ -232,11 +238,11 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <!-- Status with colored badge -->
-                        <DataGridTemplateColumn Header="الحالة" Width="110">
+                        <!-- Status badge -->
+                        <DataGridTemplateColumn Header="الحالة" Width="100" MinWidth="90">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border CornerRadius="12" Padding="8,4" HorizontalAlignment="Center">
+                                    <Border CornerRadius="10" Padding="7,3" HorizontalAlignment="Center">
                                         <Border.Style>
                                             <Style TargetType="Border">
                                                 <Setter Property="Background" Value="#2438BDF8" />
@@ -253,7 +259,7 @@
                                                 </Style.Triggers>
                                             </Style>
                                         </Border.Style>
-                                        <TextBlock FontSize="11" FontWeight="SemiBold">
+                                        <TextBlock FontSize="10" FontWeight="SemiBold">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Text" Value="غير محدد" />
@@ -280,13 +286,13 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTextColumn Header="تاريخ التسجيل" Binding="{Binding CreatedAt, StringFormat={}{0:yyyy-MM-dd}}" Width="100" />
-                        <DataGridTextColumn Header="آخر دخول" Binding="{Binding AppLastLoginAt, StringFormat={}{0:yyyy-MM-dd HH:mm}}" Width="130" />
-                        <DataGridCheckBoxColumn Header="حساب تطبيق" Binding="{Binding HasAppAccount}" Width="90" />
-                        <DataGridTextColumn Header="طلبات التطبيق" Binding="{Binding AppOrdersCount}" Width="90" />
+                        <DataGridTextColumn Header="تاريخ التسجيل" Binding="{Binding CreatedAt, StringFormat={}{0:yyyy-MM-dd}}" Width="90" MinWidth="80" />
+                        <DataGridTextColumn Header="آخر دخول" Binding="{Binding AppLastLoginAt, StringFormat={}{0:yyyy-MM-dd HH:mm}}" Width="120" MinWidth="100" />
+                        <DataGridCheckBoxColumn Header="تطبيق" Binding="{Binding HasAppAccount}" Width="62" MinWidth="50" />
+                        <DataGridTextColumn Header="الطلبات" Binding="{Binding AppOrdersCount}" Width="60" MinWidth="50" />
 
-                        <!-- Actions column -->
-                        <DataGridTemplateColumn Header="الإجراءات" Width="280">
+                        <!-- Actions -->
+                        <DataGridTemplateColumn Header="الإجراءات" Width="240" MinWidth="220">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" FlowDirection="RightToLeft">
@@ -298,15 +304,15 @@
                                                 Command="{Binding DataContext.ApprovePharmacyCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource PrimaryButtonStyle}"
-                                                Height="30" MinWidth="60" Padding="10,0" Margin="3,0"
-                                                ToolTip="اعتماد حساب الصيدلية وفتح تطبيق الصيدلي" />
+                                                Height="28" MinWidth="52" Padding="8,0" Margin="2,0"
+                                                ToolTip="اعتماد الحساب" />
 
                                         <Button Content="سحب"
                                                 Command="{Binding DataContext.RevokePharmacyCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource DangerButtonStyle}"
-                                                Height="30" MinWidth="50" Padding="8,0" Margin="3,0"
-                                                ToolTip="سحب صلاحية تطبيق الصيدلي" />
+                                                Height="28" MinWidth="44" Padding="6,0" Margin="2,0"
+                                                ToolTip="سحب الصلاحية" />
 
                                         <Button Content="&#xE13D;"
                                                 Command="{Binding DataContext.OpenAppAccountEditorCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
@@ -319,7 +325,7 @@
                                         <Button Content="&#xE74D;"
                                                 Command="{Binding DataContext.DeletePharmacyCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
-                                                Style="{StaticResource ActionBtn}" ToolTip="حذف الصيدلية"
+                                                Style="{StaticResource ActionBtn}" ToolTip="حذف"
                                                 Foreground="{StaticResource DangerBrush}" />
                                     </StackPanel>
                                 </DataTemplate>
@@ -331,63 +337,95 @@
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
                             Visibility="{Binding HasNoPharmacies, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TextBlock Text="&#xE821;" FontFamily="Segoe MDL2 Assets"
-                               Foreground="{StaticResource TextMutedBrush}" FontSize="26"
-                               HorizontalAlignment="Center" Opacity="0.7" />
-                    <TextBlock Text="لا توجد صيدليات" Foreground="{StaticResource TextMutedBrush}"
-                               FontSize="14" Margin="0,10,0,0" />
+                               Foreground="{StaticResource TextMutedBrush}" FontSize="22" HorizontalAlignment="Center" Opacity="0.7" />
+                    <TextBlock Text="لا توجد صيدليات" Foreground="{StaticResource TextMutedBrush}" FontSize="13" Margin="0,8,0,0" />
                 </StackPanel>
             </Grid>
         </Border>
 
-        <!-- Editor overlay (add / edit) -->
+        <!-- ════════════════════════════════════════ -->
+        <!-- EDITOR OVERLAY  (compact 2‑column form) -->
+        <!-- ════════════════════════════════════════ -->
         <Border Grid.RowSpan="3" Background="#E60D1117"
                 Visibility="{Binding ShowEditor, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="200">
-            <Border Style="{StaticResource CardStyle}" Width="560" Padding="24"
+            <Border Style="{StaticResource CardStyle}" Width="520" Padding="22"
                     HorizontalAlignment="Center" VerticalAlignment="Center">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="620">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="600">
                     <StackPanel>
                         <TextBlock Text="إضافة / تعديل صيدلية"
-                                   FontSize="22" FontWeight="Bold"
-                                   Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,16" />
+                                   FontSize="20" FontWeight="Bold"
+                                   Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,14" />
 
-                        <Border Background="#3D7F1D1D" CornerRadius="10" Padding="12,8" Margin="0,0,0,14"
+                        <Border Background="#3D7F1D1D" CornerRadius="8" Padding="10,6" Margin="0,0,0,12"
                                 Visibility="{Binding ValidationMessage, Converter={StaticResource StringToVisibilityConverter}, FallbackValue=Collapsed}">
-                            <TextBlock Text="{Binding ValidationMessage}" Foreground="{StaticResource DangerBrush}" FontSize="12" />
+                            <TextBlock Text="{Binding ValidationMessage}" Foreground="{StaticResource DangerBrush}" FontSize="11" />
                         </Border>
 
-                        <TextBlock Text="اسم الصيدلية *" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
-                        <TextBox Text="{Binding EditPharmacy.Name, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBox}" Height="42" Margin="0,0,0,12" />
+                        <!-- 2‑column compact grid for main fields -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="110" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="اسم المالك" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
-                        <TextBox Text="{Binding EditOwnerName, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBox}" Height="42" Margin="0,0,0,12" />
+                            <!-- Row 0 -->
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="اسم الصيدلية *" Style="{StaticResource FieldLabel}" />
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding EditPharmacy.Name, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}" Height="36" Margin="0,0,0,8" />
 
-                        <TextBlock Text="الهاتف" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
-                        <TextBox Text="{Binding EditPharmacy.Phone}"
-                                 Style="{StaticResource ModernTextBox}" Height="42" Margin="0,0,0,12" />
+                            <!-- Row 1 -->
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="اسم المالك" Style="{StaticResource FieldLabel}" />
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding EditOwnerName, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}" Height="36" Margin="0,0,0,8" />
 
-                        <TextBlock Text="العنوان" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
-                        <TextBox Text="{Binding EditPharmacy.Address}"
-                                 Style="{StaticResource ModernTextBox}" Height="42" Margin="0,0,0,12" />
+                            <!-- Row 2 -->
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="رقم الهاتف" Style="{StaticResource FieldLabel}" />
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding EditPharmacy.Phone}"
+                                     Style="{StaticResource ModernTextBox}" Height="36" Margin="0,0,0,8" />
 
-                        <!-- App account section (only for new pharmacy) -->
-                        <Border Background="#1A38BDF8" CornerRadius="10" Padding="16" Margin="0,0,0,14"
+                            <!-- Row 3 -->
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="العنوان" Style="{StaticResource FieldLabel}" />
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding EditPharmacy.Address}"
+                                     Style="{StaticResource ModernTextBox}" Height="36" />
+                        </Grid>
+
+                        <!-- App‑account section (only for new pharmacy) -->
+                        <Border Background="#1A38BDF8" CornerRadius="8" Padding="14"
+                                Margin="0,0,0,12"
                                 Visibility="{Binding IsNewPharmacy, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <StackPanel>
                                 <TextBlock Text="إنشاء حساب تطبيق (اختياري)"
-                                           Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,10" />
-                                <TextBlock Text="اسم المستخدم للتطبيق" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
-                                <TextBox Text="{Binding EditAppUsername, UpdateSourceTrigger=PropertyChanged}"
-                                         Style="{StaticResource ModernTextBox}" Height="42" Margin="0,0,0,10" />
-                                <TextBlock Text="كلمة المرور (8 أحرف على الأقل)" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,6" />
-                                <TextBox Text="{Binding EditAppPassword, UpdateSourceTrigger=PropertyChanged}"
-                                         Style="{StaticResource ModernTextBox}" Height="42" Margin="0,0,0,8" />
+                                           Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,8" />
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="110" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="اسم المستخدم" Style="{StaticResource FieldLabel}" />
+                                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding EditAppUsername, UpdateSourceTrigger=PropertyChanged}"
+                                             Style="{StaticResource ModernTextBox}" Height="36" Margin="0,0,0,6" />
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="كلمة المرور" Style="{StaticResource FieldLabel}" />
+                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding EditAppPassword, UpdateSourceTrigger=PropertyChanged}"
+                                             Style="{StaticResource ModernTextBox}" Height="36" />
+                                </Grid>
                             </StackPanel>
                         </Border>
 
-                        <Grid Margin="0,6,0,0">
+                        <!-- Action buttons -->
+                        <Grid Margin="0,4,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="12" />
@@ -395,34 +433,48 @@
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="0" Content="حفظ"
                                     Command="{Binding SaveCommand}"
-                                    Style="{StaticResource PrimaryButtonStyle}" Height="44" />
+                                    Style="{StaticResource PrimaryButtonStyle}" Height="40" />
                             <Button Grid.Column="2" Content="إلغاء"
                                     Command="{Binding CancelEditCommand}"
-                                    Style="{StaticResource DangerButtonStyle}" Height="44" />
+                                    Style="{StaticResource DangerButtonStyle}" Height="40" />
                         </Grid>
                     </StackPanel>
                 </ScrollViewer>
             </Border>
         </Border>
 
-        <!-- App Account editor overlay -->
+        <!-- ════════════════════════════════════ -->
+        <!-- APP ACCOUNT EDITOR OVERLAY          -->
+        <!-- ════════════════════════════════════ -->
         <Border Grid.RowSpan="3" Background="#E60D1117"
                 Visibility="{Binding ShowAppAccountEditor, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="220">
-            <Border Style="{StaticResource CardStyle}" Width="460" Padding="24"
+            <Border Style="{StaticResource CardStyle}" Width="420" Padding="22"
                     HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel>
-                    <TextBlock Text="إنشاء حساب تطبيق" FontSize="22" FontWeight="Bold"
-                               Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,10" />
+                    <TextBlock Text="إنشاء حساب تطبيق" FontSize="20" FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,8" />
                     <TextBlock Text="{Binding SelectedPharmacy.Name}"
-                               Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,16" />
+                               Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,14" />
 
-                    <TextBox Text="{Binding AppUsername, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource ModernTextBox}" Height="42"
-                             Tag="اسم المستخدم" Margin="0,0,0,12" />
-                    <TextBox Text="{Binding AppPassword, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource ModernTextBox}" Height="42"
-                             Tag="كلمة المرور" Margin="0,0,0,18" />
+                    <Grid Margin="0,0,0,14">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="اسم المستخدم" Style="{StaticResource FieldLabel}" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding AppUsername, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource ModernTextBox}" Height="36" Margin="0,0,0,8" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="كلمة المرور" Style="{StaticResource FieldLabel}" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding AppPassword, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource ModernTextBox}" Height="36" />
+                    </Grid>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -432,10 +484,10 @@
                         </Grid.ColumnDefinitions>
                         <Button Grid.Column="0" Content="إنشاء"
                                 Command="{Binding CreateAppAccountCommand}"
-                                Style="{StaticResource PrimaryButtonStyle}" Height="42" />
+                                Style="{StaticResource PrimaryButtonStyle}" Height="38" />
                         <Button Grid.Column="2" Content="إلغاء"
                                 Command="{Binding CancelAppAccountCommand}"
-                                Style="{StaticResource DangerButtonStyle}" Height="42" />
+                                Style="{StaticResource DangerButtonStyle}" Height="38" />
                     </Grid>
                 </StackPanel>
             </Border>
