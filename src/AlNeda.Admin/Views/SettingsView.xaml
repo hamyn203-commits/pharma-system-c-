@@ -14,7 +14,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
-                        <Border x:Name="TabBorder" Background="#18243A" BorderBrush="{StaticResource BorderDefaultBrush}"
+                        <Border x:Name="TabBorder" Background="{StaticResource CardBgBrush}" BorderBrush="{StaticResource BorderDefaultBrush}"
                                 BorderThickness="1" CornerRadius="14" Padding="18,12" Margin="0,0,8,8">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock x:Name="TabIcon" FontFamily="Segoe MDL2 Assets" FontSize="15" Margin="0,0,10,0" />
@@ -45,16 +45,13 @@
         </Style>
 
         <Style x:Key="SettingsPanel" TargetType="Border" BasedOn="{StaticResource SettingsCardStyle}">
-            <Setter Property="Background" Value="#FF121C2E" />
-            <Setter Property="BorderBrush" Value="#FF31415F" />
-            <Setter Property="BorderThickness" Value="1.5" />
             <Setter Property="CornerRadius" Value="18" />
             <Setter Property="Padding" Value="22" />
         </Style>
 
         <Style x:Key="SettingRow" TargetType="Border">
-            <Setter Property="Background" Value="#FF18243A" />
-            <Setter Property="BorderBrush" Value="#FF2B3A56" />
+            <Setter Property="Background" Value="{StaticResource CardBgBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderMutedBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="14" />
             <Setter Property="Padding" Value="16,14" />
@@ -84,14 +81,18 @@
 
         <Border Grid.Row="0" Background="{StaticResource DashboardHeroGradient}" CornerRadius="22" Padding="24" Margin="0,0,0,18">
             <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
                 <StackPanel>
                     <TextBlock Text="الإعدادات المتقدمة" FontSize="30" FontWeight="Bold" Foreground="White" />
                     <TextBlock Text="تحكم كامل في الحسابات، الأمان، النظام، التنبيهات، النسخ الاحتياطي، والتقارير"
-                               Foreground="#E6FFFFFF" FontSize="13" Margin="0,6,0,0" />
+                               Opacity="0.9" Foreground="White" FontSize="13" Margin="0,6,0,0" />
                 </StackPanel>
-                <Button Content="فحص النظام" Command="{Binding RunHealthCheckCommand}"
+                <Button Grid.Column="1" Content="فحص النظام" Command="{Binding RunHealthCheckCommand}"
                         Style="{StaticResource SecondaryButtonStyle}" Width="130" Height="42"
-                        HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        VerticalAlignment="Center" />
             </Grid>
         </Border>
 
@@ -118,20 +119,28 @@
                                 <TextBlock Text="تحكم في شكل البرنامج وسلوكه اليومي" Style="{StaticResource MutedText}" Margin="0,4,0,18" />
                                 <Border Style="{StaticResource SettingRow}">
                                     <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
                                         <StackPanel>
                                             <TextBlock Text="قائمة جانبية مضغوطة" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
                                             <TextBlock Text="تجعل مساحة العمل أكبر في الشاشات الصغيرة" Style="{StaticResource MutedText}" />
                                         </StackPanel>
-                                        <CheckBox IsChecked="{Binding CurrentSettings.CompactSidebar}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                        <CheckBox Grid.Column="1" IsChecked="{Binding CurrentSettings.CompactSidebar}" Style="{StaticResource ModernToggleSwitch}" VerticalAlignment="Center" />
                                     </Grid>
                                 </Border>
                                 <Border Style="{StaticResource SettingRow}">
                                     <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
                                         <StackPanel>
                                             <TextBlock Text="حركات الداش بورد" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
                                             <TextBlock Text="تفعيل تأثيرات 3D والحركة داخل كروت لوحة التحكم" Style="{StaticResource MutedText}" />
                                         </StackPanel>
-                                        <CheckBox IsChecked="{Binding CurrentSettings.ShowDashboardAnimations}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                        <CheckBox Grid.Column="1" IsChecked="{Binding CurrentSettings.ShowDashboardAnimations}" Style="{StaticResource ModernToggleSwitch}" VerticalAlignment="Center" />
                                     </Grid>
                                 </Border>
                                 <TextBlock Text="الثيم" Style="{StaticResource FieldLabel}" />
@@ -165,7 +174,7 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Grid.Column="2" Style="{StaticResource SettingsPanel}" Padding="0">
+                    <Border Grid.Column="2" Style="{StaticResource SettingsPanel}" Padding="12">
                         <DataGrid ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}"
                                   Style="{StaticResource ModernDataGrid}"
                                   ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}"
@@ -205,11 +214,15 @@
                                 <TextBlock Text="إعدادات تمنع الاستخدام غير المصرح به عند ترك الجهاز" Style="{StaticResource MutedText}" Margin="0,4,0,18" />
                                 <Border Style="{StaticResource SettingRow}">
                                     <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
                                         <StackPanel>
                                             <TextBlock Text="قفل تلقائي للجلسة" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
                                             <TextBlock Text="يقفل البرنامج بعد مدة عدم نشاط" Style="{StaticResource MutedText}" />
                                         </StackPanel>
-                                        <CheckBox IsChecked="{Binding CurrentSettings.EnableSessionLock}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                        <CheckBox Grid.Column="1" IsChecked="{Binding CurrentSettings.EnableSessionLock}" Style="{StaticResource ModernToggleSwitch}" VerticalAlignment="Center" />
                                     </Grid>
                                 </Border>
                                 <TextBlock Text="مدة عدم النشاط بالدقائق" Style="{StaticResource FieldLabel}" />
@@ -222,29 +235,41 @@
                                 <TextBlock Text="قواعد تحمي البيانات والعمليات الحساسة" Style="{StaticResource MutedText}" Margin="0,4,0,18" />
                                 <Border Style="{StaticResource SettingRow}">
                                     <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
                                         <StackPanel>
                                             <TextBlock Text="كلمات مرور قوية" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
                                             <TextBlock Text="يفرض كلمة مرور أقوى عند تغيير بيانات المستخدم" Style="{StaticResource MutedText}" />
                                         </StackPanel>
-                                        <CheckBox IsChecked="{Binding CurrentSettings.RequireStrongPasswords}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                        <CheckBox Grid.Column="1" IsChecked="{Binding CurrentSettings.RequireStrongPasswords}" Style="{StaticResource ModernToggleSwitch}" VerticalAlignment="Center" />
                                     </Grid>
                                 </Border>
                                 <Border Style="{StaticResource SettingRow}">
                                     <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
                                         <StackPanel>
                                             <TextBlock Text="إخفاء الأرقام المالية الحساسة" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
                                             <TextBlock Text="مفيد عند مشاركة الشاشة أو العمل أمام العملاء" Style="{StaticResource MutedText}" />
                                         </StackPanel>
-                                        <CheckBox IsChecked="{Binding CurrentSettings.MaskSensitiveFinancials}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                        <CheckBox Grid.Column="1" IsChecked="{Binding CurrentSettings.MaskSensitiveFinancials}" Style="{StaticResource ModernToggleSwitch}" VerticalAlignment="Center" />
                                     </Grid>
                                 </Border>
                                 <Border Style="{StaticResource SettingRow}">
                                     <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
                                         <StackPanel>
                                             <TextBlock Text="تأكيد قبل الحذف" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
                                             <TextBlock Text="يقلل أخطاء حذف المنتجات أو الحسابات بالخطأ" Style="{StaticResource MutedText}" />
                                         </StackPanel>
-                                        <CheckBox IsChecked="{Binding CurrentSettings.ConfirmBeforeDelete}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                        <CheckBox Grid.Column="1" IsChecked="{Binding CurrentSettings.ConfirmBeforeDelete}" Style="{StaticResource ModernToggleSwitch}" VerticalAlignment="Center" />
                                     </Grid>
                                 </Border>
                             </StackPanel>
@@ -298,7 +323,7 @@
                             <Button Content="مستخدم جديد" Command="{Binding NewUserAsyncCommand}" Style="{StaticResource PrimaryButtonStyle}" Width="130" HorizontalAlignment="Left" />
                         </Grid>
                     </Border>
-                    <Border Grid.Row="1" Style="{StaticResource SettingsPanel}" Padding="0">
+                    <Border Grid.Row="1" Style="{StaticResource SettingsPanel}" Padding="12">
                         <DataGrid ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}"
                                   Style="{StaticResource ModernDataGrid}"
                                   ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}"
@@ -323,16 +348,24 @@
                                 <TextBlock Text="تحديد متى ينبهك البرنامج عن الصلاحية والكميات" Style="{StaticResource MutedText}" Margin="0,4,0,18" />
                                 <Border Style="{StaticResource SettingRow}">
                                     <Grid>
-                                        <TextBlock Text="تنبيه انتهاء الصلاحية" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
-                                        <CheckBox IsChecked="{Binding CurrentSettings.ExpiryAlertEnabled}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="تنبيه انتهاء الصلاحية" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                        <CheckBox Grid.Column="1" IsChecked="{Binding CurrentSettings.ExpiryAlertEnabled}" Style="{StaticResource ModernToggleSwitch}" VerticalAlignment="Center" />
                                     </Grid>
                                 </Border>
                                 <TextBlock Text="عدد الأيام قبل انتهاء الصلاحية" Style="{StaticResource FieldLabel}" />
                                 <TextBox Text="{Binding CurrentSettings.ExpiryDaysThreshold, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="44" Margin="0,0,0,14" />
                                 <Border Style="{StaticResource SettingRow}">
                                     <Grid>
-                                        <TextBlock Text="تنبيه انخفاض الكمية" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
-                                        <CheckBox IsChecked="{Binding CurrentSettings.LowStockAlertEnabled}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="تنبيه انخفاض الكمية" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                        <CheckBox Grid.Column="1" IsChecked="{Binding CurrentSettings.LowStockAlertEnabled}" Style="{StaticResource ModernToggleSwitch}" VerticalAlignment="Center" />
                                     </Grid>
                                 </Border>
                                 <TextBlock Text="الحد الأدنى للكمية" Style="{StaticResource FieldLabel}" />
@@ -348,14 +381,22 @@
                                 <ComboBox ItemsSource="{Binding AlertMethods}" SelectedItem="{Binding CurrentSettings.AlertMethod}" Style="{StaticResource ModernComboBox}" Height="44" Margin="0,0,0,14" />
                                 <Border Style="{StaticResource SettingRow}">
                                     <Grid>
-                                        <TextBlock Text="تشغيل صوت التنبيه" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
-                                        <CheckBox IsChecked="{Binding CurrentSettings.PlaySoundOnAlert}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="تشغيل صوت التنبيه" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                        <CheckBox Grid.Column="1" IsChecked="{Binding CurrentSettings.PlaySoundOnAlert}" Style="{StaticResource ModernToggleSwitch}" VerticalAlignment="Center" />
                                     </Grid>
                                 </Border>
                                 <Border Style="{StaticResource SettingRow}">
                                     <Grid>
-                                        <TextBlock Text="تنبيه التحصيلات المتأخرة" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
-                                        <CheckBox IsChecked="{Binding CurrentSettings.PendingPaymentsAlertEnabled}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="تنبيه التحصيلات المتأخرة" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                        <CheckBox Grid.Column="1" IsChecked="{Binding CurrentSettings.PendingPaymentsAlertEnabled}" Style="{StaticResource ModernToggleSwitch}" VerticalAlignment="Center" />
                                     </Grid>
                                 </Border>
                                 <TextBlock Text="حد التنبيه المالي" Style="{StaticResource FieldLabel}" />
@@ -375,8 +416,12 @@
                                 <TextBlock Text="حفظ نسخة آمنة من بياناتك بشكل يدوي أو تلقائي" Style="{StaticResource MutedText}" Margin="0,4,0,18" />
                                 <Border Style="{StaticResource SettingRow}">
                                     <Grid>
-                                        <TextBlock Text="نسخ احتياطي تلقائي" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
-                                        <CheckBox IsChecked="{Binding CurrentSettings.AutoBackupEnabled}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="نسخ احتياطي تلقائي" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                        <CheckBox Grid.Column="1" IsChecked="{Binding CurrentSettings.AutoBackupEnabled}" Style="{StaticResource ModernToggleSwitch}" VerticalAlignment="Center" />
                                     </Grid>
                                 </Border>
                                 <TextBlock Text="تكرار النسخ" Style="{StaticResource FieldLabel}" />
@@ -395,28 +440,40 @@
                                 <TextBlock Text="إعدادات ترفع جودة التقارير والفواتير" Style="{StaticResource MutedText}" Margin="0,4,0,18" />
                                 <Border Style="{StaticResource SettingRow}">
                                     <Grid>
-                                        <TextBlock Text="تصدير التقارير تلقائيا" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
-                                        <CheckBox IsChecked="{Binding CurrentSettings.AutoExportReports}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="تصدير التقارير تلقائيا" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
+                                        <CheckBox Grid.Column="1" IsChecked="{Binding CurrentSettings.AutoExportReports}" Style="{StaticResource ModernToggleSwitch}" VerticalAlignment="Center" />
                                     </Grid>
                                 </Border>
                                 <TextBlock Text="النطاق الافتراضي للتقارير" Style="{StaticResource FieldLabel}" />
                                 <ComboBox ItemsSource="{Binding ReportRanges}" SelectedItem="{Binding CurrentSettings.DefaultReportRange}" Style="{StaticResource ModernComboBox}" Height="44" Margin="0,0,0,14" />
                                 <Border Style="{StaticResource SettingRow}">
                                     <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
                                         <StackPanel>
                                             <TextBlock Text="إظهار بيانات الشركة في الطباعة" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
                                             <TextBlock Text="يضيف اسم المخزن والفرع في رأس الفاتورة والتقارير" Style="{StaticResource MutedText}" />
                                         </StackPanel>
-                                        <CheckBox IsChecked="{Binding CurrentSettings.PrintCompanyHeader}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                        <CheckBox Grid.Column="1" IsChecked="{Binding CurrentSettings.PrintCompanyHeader}" Style="{StaticResource ModernToggleSwitch}" VerticalAlignment="Center" />
                                     </Grid>
                                 </Border>
                                 <Border Style="{StaticResource SettingRow}">
                                     <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
                                         <StackPanel>
                                             <TextBlock Text="سجل تدقيق العمليات" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" />
                                             <TextBlock Text="تسجيل التعديلات والحذف والعمليات المهمة" Style="{StaticResource MutedText}" />
                                         </StackPanel>
-                                        <CheckBox IsChecked="{Binding CurrentSettings.EnableAuditTrail}" Style="{StaticResource ModernToggleSwitch}" HorizontalAlignment="Left" />
+                                        <CheckBox Grid.Column="1" IsChecked="{Binding CurrentSettings.EnableAuditTrail}" Style="{StaticResource ModernToggleSwitch}" VerticalAlignment="Center" />
                                     </Grid>
                                 </Border>
                             </StackPanel>
@@ -426,16 +483,15 @@
             </TabItem>
         </TabControl>
 
-        <Border Grid.Row="2" Background="#FF121C2E" CornerRadius="18" Padding="20,14"
-                BorderBrush="#FF31415F" BorderThickness="1.5" Margin="0,18,0,0"
-                Effect="{StaticResource CardShadow}">
+        <Border Grid.Row="2" Background="{StaticResource CardBgBrush}" CornerRadius="18" Padding="20,14"
+                BorderBrush="{StaticResource BorderMutedBrush}" BorderThickness="1.5" Margin="0,18,0,0">
             <Grid>
                 <TextBlock Text="{Binding Status, FallbackValue=جاهز}" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" />
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                    <Button Content="إعادة تشغيل" Command="{Binding RestartAppCommand}" Style="{StaticResource SecondaryButtonStyle}" Width="120" Margin="0,0,12,0" />
-                    <Button Content="استعادة الافتراضي" Command="{Binding ResetDefaultsCommand}" Style="{StaticResource DangerButtonStyle}" Width="145" Margin="0,0,12,0" />
+                <WrapPanel HorizontalAlignment="Left">
+                    <Button Content="إعادة تشغيل" Command="{Binding RestartAppCommand}" Style="{StaticResource SecondaryButtonStyle}" Width="120" Margin="0,0,10,0" />
+                    <Button Content="استعادة الافتراضي" Command="{Binding ResetDefaultsCommand}" Style="{StaticResource DangerButtonStyle}" Width="145" Margin="0,0,10,0" />
                     <Button Content="حفظ الإعدادات" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButtonStyle}" Width="155" />
-                </StackPanel>
+                </WrapPanel>
             </Grid>
         </Border>
     </Grid>

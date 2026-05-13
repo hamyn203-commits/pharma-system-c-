@@ -53,13 +53,12 @@ public partial class SettingsViewModel : ObservableObject
         _dbFactory = dbFactory;
         _apiClient = apiClient;
         _currentSettings = _settingsService.LoadSettings();
-        _ = LoadDataAsync(); // Fire and forget but with discard to suppress warning
+        IsLoading = true;
+        Task.Run(async () => await InitializeAsync());
     }
 
-    [RelayCommand]
-    private async Task LoadDataAsync()
+    private async Task InitializeAsync()
     {
-        IsLoading = true;
         try
         {
             Users = new ObservableCollection<User>(await _userService.GetAllUsersAsync());
@@ -74,14 +73,21 @@ public partial class SettingsViewModel : ObservableObject
 
     private async Task LoadDbInfoAsync()
     {
-        var fileInfo = new FileInfo(CurrentSettings.DbPath);
-        if (fileInfo.Exists)
-        {
-            DbSize = $"{(fileInfo.Length / 1024.0 / 1024.0):F2} MB";
-        }
-
         await using var db = await _dbFactory.CreateDbContextAsync();
-        TableCount = 0; // Simplified
+        var connStr = db.Database.GetConnectionString();
+        if (!string.IsNullOrWhiteSpace(connStr))
+        {
+            // Extract file path from SQLite connection string "Data Source=path"
+            var parts = connStr.Split('=');
+            if (parts.Length > 1)
+            {
+                var dbPath = string.Join("=", parts.Skip(1)).Trim();
+                DbSize = System.IO.File.Exists(dbPath)
+                    ? $"{(new FileInfo(dbPath).Length / 1024.0 / 1024.0):F2} MB"
+                    : "الملف غير موجود";
+            }
+        }
+        TableCount = 0;
     }
 
     [RelayCommand]
@@ -154,7 +160,8 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private void RestartApp()
     {
-        if (_dialog.Confirm("هل تريد إعادة تشغيل البرنامج الآن لتطبيق التغييرات؟"))
+        Save();
+        if (_dialog.Confirm("تم حفظ الإعدادات. هل تريد إعادة تشغيل البرنامج الآن؟"))
         {
             var processPath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
             if (processPath != null)
@@ -174,13 +181,14 @@ public partial class SettingsViewModel : ObservableObject
             return;
         }
 
-        if (!string.IsNullOrWhiteSpace(UserPassword) && UserPassword != ConfirmPassword)
+        var password = UserPassword?.Trim();
+        if (!string.IsNullOrEmpty(password) && password != ConfirmPassword?.Trim())
         {
             Status = "كلمة المرور وتأكيدها غير متطابقين.";
             return;
         }
 
-        await _userService.UpdateUserAsync(SelectedUser, string.IsNullOrWhiteSpace(UserPassword) ? null : UserPassword);
+        await _userService.UpdateUserAsync(SelectedUser, string.IsNullOrWhiteSpace(password) ? null : password);
         UserPassword = "";
         ConfirmPassword = "";
         await LoadDataAsync();
@@ -194,7 +202,7 @@ public partial class SettingsViewModel : ObservableObject
         {
             await using var db = await _dbFactory.CreateDbContextAsync();
             var canConnect = await db.Database.CanConnectAsync();
-            var dbExists = File.Exists(CurrentSettings.DbPath);
+            var dbExists = System.IO.File.Exists(CurrentSettings.DbPath);
             var backupPathReady = !string.IsNullOrWhiteSpace(CurrentSettings.BackupPath);
             Status = canConnect && dbExists && backupPathReady
                 ? "فحص النظام مكتمل: قاعدة البيانات والنسخ الاحتياطي جاهزان."
@@ -227,6 +235,20 @@ public partial class SettingsViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
+    private async Task LoadDataAsync()
+    {
+        IsLoading = true;
+        try
+        {
+            Users = new ObservableCollection<User>(await _userService.GetAllUsersAsync());
+        }
+        catch (Exception ex)
+        {
+            Status = $"خطأ في تحميل المستخدمين: {ex.Message}";
+        }
+        IsLoading = false;
+    }
 
     [RelayCommand]
     private async Task CreateBackupAsync()
