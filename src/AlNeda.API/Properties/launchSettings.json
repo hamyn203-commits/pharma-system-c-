@@ -13,7 +13,7 @@
         "ALNEDA_JWT_ISSUER": "AlNeda.API",
         "ALNEDA_JWT_AUDIENCE": "AlNeda.Clients",
         "ALNEDA_JWT_EXPIRE_MINUTES": "1440",
-        "ALNEDA_DEFAULT_ADMIN_PASSWORD": "admin"
+        "ALNEDA_DEFAULT_ADMIN_PASSWORD": "admin123"
       }
     }
   }
