@@ -1,5 +1,4 @@
 using System.Text;
-using AlNeda.API.Authorization;
 using AlNeda.API.Middleware;
 using AlNeda.Core.Entities;
 using AlNeda.Data.Configuration;
@@ -113,41 +112,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization(options =>
-{
-    // واجهة الإدارة (WPF): أدوار الموظفين فقط — لا يشمل pharmacy.
-    options.AddPolicy(AuthPolicies.Staff, p => p.RequireRole("admin", "accountant", "rep"));
-    options.AddPolicy(AuthPolicies.PharmacyApp, p => p.RequireRole("pharmacy"));
-    options.AddPolicy(AuthPolicies.AdminOnly, p => p.RequireRole("admin"));
-});
+builder.Services.AddAuthorization();
 builder.Services.AddRateLimiter(options =>
 {
-    var isTesting = builder.Environment.IsEnvironment("Testing");
     options.AddPolicy("login", context =>
         RateLimitPartition.GetFixedWindowLimiter(
             context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
             _ => new FixedWindowRateLimiterOptions
             {
-                PermitLimit = isTesting ? 100 : 5,
+                PermitLimit = 5,
                 Window = TimeSpan.FromMinutes(1),
                 QueueLimit = 0
             }));
-    options.AddPolicy("offer-events", context =>
-    {
-        var pharmacyId = context.User.FindFirst("pharmacyId")?.Value
-            ?? context.User.FindFirst("PharmacyId")?.Value
-            ?? context.Connection.RemoteIpAddress?.ToString()
-            ?? "unknown";
-
-        return RateLimitPartition.GetFixedWindowLimiter(
-            pharmacyId,
-            _ => new FixedWindowRateLimiterOptions
-            {
-                PermitLimit = isTesting ? 1000 : 120,
-                Window = TimeSpan.FromMinutes(1),
-                QueueLimit = 0
-            });
-    });
 });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -195,10 +171,9 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 try
 {
     var dbFactory = app.Services.GetRequiredService<IDbContextFactory<AlNeda.Data.AppDbContext>>();
-    await using var initDb = await dbFactory.CreateDbContextAsync();
-    // الإنتاج/التكرار: EF Migrations. التطوير السريع بدون ملف DB: Migrate ينشئ الملف تلقائياً.
-    // قواعد قديمة أنشئت بـ EnsureCreated فقط (بدون __EFMigrationsHistory): راجع تعليمات baseline في README أو نفّذ Migrate على نسخة احتياطية ثم أدرج سجل الهجرة يدوياً عند الحاجة.
-    await initDb.Database.MigrateAsync();
+    using var initDb = dbFactory.CreateDbContext();
+    await initDb.Database.EnsureCreatedAsync();
+    await EnsureMobileSchemaAsync(initDb);
 
     if (!await initDb.Users.AnyAsync())
     {
@@ -228,8 +203,6 @@ SeedDone:;
 catch (Exception ex)
 {
     var logger = app.Services.GetRequiredService<ILogger<Program>>();
-    if (app.Environment.IsEnvironment("Testing"))
-        throw;
     logger.LogWarning(ex, "Database initialization skipped (will retry on first request)");
 }
 
@@ -242,8 +215,7 @@ app.UseSwaggerUI(options =>
 });
 
 app.UseCors();
-if (!app.Environment.IsEnvironment("Testing"))
-    app.UseRateLimiter();
+app.UseRateLimiter();
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseMiddleware<MobileAccountStatusMiddleware>();
@@ -252,5 +224,41 @@ app.MapControllers();
 
 app.Run();
 
-/// <summary>يسمح بـ <c>WebApplicationFactory&lt;Program&gt;</c> في اختبارات التكامل.</summary>
-public partial class Program { }
+static async Task EnsureMobileSchemaAsync(AlNeda.Data.AppDbContext db)
+{
+    var userColumns = await db.Database
+        .SqlQueryRaw<string>("SELECT name AS Value FROM pragma_table_info('Users')")
+        .ToListAsync();
+    if (!userColumns.Contains("PharmacyId"))
+        await db.Database.ExecuteSqlRawAsync("ALTER TABLE Users ADD COLUMN PharmacyId INTEGER NULL");
+    if (!userColumns.Contains("LastLoginAt"))
+        await db.Database.ExecuteSqlRawAsync("ALTER TABLE Users ADD COLUMN LastLoginAt TEXT NULL");
+
+    var pharmacyColumns = await db.Database
+        .SqlQueryRaw<string>("SELECT name AS Value FROM pragma_table_info('Pharmacies')")
+        .ToListAsync();
+    if (!pharmacyColumns.Contains("AccountStatus"))
+        await db.Database.ExecuteSqlRawAsync("ALTER TABLE Pharmacies ADD COLUMN AccountStatus TEXT NOT NULL DEFAULT 'active'");
+    if (!pharmacyColumns.Contains("ApprovedAt"))
+        await db.Database.ExecuteSqlRawAsync("ALTER TABLE Pharmacies ADD COLUMN ApprovedAt TEXT NULL");
+    if (!pharmacyColumns.Contains("BlockedAt"))
+        await db.Database.ExecuteSqlRawAsync("ALTER TABLE Pharmacies ADD COLUMN BlockedAt TEXT NULL");
+    if (!pharmacyColumns.Contains("LastLoginAt"))
+        await db.Database.ExecuteSqlRawAsync("ALTER TABLE Pharmacies ADD COLUMN LastLoginAt TEXT NULL");
+    if (!pharmacyColumns.Contains("DeviceId"))
+        await db.Database.ExecuteSqlRawAsync("ALTER TABLE Pharmacies ADD COLUMN DeviceId TEXT NULL");
+
+    var orderColumns = await db.Database
+        .SqlQueryRaw<string>("SELECT name AS Value FROM pragma_table_info('Orders')")
+        .ToListAsync();
+    if (!orderColumns.Contains("Source"))
+        await db.Database.ExecuteSqlRawAsync("ALTER TABLE Orders ADD COLUMN Source TEXT NOT NULL DEFAULT 'admin'");
+    if (!orderColumns.Contains("ClientNotes"))
+        await db.Database.ExecuteSqlRawAsync("ALTER TABLE Orders ADD COLUMN ClientNotes TEXT NOT NULL DEFAULT ''");
+    if (!orderColumns.Contains("MobileCreatedAt"))
+        await db.Database.ExecuteSqlRawAsync("ALTER TABLE Orders ADD COLUMN MobileCreatedAt TEXT NULL");
+    if (!orderColumns.Contains("CancellationRequestedAt"))
+        await db.Database.ExecuteSqlRawAsync("ALTER TABLE Orders ADD COLUMN CancellationRequestedAt TEXT NULL");
+    if (!orderColumns.Contains("CancellationReason"))
+        await db.Database.ExecuteSqlRawAsync("ALTER TABLE Orders ADD COLUMN CancellationReason TEXT NOT NULL DEFAULT ''");
+}

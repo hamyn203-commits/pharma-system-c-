@@ -94,6 +94,7 @@
         <GradientStop Color="#FF0F1828" Offset="1" />
     </LinearGradientBrush>
     <SolidColorBrush x:Key="OverlayBgBrush" Color="#66FFFFFF" />
+    <SolidColorBrush x:Key="DarkOverlayBgBrush" Color="#E60D1117" />
 
     <!-- Glass Gradient Brushes for Settings -->
     <LinearGradientBrush x:Key="GlassCardBrush" StartPoint="0,0" EndPoint="1,1">

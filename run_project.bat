@@ -1,0 +1,9 @@
+@echo off
+echo Starting API...
+start cmd /k "title API Server && cd /d "%~dp0" && dotnet run --project src\AlNeda.API\AlNeda.API.csproj --urls http://localhost:5000"
+
+echo Waiting for API to start...
+timeout /t 5
+
+echo Starting Admin App...
+start cmd /k "title Admin App && cd /d "%~dp0" && dotnet run --project src\AlNeda.Admin\AlNeda.Admin.csproj"

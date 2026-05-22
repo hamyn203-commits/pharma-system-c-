@@ -1,5 +1,6 @@
 using AlNeda.Core.Entities;
 using AlNeda.Data;
+using AlNeda.DomainLogic;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlNeda.Services;
@@ -14,20 +15,44 @@ public static class MarketingOfferRules
 
     public static bool IsActive(MarketingOffer offer, DateTime now)
     {
-        // The mobile/API active window is exclusive at the end: StartsAt <= now < EndsAt.
-        return offer.Status == Published
-            && offer.StartsAt <= now
-            && now < offer.EndsAt
-            && offer.Status is not Paused and not Cancelled and not Depleted
-            && (offer.RemainingQuantity is null or > 0);
+        return MarketingOffers.isActive(
+            offer.Status,
+            offer.StartsAt,
+            offer.EndsAt,
+            offer.RemainingQuantity.HasValue ? new int?(offer.RemainingQuantity.Value) : null,
+            now);
     }
 
-    public static string EventDateKey(DateTime occurredAt) => occurredAt.ToString("yyyy-MM-dd");
+    public static string EventDateKey(DateTime occurredAt) => MarketingOffers.eventDateKey(occurredAt);
 
-    public static string DeviceKey(string? deviceId) =>
-        string.IsNullOrWhiteSpace(deviceId) ? "pharmacy" : deviceId.Trim();
+    public static string DeviceKey(string? deviceId) => MarketingOffers.deviceKey(deviceId);
 
-    public static bool UsesDeviceFallback(string? deviceId) => string.IsNullOrWhiteSpace(deviceId);
+    public static bool UsesDeviceFallback(string? deviceId) => MarketingOffers.usesDeviceFallback(deviceId);
+
+    public static string NormalizeStatus(string? value) => MarketingOffers.normalizeStatus(value ?? string.Empty);
+
+    public static string NormalizeOfferType(string? value) => MarketingOffers.normalizeOfferType(value ?? string.Empty);
+
+    public static string NormalizeAudienceRule(string? value) => MarketingOffers.normalizeAudienceRule(value ?? string.Empty);
+
+    public static string ValidateSchedule(DateTime startsAt, DateTime endsAt) =>
+        MarketingOffers.validateSchedule(startsAt, endsAt);
+
+    public static string ValidatePrices(decimal? oldPrice, decimal? newPrice, int? discountPercent) =>
+        MarketingOffers.validatePrices(
+            oldPrice.HasValue ? new decimal?(oldPrice.Value) : null,
+            newPrice.HasValue ? new decimal?(newPrice.Value) : null,
+            discountPercent.HasValue ? new int?(discountPercent.Value) : null);
+
+    public static string ValidateQuantity(int? quantityLimit, int? remainingQuantity) =>
+        MarketingOffers.validateQuantity(
+            quantityLimit.HasValue ? new int?(quantityLimit.Value) : null,
+            remainingQuantity.HasValue ? new int?(remainingQuantity.Value) : null);
+
+    public static string NextStatusAfterQuantity(string? requestedStatus, int? remainingQuantity) =>
+        MarketingOffers.nextStatusAfterQuantity(
+            requestedStatus ?? string.Empty,
+            remainingQuantity.HasValue ? new int?(remainingQuantity.Value) : null);
 
     public static async Task<bool> MatchesAudienceAsync(AppDbContext db, MarketingOffer offer, Pharmacy pharmacy, DateTime now)
     {

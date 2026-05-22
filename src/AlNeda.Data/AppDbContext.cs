@@ -24,6 +24,7 @@ public class AppDbContext : DbContext
     public DbSet<ReturnItem> ReturnItems => Set<ReturnItem>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<MarketingOffer> MarketingOffers => Set<MarketingOffer>();
+    public DbSet<MarketingOfferProduct> MarketingOfferProducts => Set<MarketingOfferProduct>();
     public DbSet<OfferEvent> OfferEvents => Set<OfferEvent>();
     public DbSet<MarketingOfferPharmacyTarget> MarketingOfferPharmacyTargets => Set<MarketingOfferPharmacyTarget>();
 
@@ -69,6 +70,15 @@ public class AppDbContext : DbContext
             e.HasIndex(x => new { x.MarketingOfferId, x.PharmacyId }).IsUnique();
             e.HasOne(x => x.Offer).WithMany(o => o.PharmacyTargets).HasForeignKey(x => x.MarketingOfferId).OnDelete(DeleteBehavior.Cascade);
             e.HasOne(x => x.Pharmacy).WithMany().HasForeignKey(x => x.PharmacyId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<MarketingOfferProduct>(e =>
+        {
+            e.HasIndex(x => new { x.MarketingOfferId, x.ProductId }).IsUnique();
+            e.Property(x => x.OldPrice).HasPrecision(18, 2);
+            e.Property(x => x.NewPrice).HasPrecision(18, 2);
+            e.HasOne(x => x.Offer).WithMany(o => o.OfferProducts).HasForeignKey(x => x.MarketingOfferId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(x => x.Product).WithMany().HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<OrderItem>(e =>

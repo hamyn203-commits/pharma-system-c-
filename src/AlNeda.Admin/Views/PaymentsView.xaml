@@ -12,11 +12,11 @@
             <RowDefinition Height="*" />    <!-- Grid -->
         </Grid.RowDefinitions>
 
-        <Border Grid.RowSpan="3" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+        <Border Grid.RowSpan="3" Background="{StaticResource DarkOverlayBgBrush}" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="100">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="4"
-                             Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
+                             Foreground="{StaticResource SuccessBrush}" Style="{StaticResource ModernProgressBar}" />
                 <TextBlock Text="جاري تحميل التحصيلات..." Foreground="{StaticResource TextMutedBrush}"
                            HorizontalAlignment="Center" Margin="0,12,0,0" />
             </StackPanel>
@@ -34,7 +34,7 @@
                 <StackPanel>
                     <TextBlock Text="تحصيلات اليوم" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
-                        <TextBlock Text="12,500" FontSize="28" FontWeight="Bold" Foreground="White" />
+                        <TextBlock Text="12,500" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
                         <TextBlock Text="💵" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
                     </Grid>
                 </StackPanel>
@@ -44,7 +44,7 @@
                 <StackPanel>
                     <TextBlock Text="تحصيلات الشهر" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
-                        <TextBlock Text="285,400" FontSize="28" FontWeight="Bold" Foreground="#FF55D66B" />
+                        <TextBlock Text="285,400" FontSize="28" FontWeight="Bold" Foreground="{StaticResource SuccessBrush}" />
                         <TextBlock Text="&#xE9D2;" FontFamily="Segoe MDL2 Assets" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
                     </Grid>
                 </StackPanel>
@@ -54,7 +54,7 @@
                 <StackPanel>
                     <TextBlock Text="إجمالي النقدية" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
-                        <TextBlock Text="1,240,000" FontSize="28" FontWeight="Bold" Foreground="#FFD29922" />
+                        <TextBlock Text="1,240,000" FontSize="28" FontWeight="Bold" Foreground="{StaticResource WarningBrush}" />
                         <TextBlock Text="&#xE8C7;" FontFamily="Segoe MDL2 Assets" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
                     </Grid>
                 </StackPanel>
@@ -68,7 +68,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Text="سجل التحصيلات" FontSize="22" FontWeight="Bold" Foreground="#FF55D66B" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="0" Text="سجل التحصيلات" FontSize="22" FontWeight="Bold" Foreground="{StaticResource SuccessBrush}" VerticalAlignment="Center" />
 
             <Button Grid.Column="1" Content="+ تحصيل مبلغ جديد" Command="{Binding NewPaymentCommand}"
                     Style="{StaticResource PrimaryButtonStyle}" Height="44" Padding="24,0" />
@@ -94,17 +94,17 @@
         </Border>
 
         <!-- Editor Overlay -->
-        <Border Grid.RowSpan="3" Background="#E60D1117"
+        <Border Grid.RowSpan="3" Background="{StaticResource DarkOverlayBgBrush}"
                 Visibility="{Binding ShowEditor, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="200">
             <Border Style="{StaticResource CardStyle}" Width="480"
                     HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel>
-                    <TextBlock Text="تحصيل مبلغ جديد" FontSize="20" FontWeight="Bold" Foreground="#FF55D66B" Margin="0,0,0,20" />
+                    <TextBlock Text="تحصيل مبلغ جديد" FontSize="20" FontWeight="Bold" Foreground="{StaticResource SuccessBrush}" Margin="0,0,0,20" />
 
-                    <Border Background="#FF3D1A1A" CornerRadius="8" Padding="12,8" Margin="0,0,0,12"
+                    <Border Background="{StaticResource DangerGlassBrush}" CornerRadius="8" Padding="12,8" Margin="0,0,0,12"
                             Visibility="{Binding ValidationMessage, Converter={StaticResource StringToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <TextBlock Text="{Binding ValidationMessage}" Foreground="#FFFF5C5C" FontSize="12" />
+                        <TextBlock Text="{Binding ValidationMessage}" Foreground="{StaticResource DangerBrush}" FontSize="12" />
                     </Border>
 
                     <StackPanel Margin="0,0,0,12">

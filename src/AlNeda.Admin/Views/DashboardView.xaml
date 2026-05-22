@@ -84,7 +84,7 @@
             <!-- ═══════════════════════════════════════════════════════════ -->
             <Border Grid.Row="0" Background="{StaticResource DashboardHeroGradient}" CornerRadius="22" Padding="26" Margin="0,0,0,24">
                 <Border.Effect>
-                    <DropShadowEffect BlurRadius="34" ShadowDepth="6" Color="#FF6E928B" Opacity="0.28" />
+                    <DropShadowEffect BlurRadius="34" ShadowDepth="6" Color="{StaticResource PrimaryIndigoDark}" Opacity="0.28" />
                 </Border.Effect>
                 <Grid>
                     <Grid.ColumnDefinitions>

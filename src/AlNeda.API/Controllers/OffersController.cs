@@ -31,7 +31,11 @@ public class OffersController : ControllerBase
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
         var now = DateTime.Now;
-        var offers = await db.MarketingOffers.Include(o => o.PharmacyTargets).OrderByDescending(o => o.UpdatedAt).ToListAsync();
+        var offers = await db.MarketingOffers
+            .Include(o => o.PharmacyTargets)
+            .Include(o => o.OfferProducts).ThenInclude(p => p.Product)
+            .OrderByDescending(o => o.UpdatedAt)
+            .ToListAsync();
         return Ok(offers.Select(o => ToDto(o, now)).ToList());
     }
 
@@ -39,7 +43,10 @@ public class OffersController : ControllerBase
     public async Task<IActionResult> GetById(int id)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        var offer = await db.MarketingOffers.Include(o => o.PharmacyTargets).FirstOrDefaultAsync(o => o.Id == id);
+        var offer = await db.MarketingOffers
+            .Include(o => o.PharmacyTargets)
+            .Include(o => o.OfferProducts).ThenInclude(p => p.Product)
+            .FirstOrDefaultAsync(o => o.Id == id);
         if (offer == null)
             return NotFound(new ApiError { Message = "العرض غير موجود", Code = "OFFER_NOT_FOUND" });
 
@@ -51,8 +58,17 @@ public class OffersController : ControllerBase
     {
         if (string.IsNullOrWhiteSpace(request.Title))
             return BadRequest(new ApiError { Message = "عنوان العرض مطلوب", Code = "VALIDATION_ERROR" });
-        if (request.EndsAt <= request.StartsAt)
-            return BadRequest(new ApiError { Message = "تاريخ نهاية العرض يجب أن يكون بعد تاريخ البداية", Code = "VALIDATION_ERROR" });
+        var scheduleError = MarketingOfferRules.ValidateSchedule(request.StartsAt, request.EndsAt);
+        if (!string.IsNullOrEmpty(scheduleError))
+            return BadRequest(new ApiError { Message = scheduleError, Code = "VALIDATION_ERROR" });
+
+        var priceError = MarketingOfferRules.ValidatePrices(request.OldPrice, request.NewPrice, request.DiscountPercent);
+        if (!string.IsNullOrEmpty(priceError))
+            return BadRequest(new ApiError { Message = priceError, Code = "VALIDATION_ERROR" });
+
+        var quantityError = MarketingOfferRules.ValidateQuantity(request.QuantityLimit, request.RemainingQuantity ?? request.QuantityLimit);
+        if (!string.IsNullOrEmpty(quantityError))
+            return BadRequest(new ApiError { Message = quantityError, Code = "VALIDATION_ERROR" });
 
         await using var db = await _contextFactory.CreateDbContextAsync();
         var now = DateTime.Now;
@@ -61,7 +77,8 @@ public class OffersController : ControllerBase
             Title = request.Title.Trim(),
             Subtitle = request.Subtitle.Trim(),
             Description = request.Description,
-            ImageUrl = request.ImageUrl.Trim(),
+            ImageUrl = PrimaryImageUrl(request),
+            AdditionalImageUrls = AdditionalImageUrls(request),
             OfferType = NormalizeOfferType(request.OfferType),
             AudienceRule = NormalizeAudienceRule(request.AudienceRule),
             StartsAt = request.StartsAt,
@@ -79,8 +96,10 @@ public class OffersController : ControllerBase
         db.MarketingOffers.Add(offer);
         await db.SaveChangesAsync();
         await SyncTargetsAsync(db, offer.Id, offer.AudienceRule, request.TargetPharmacyIds);
+        await SyncProductsAsync(db, offer.Id, request.OfferProducts);
         await db.SaveChangesAsync();
         await db.Entry(offer).Collection(o => o.PharmacyTargets).LoadAsync();
+        await db.Entry(offer).Collection(o => o.OfferProducts).Query().Include(p => p.Product).LoadAsync();
 
         await _audit.LogAsync(User.Identity?.Name ?? "system", "create", "MarketingOffer", offer.Id.ToString(),
             $"Created marketing offer '{offer.Title}'");
@@ -92,22 +111,35 @@ public class OffersController : ControllerBase
     public async Task<IActionResult> Update(int id, [FromBody] UpdateMarketingOfferRequest request)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        var offer = await db.MarketingOffers.Include(o => o.PharmacyTargets).FirstOrDefaultAsync(o => o.Id == id);
+        var offer = await db.MarketingOffers
+            .Include(o => o.PharmacyTargets)
+            .Include(o => o.OfferProducts).ThenInclude(p => p.Product)
+            .FirstOrDefaultAsync(o => o.Id == id);
         if (offer == null)
             return NotFound(new ApiError { Message = "العرض غير موجود", Code = "OFFER_NOT_FOUND" });
-        if (request.EndsAt <= request.StartsAt)
-            return BadRequest(new ApiError { Message = "تاريخ نهاية العرض يجب أن يكون بعد تاريخ البداية", Code = "VALIDATION_ERROR" });
+        var scheduleError = MarketingOfferRules.ValidateSchedule(request.StartsAt, request.EndsAt);
+        if (!string.IsNullOrEmpty(scheduleError))
+            return BadRequest(new ApiError { Message = scheduleError, Code = "VALIDATION_ERROR" });
+
+        var priceError = MarketingOfferRules.ValidatePrices(request.OldPrice, request.NewPrice, request.DiscountPercent);
+        if (!string.IsNullOrEmpty(priceError))
+            return BadRequest(new ApiError { Message = priceError, Code = "VALIDATION_ERROR" });
+
+        var quantityError = MarketingOfferRules.ValidateQuantity(request.QuantityLimit, request.RemainingQuantity ?? request.QuantityLimit);
+        if (!string.IsNullOrEmpty(quantityError))
+            return BadRequest(new ApiError { Message = quantityError, Code = "VALIDATION_ERROR" });
 
         var oldDates = $"{offer.StartsAt:s}..{offer.EndsAt:s}";
         offer.Title = request.Title.Trim();
         offer.Subtitle = request.Subtitle.Trim();
         offer.Description = request.Description;
-        offer.ImageUrl = request.ImageUrl.Trim();
+        offer.ImageUrl = PrimaryImageUrl(request);
+        offer.AdditionalImageUrls = AdditionalImageUrls(request);
         offer.OfferType = NormalizeOfferType(request.OfferType);
         offer.AudienceRule = NormalizeAudienceRule(request.AudienceRule);
         offer.StartsAt = request.StartsAt;
         offer.EndsAt = request.EndsAt;
-        offer.Status = NormalizeStatus(request.Status);
+        offer.Status = MarketingOfferRules.NextStatusAfterQuantity(request.Status, request.RemainingQuantity ?? request.QuantityLimit);
         offer.QuantityLimit = request.QuantityLimit;
         offer.RemainingQuantity = request.RemainingQuantity ?? request.QuantityLimit;
         offer.OldPrice = request.OldPrice;
@@ -115,12 +147,11 @@ public class OffersController : ControllerBase
         offer.DiscountPercent = request.DiscountPercent;
         offer.UpdatedAt = DateTime.Now;
 
-        if (offer.RemainingQuantity == 0)
-            offer.Status = MarketingOfferRules.Depleted;
-
         await SyncTargetsAsync(db, offer.Id, offer.AudienceRule, request.TargetPharmacyIds);
+        await SyncProductsAsync(db, offer.Id, request.OfferProducts);
         await db.SaveChangesAsync();
         await db.Entry(offer).Collection(o => o.PharmacyTargets).LoadAsync();
+        await db.Entry(offer).Collection(o => o.OfferProducts).Query().Include(p => p.Product).LoadAsync();
 
         await _audit.LogAsync(User.Identity?.Name ?? "system", "update", "MarketingOffer", offer.Id.ToString(),
             $"Updated marketing offer '{offer.Title}', dates {oldDates} -> {offer.StartsAt:s}..{offer.EndsAt:s}");
@@ -144,6 +175,79 @@ public class OffersController : ControllerBase
     public async Task<IActionResult> Cancel(int id)
     {
         return await ChangeStatus(id, MarketingOfferRules.Cancelled, "cancel");
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        var offer = await db.MarketingOffers.FirstOrDefaultAsync(o => o.Id == id);
+        if (offer == null)
+            return NotFound(new ApiError { Message = "العرض غير موجود", Code = "OFFER_NOT_FOUND" });
+
+        var title = offer.Title;
+        db.MarketingOffers.Remove(offer);
+        await db.SaveChangesAsync();
+
+        await _audit.LogAsync(User.Identity?.Name ?? "system", "delete", "MarketingOffer", id.ToString(),
+            $"Deleted marketing offer '{title}'");
+
+        return NoContent();
+    }
+
+    [HttpPost("{id:int}/test-send")]
+    public async Task<IActionResult> TestSend(int id, [FromBody] OfferTestSendRequest request)
+    {
+        if (request.PharmacyId <= 0)
+            return BadRequest(new ApiError { Message = "اختار صيدلية لإرسال التجربة", Code = "VALIDATION_ERROR" });
+
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        var now = DateTime.Now;
+        var offer = await db.MarketingOffers
+            .Include(o => o.PharmacyTargets)
+            .Include(o => o.OfferProducts).ThenInclude(p => p.Product)
+            .FirstOrDefaultAsync(o => o.Id == id);
+        if (offer == null)
+            return NotFound(new ApiError { Message = "العرض غير موجود", Code = "OFFER_NOT_FOUND" });
+
+        var pharmacy = await db.Pharmacies.FirstOrDefaultAsync(p => p.Id == request.PharmacyId);
+        if (pharmacy == null)
+            return NotFound(new ApiError { Message = "الصيدلية غير موجودة", Code = "PHARMACY_NOT_FOUND" });
+
+        var wouldAppear = MarketingOfferRules.IsActive(offer, now)
+            && await MarketingOfferRules.MatchesAudienceAsync(db, offer, pharmacy, now);
+        var deviceKey = MarketingOfferRules.DeviceKey(request.DeviceId);
+        db.OfferEvents.Add(new OfferEvent
+        {
+            MarketingOfferId = offer.Id,
+            PharmacyId = pharmacy.Id,
+            DeviceId = string.IsNullOrWhiteSpace(request.DeviceId) ? null : request.DeviceId.Trim(),
+            DeviceKey = deviceKey,
+            EventType = "test_send",
+            OccurredAt = now,
+            EventDateKey = MarketingOfferRules.EventDateKey(now),
+            IsUniqueDailyImpression = false,
+            UsedDeviceFallback = MarketingOfferRules.UsesDeviceFallback(request.DeviceId),
+            IsRejected = false,
+            RejectionReason = wouldAppear ? string.Empty : "test_only_not_currently_visible"
+        });
+        await db.SaveChangesAsync();
+
+        await _audit.LogAsync(User.Identity?.Name ?? "system", "test-send", "MarketingOffer", offer.Id.ToString(),
+            $"Prepared test send for offer '{offer.Title}' to pharmacy '{pharmacy.Name}'");
+
+        return Ok(new OfferTestSendResponse
+        {
+            Sent = true,
+            WouldAppearOnMobile = wouldAppear,
+            OfferId = offer.Id,
+            OfferTitle = offer.Title,
+            PharmacyId = pharmacy.Id,
+            PharmacyName = pharmacy.Name,
+            Message = wouldAppear
+                ? $"تم تجهيز تجربة العرض لصيدلية {pharmacy.Name} وسيظهر لها على تطبيق الصيدلي."
+                : $"تم تجهيز التجربة، لكن العرض لن يظهر حالياً لصيدلية {pharmacy.Name} بسبب الحالة أو الاستهداف أو مدة العرض."
+        });
     }
 
     [HttpPost("upload-image")]
@@ -222,7 +326,10 @@ public class OffersController : ControllerBase
     private async Task<IActionResult> ChangeStatus(int id, string status, string action)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-        var offer = await db.MarketingOffers.Include(o => o.PharmacyTargets).FirstOrDefaultAsync(o => o.Id == id);
+        var offer = await db.MarketingOffers
+            .Include(o => o.PharmacyTargets)
+            .Include(o => o.OfferProducts).ThenInclude(p => p.Product)
+            .FirstOrDefaultAsync(o => o.Id == id);
         if (offer == null)
             return NotFound(new ApiError { Message = "العرض غير موجود", Code = "OFFER_NOT_FOUND" });
 
@@ -243,6 +350,7 @@ public class OffersController : ControllerBase
         Subtitle = offer.Subtitle,
         Description = offer.Description,
         ImageUrl = offer.ImageUrl,
+        ImageUrls = OfferImageUrls(offer).ToList(),
         OfferType = offer.OfferType,
         AudienceRule = offer.AudienceRule,
         StartsAt = offer.StartsAt,
@@ -256,20 +364,57 @@ public class OffersController : ControllerBase
         UpdatedAt = offer.UpdatedAt,
         IsActive = MarketingOfferRules.IsActive(offer, now),
         TargetPharmacyIds = offer.PharmacyTargets.Select(t => t.PharmacyId).ToList(),
+        OfferProducts = offer.OfferProducts.OrderBy(p => p.Id).Select(ToProductDto).ToList(),
         AudienceLabel = offer.AudienceRule == "selected_pharmacies"
             ? $"صيدليات محددة ({offer.PharmacyTargets.Count})"
             : "كل الصيدليات"
     };
 
-    private static string NormalizeOfferType(string value) =>
-        string.IsNullOrWhiteSpace(value) ? "discount" : value.Trim().ToLowerInvariant();
-
-    private static string NormalizeAudienceRule(string value)
+    private static MarketingOfferProductDto ToProductDto(MarketingOfferProduct offerProduct) => new()
     {
-        var rule = string.IsNullOrWhiteSpace(value) ? "all" : value.Trim();
-        return rule is "all" or "selected_pharmacies" or "active_pharmacies_last_30d" || rule.StartsWith("geo:", StringComparison.OrdinalIgnoreCase)
-            ? rule
-            : "all";
+        Id = offerProduct.Id,
+        ProductId = offerProduct.ProductId,
+        ProductName = offerProduct.Product?.Name ?? string.Empty,
+        AvailableQuantity = offerProduct.Product?.Quantity ?? 0,
+        OfferQuantity = offerProduct.OfferQuantity,
+        MinimumOrder = offerProduct.MinimumOrder,
+        OldPrice = offerProduct.OldPrice,
+        NewPrice = offerProduct.NewPrice,
+        GiftProduct = offerProduct.GiftProduct
+    };
+
+    private static string NormalizeOfferType(string value) => MarketingOfferRules.NormalizeOfferType(value);
+
+    private static string NormalizeAudienceRule(string value) => MarketingOfferRules.NormalizeAudienceRule(value);
+
+    private static string PrimaryImageUrl(CreateMarketingOfferRequest request)
+    {
+        var firstFromList = request.ImageUrls.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x));
+        return (firstFromList ?? request.ImageUrl).Trim();
+    }
+
+    private static string AdditionalImageUrls(CreateMarketingOfferRequest request)
+    {
+        var primary = PrimaryImageUrl(request);
+        var images = request.ImageUrls
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Select(x => x.Trim())
+            .Where(x => !string.Equals(x, primary, StringComparison.OrdinalIgnoreCase))
+            .Distinct(StringComparer.OrdinalIgnoreCase);
+
+        return string.Join('\n', images);
+    }
+
+    private static IEnumerable<string> OfferImageUrls(MarketingOffer offer)
+    {
+        if (!string.IsNullOrWhiteSpace(offer.ImageUrl))
+            yield return offer.ImageUrl;
+
+        foreach (var image in (offer.AdditionalImageUrls ?? string.Empty).Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            if (!string.Equals(image, offer.ImageUrl, StringComparison.OrdinalIgnoreCase))
+                yield return image;
+        }
     }
 
     private static async Task SyncTargetsAsync(Data.AppDbContext db, int offerId, string audienceRule, List<int> targetPharmacyIds)
@@ -292,11 +437,45 @@ public class OffersController : ControllerBase
         }
     }
 
-    private static string NormalizeStatus(string value)
+    private static async Task SyncProductsAsync(Data.AppDbContext db, int offerId, List<MarketingOfferProductRequest> requestProducts)
     {
-        var status = string.IsNullOrWhiteSpace(value) ? "draft" : value.Trim().ToLowerInvariant();
-        return status is "draft" or "scheduled" or "published" or "paused" or "ended" or "cancelled" or "depleted"
-            ? status
-            : "draft";
+        var oldProducts = await db.MarketingOfferProducts.Where(p => p.MarketingOfferId == offerId).ToListAsync();
+        db.MarketingOfferProducts.RemoveRange(oldProducts);
+
+        var rows = requestProducts
+            .Where(p => p.ProductId > 0)
+            .GroupBy(p => p.ProductId)
+            .Select(g => g.First())
+            .ToList();
+
+        if (rows.Count == 0)
+            return;
+
+        var ids = rows.Select(p => p.ProductId).ToList();
+        var products = await db.Products
+            .Where(p => ids.Contains(p.Id))
+            .Select(p => new { p.Id, p.UnitPrice })
+            .ToDictionaryAsync(p => p.Id);
+
+        foreach (var row in rows)
+        {
+            if (!products.TryGetValue(row.ProductId, out var product))
+                continue;
+
+            var oldPrice = row.OldPrice > 0 ? row.OldPrice : product.UnitPrice;
+            var newPrice = row.NewPrice > 0 ? row.NewPrice : oldPrice;
+            db.MarketingOfferProducts.Add(new MarketingOfferProduct
+            {
+                MarketingOfferId = offerId,
+                ProductId = row.ProductId,
+                OfferQuantity = Math.Max(1, row.OfferQuantity),
+                MinimumOrder = Math.Max(1, row.MinimumOrder),
+                OldPrice = oldPrice,
+                NewPrice = newPrice,
+                GiftProduct = (row.GiftProduct ?? string.Empty).Trim()
+            });
+        }
     }
+
+    private static string NormalizeStatus(string value) => MarketingOfferRules.NormalizeStatus(value);
 }

@@ -7,6 +7,7 @@ public class MarketingOfferDto
     public string Subtitle { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string ImageUrl { get; set; } = string.Empty;
+    public List<string> ImageUrls { get; set; } = [];
     public string OfferType { get; set; } = "discount";
     public string AudienceRule { get; set; } = "all";
     public DateTime StartsAt { get; set; }
@@ -20,6 +21,7 @@ public class MarketingOfferDto
     public DateTime UpdatedAt { get; set; }
     public bool IsActive { get; set; }
     public List<int> TargetPharmacyIds { get; set; } = [];
+    public List<MarketingOfferProductDto> OfferProducts { get; set; } = [];
     public string AudienceLabel { get; set; } = "كل الصيدليات";
 }
 
@@ -29,6 +31,7 @@ public class CreateMarketingOfferRequest
     public string Subtitle { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string ImageUrl { get; set; } = string.Empty;
+    public List<string> ImageUrls { get; set; } = [];
     public string OfferType { get; set; } = "discount";
     public string AudienceRule { get; set; } = "all";
     public DateTime StartsAt { get; set; } = DateTime.Today;
@@ -39,6 +42,30 @@ public class CreateMarketingOfferRequest
     public decimal? NewPrice { get; set; }
     public int? DiscountPercent { get; set; }
     public List<int> TargetPharmacyIds { get; set; } = [];
+    public List<MarketingOfferProductRequest> OfferProducts { get; set; } = [];
+}
+
+public class MarketingOfferProductDto
+{
+    public int Id { get; set; }
+    public int ProductId { get; set; }
+    public string ProductName { get; set; } = string.Empty;
+    public int AvailableQuantity { get; set; }
+    public int OfferQuantity { get; set; }
+    public int MinimumOrder { get; set; } = 1;
+    public decimal OldPrice { get; set; }
+    public decimal NewPrice { get; set; }
+    public string GiftProduct { get; set; } = string.Empty;
+}
+
+public class MarketingOfferProductRequest
+{
+    public int ProductId { get; set; }
+    public int OfferQuantity { get; set; }
+    public int MinimumOrder { get; set; } = 1;
+    public decimal OldPrice { get; set; }
+    public decimal NewPrice { get; set; }
+    public string GiftProduct { get; set; } = string.Empty;
 }
 
 public class OfferImageUploadResponse
@@ -63,6 +90,23 @@ public class OfferEventResponse
     public bool Counted { get; set; }
     public bool UsedDeviceFallback { get; set; }
     public string Message { get; set; } = string.Empty;
+}
+
+public class OfferTestSendRequest
+{
+    public int PharmacyId { get; set; }
+    public string? DeviceId { get; set; }
+}
+
+public class OfferTestSendResponse
+{
+    public bool Sent { get; set; }
+    public bool WouldAppearOnMobile { get; set; }
+    public string Message { get; set; } = string.Empty;
+    public int OfferId { get; set; }
+    public string OfferTitle { get; set; } = string.Empty;
+    public int PharmacyId { get; set; }
+    public string PharmacyName { get; set; } = string.Empty;
 }
 
 public class OfferAnalyticsDto

@@ -50,6 +50,8 @@ public interface IAlNedaApiClient
     Task<MarketingOfferDto?> UpdateOfferAsync(int id, UpdateMarketingOfferRequest request);
     Task<MarketingOfferDto?> PublishOfferAsync(int id);
     Task<MarketingOfferDto?> PauseOfferAsync(int id);
+    Task DeleteOfferAsync(int id);
+    Task<OfferTestSendResponse?> TestSendOfferAsync(int id, OfferTestSendRequest request);
     Task<OffersAnalyticsSummaryDto?> GetOffersAnalyticsAsync();
     Task<OfferImageUploadResponse?> UploadOfferImageAsync(string imagePath);
 
@@ -309,6 +311,21 @@ public class ApiClientService : IAlNedaApiClient, IDisposable
         var response = await _httpClient.PostAsync($"api/admin/offers/{id}/pause", null);
         await ThrowIfErrorAsync(response);
         return await response.Content.ReadFromJsonAsync<MarketingOfferDto>(_jsonOptions);
+    }
+
+    public async Task DeleteOfferAsync(int id)
+    {
+        EnsureAuthenticated();
+        var response = await _httpClient.DeleteAsync($"api/admin/offers/{id}");
+        await ThrowIfErrorAsync(response);
+    }
+
+    public async Task<OfferTestSendResponse?> TestSendOfferAsync(int id, OfferTestSendRequest request)
+    {
+        EnsureAuthenticated();
+        var response = await _httpClient.PostAsJsonAsync($"api/admin/offers/{id}/test-send", request, _jsonOptions);
+        await ThrowIfErrorAsync(response);
+        return await response.Content.ReadFromJsonAsync<OfferTestSendResponse>(_jsonOptions);
     }
 
     public async Task<OffersAnalyticsSummaryDto?> GetOffersAnalyticsAsync()

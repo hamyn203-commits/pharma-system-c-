@@ -23,6 +23,7 @@
             <conv:InverseBoolConverter x:Key="InverseBoolConverter" />
             <conv:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
             <conv:BoolToTextConverter x:Key="BoolToTextConverter" />
+            <conv:StringEmptyToVisibilityConverter x:Key="StringEmptyToVisibilityConverter" />
             <conv:PositiveNegativeToBrushConverter x:Key="PositiveNegativeToBrushConverter" />
             <conv:ProfitMarginToBrushConverter x:Key="ProfitMarginToBrushConverter" />
             <conv:TrendToBrushConverter x:Key="TrendToBrushConverter" />

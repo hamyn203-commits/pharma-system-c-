@@ -89,21 +89,23 @@ public partial class PharmaciesViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void EditSelected()
+    private void EditSelected(PharmacyDto? pharmacy = null)
     {
-        if (SelectedPharmacy == null) return;
+        pharmacy ??= SelectedPharmacy;
+        if (pharmacy == null) return;
+        SelectedPharmacy = pharmacy;
         IsNewPharmacy = false;
         EditPharmacy = new Pharmacy
         {
-            Id = SelectedPharmacy.Id,
-            Name = SelectedPharmacy.Name ?? string.Empty,
-            Address = SelectedPharmacy.Address ?? string.Empty,
-            Phone = SelectedPharmacy.Phone ?? string.Empty,
-            OwnerName = SelectedPharmacy.OwnerName,
-            Balance = SelectedPharmacy.Balance,
-            AccountStatus = SelectedPharmacy.AccountStatus ?? "active"
+            Id = pharmacy.Id,
+            Name = pharmacy.Name ?? string.Empty,
+            Address = pharmacy.Address ?? string.Empty,
+            Phone = pharmacy.Phone ?? string.Empty,
+            OwnerName = pharmacy.OwnerName,
+            Balance = pharmacy.Balance,
+            AccountStatus = pharmacy.AccountStatus ?? "active"
         };
-        EditOwnerName = SelectedPharmacy.OwnerName ?? "";
+        EditOwnerName = pharmacy.OwnerName ?? "";
         EditAppUsername = "";
         EditAppPassword = "";
         ValidationMessage = "";
@@ -193,10 +195,12 @@ public partial class PharmaciesViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void OpenAppAccountEditor()
+    private void OpenAppAccountEditor(PharmacyDto? pharmacy = null)
     {
-        if (SelectedPharmacy == null) return;
-        AppUsername = SelectedPharmacy.Phone?.Replace(" ", "") ?? $"pharmacy{SelectedPharmacy.Id}";
+        pharmacy ??= SelectedPharmacy;
+        if (pharmacy == null) return;
+        SelectedPharmacy = pharmacy;
+        AppUsername = pharmacy.Phone?.Replace(" ", "") ?? $"pharmacy{pharmacy.Id}";
         AppPassword = "";
         ShowAppAccountEditor = true;
     }
@@ -297,13 +301,15 @@ public partial class PharmaciesViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task ResetAppPasswordAsync()
+    private async Task ResetAppPasswordAsync(PharmacyDto? pharmacy = null)
     {
-        if (SelectedPharmacy == null || !SelectedPharmacy.HasAppAccount) return;
-        AppPassword = $"P@{SelectedPharmacy.Id}{DateTime.Now:HHmm}";
+        pharmacy ??= SelectedPharmacy;
+        if (pharmacy == null || !pharmacy.HasAppAccount) return;
+        SelectedPharmacy = pharmacy;
+        AppPassword = $"P@{pharmacy.Id}{DateTime.Now:HHmm}";
         try
         {
-            await _apiClient.ResetPharmacyAppPasswordAsync(SelectedPharmacy.Id, AppPassword);
+            await _apiClient.ResetPharmacyAppPasswordAsync(pharmacy.Id, AppPassword);
             _dialog.ShowMessage($"تم تعيين كلمة المرور الجديدة: {AppPassword}", "كلمة مرور التطبيق");
         }
         catch (ApiException ex)

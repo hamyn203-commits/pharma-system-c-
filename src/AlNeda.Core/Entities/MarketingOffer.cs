@@ -18,6 +18,8 @@ public class MarketingOffer : IEntity
     [MaxLength(400)]
     public string ImageUrl { get; set; } = string.Empty;
 
+    public string AdditionalImageUrls { get; set; } = string.Empty;
+
     [MaxLength(50)]
     public string OfferType { get; set; } = "discount";
 
@@ -52,4 +54,5 @@ public class MarketingOffer : IEntity
     public ICollection<OfferEvent> Events { get; set; } = new List<OfferEvent>();
     public ICollection<Order> Orders { get; set; } = new List<Order>();
     public ICollection<MarketingOfferPharmacyTarget> PharmacyTargets { get; set; } = new List<MarketingOfferPharmacyTarget>();
+    public ICollection<MarketingOfferProduct> OfferProducts { get; set; } = new List<MarketingOfferProduct>();
 }

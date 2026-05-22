@@ -25,8 +25,8 @@ public partial class LoginWindow : Window
         };
 
         ViewModel.Username = "admin";
-        ViewModel.Password = "admin123";
-        PasswordBox.Password = "admin123"; // Initialize the PasswordBox too
+        ViewModel.Password = "admin";
+        PasswordBox.Password = "admin"; // Initialize the PasswordBox too
         UsernameBox.Focus();
     }
 

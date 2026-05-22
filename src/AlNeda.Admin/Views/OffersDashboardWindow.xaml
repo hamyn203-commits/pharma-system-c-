@@ -488,7 +488,7 @@
                                                 <ColumnDefinition Width="280" />
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
-                                            <Border Background="#FF07111F" BorderBrush="#3347556B" BorderThickness="1" CornerRadius="16" Height="210" ClipToBounds="True" Margin="0,0,16,0">
+                                            <Border Background="{StaticResource DarkBgBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" CornerRadius="16" Height="210" ClipToBounds="True" Margin="0,0,16,0">
                                                 <Image Source="{Binding PreviewImagePath}" Stretch="UniformToFill" />
                                             </Border>
                                             <StackPanel Grid.Column="1">
@@ -501,7 +501,7 @@
                                     </StackPanel>
                                 </Border>
 
-                                <Border Background="#101827" BorderBrush="#3347556B" BorderThickness="1" CornerRadius="16" Padding="14">
+                                <Border Background="{StaticResource CardBgBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" CornerRadius="16" Padding="14">
                                     <WrapPanel>
                                         <Button Content="حفظ كمسودة" Command="{Binding SaveDraftCommand}" Style="{StaticResource SecondaryButtonStyle}" Height="42" Padding="24,0" Margin="0,0,10,0" />
                                         <Button Content="إرسال للمراجعة" Style="{StaticResource SecondaryButtonStyle}" Height="42" Padding="24,0" Margin="0,0,10,0" />
@@ -559,7 +559,7 @@
                                 <Border Grid.Column="1" Background="#141E293B" BorderBrush="#3347556B" BorderThickness="1" CornerRadius="16" Padding="16">
                                     <DockPanel>
                                         <TextBlock DockPanel.Dock="Top" Text="قائمة الصيدليات المختارة" Foreground="{StaticResource TextPrimaryBrush}" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                                        <ListBox ItemsSource="{Binding TargetPharmacies}" Background="#FF07111F" BorderBrush="#3347556B">
+                                        <ListBox ItemsSource="{Binding TargetPharmacies}" Background="{StaticResource DarkBgBrush}" BorderBrush="{StaticResource BorderDefaultBrush}">
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <CheckBox IsChecked="{Binding IsSelected}" Foreground="{StaticResource TextPrimaryBrush}" Margin="8">
@@ -591,10 +591,10 @@
                                     </StackPanel>
                                 </Border>
                             </StackPanel>
-                            <Border Grid.Column="1" Background="#FF050A13" BorderBrush="#3347556B" BorderThickness="1" CornerRadius="30" Padding="14">
+                            <Border Grid.Column="1" Background="{StaticResource DarkBgBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" CornerRadius="30" Padding="14">
                                 <StackPanel>
                                     <TextBlock Text="تطبيق الصيدلي" Foreground="{StaticResource TextMutedBrush}" FontSize="12" HorizontalAlignment="Center" Margin="0,0,0,12" />
-                                    <Border Background="#FF07111F" CornerRadius="22" Padding="14">
+                                    <Border Background="{StaticResource DarkBgBrush}" CornerRadius="22" Padding="14">
                                         <StackPanel>
                                             <Border Background="#141E293B" CornerRadius="18" Padding="12" Margin="0,0,0,12">
                                                 <StackPanel>
@@ -602,19 +602,19 @@
                                                     <TextBlock Text="عروض مختارة لمخزونك" Foreground="{StaticResource TextMutedBrush}" FontSize="11" />
                                                 </StackPanel>
                                             </Border>
-                                            <Border CornerRadius="22" ClipToBounds="True" Background="#FF0F172A">
+                                            <Border CornerRadius="22" ClipToBounds="True" Background="{StaticResource CardBgBrush}">
                                                 <Grid MinHeight="380">
                                                     <Image Source="{Binding PreviewImagePath}" Stretch="UniformToFill" Opacity="0.96" />
-                                                    <Border Background="#66020A13" />
+                                                    <Border Background="{StaticResource DarkOverlayBgBrush}" />
                                                     <StackPanel Margin="18" VerticalAlignment="Bottom">
-                                                        <Border Background="#F031D0AA" CornerRadius="16" Padding="10,5" HorizontalAlignment="Right" Margin="0,0,0,10">
-                                                            <TextBlock Text="{Binding PreviewDiscountLabel}" Foreground="#FF022C22" FontSize="17" FontWeight="Black" />
+                                                        <Border Background="{StaticResource PrimaryIndigoGlassBrush}" CornerRadius="16" Padding="10,5" HorizontalAlignment="Right" Margin="0,0,0,10">
+                                                            <TextBlock Text="{Binding PreviewDiscountLabel}" Foreground="{StaticResource PrimaryIndigoDarkBrush}" FontSize="17" FontWeight="Black" />
                                                         </Border>
                                                         <TextBlock Text="{Binding OfferTitle}" Foreground="White" FontSize="22" FontWeight="Bold" TextWrapping="Wrap" />
-                                                        <TextBlock Text="{Binding OfferSubtitle}" Foreground="#FFE0F2FE" FontSize="12" TextWrapping="Wrap" Margin="0,5,0,0" />
+                                                        <TextBlock Text="{Binding OfferSubtitle}" Foreground="{StaticResource PrimaryCyanLightBrush}" FontSize="12" TextWrapping="Wrap" Margin="0,5,0,0" />
                                                         <StackPanel Orientation="Horizontal" Margin="0,14,0,0" FlowDirection="RightToLeft">
-                                                            <TextBlock Text="{Binding PreviewPriceLabel}" Foreground="#FFA7F3D0" FontSize="20" FontWeight="Bold" />
-                                                            <TextBlock Text="{Binding PreviewOldPriceLabel}" Foreground="#FFCBD5E1" FontSize="12" TextDecorations="Strikethrough" Margin="10,6,0,0" />
+                                                            <TextBlock Text="{Binding PreviewPriceLabel}" Foreground="{StaticResource PrimaryIndigoLightBrush}" FontSize="20" FontWeight="Bold" />
+                                                            <TextBlock Text="{Binding PreviewOldPriceLabel}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" TextDecorations="Strikethrough" Margin="10,6,0,0" />
                                                         </StackPanel>
                                                     </StackPanel>
                                                 </Grid>
@@ -683,7 +683,7 @@
                                         </StackPanel>
                                     </Border>
                                 </StackPanel>
-                                <Border Grid.Column="1" Background="#FF07111F" BorderBrush="#3347556B" BorderThickness="1" CornerRadius="18" ClipToBounds="True">
+                                <Border Grid.Column="1" Background="{StaticResource DarkBgBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" CornerRadius="18" ClipToBounds="True">
                                     <Image Source="{Binding PreviewImagePath}" Stretch="Uniform" />
                                 </Border>
                             </Grid>

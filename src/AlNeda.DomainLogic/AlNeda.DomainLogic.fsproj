@@ -9,6 +9,8 @@
     <Compile Include="Domain.fs" />
     <Compile Include="OrderWorkflow.fs" />
     <Compile Include="Calculations.fs" />
+    <Compile Include="InventoryAlerts.fs" />
+    <Compile Include="MarketingOffers.fs" />
     <Compile Include="Reporting.fs" />
   </ItemGroup>
 

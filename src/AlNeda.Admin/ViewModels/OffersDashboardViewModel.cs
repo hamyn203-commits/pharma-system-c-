@@ -22,6 +22,16 @@ public partial class OffersDashboardViewModel : ObservableObject
     [ObservableProperty] private string _statusMessage = "جاهز لتحميل مؤشرات العروض";
     [ObservableProperty] private bool _isBusy;
 
+    public int TotalOffers => Offers.Count;
+    public int ReviewOffers => Offers.Count(IsReviewOffer);
+    public int DraftOffers => Offers.Count(IsDraftOffer);
+    public IEnumerable<OfferAnalyticsDto> PublishedOfferItems => Offers.Where(IsPublishedOffer);
+    public IEnumerable<OfferAnalyticsDto> ReviewOfferItems => Offers.Where(IsReviewOffer);
+    public IEnumerable<OfferAnalyticsDto> DraftOfferItems => Offers.Where(IsDraftOffer);
+    public IEnumerable<OfferAnalyticsDto> AttentionOfferItems => Offers
+        .Where(x => IsReviewOffer(x) || IsDraftOffer(x) || x.ConversionRate <= 0.02)
+        .Take(8);
+
     public string ConversionRateText => $"{ConversionRate:P1}";
     public string DeviceFallbackWarning => HasDeviceFallbackEvents
         ? "تنبيه: بعض الأحداث بلا DeviceId، لذلك إحصاء الجهاز تقديري ويعتمد على الصيدلية."
@@ -71,4 +81,26 @@ public partial class OffersDashboardViewModel : ObservableObject
 
     partial void OnConversionRateChanged(double value) => OnPropertyChanged(nameof(ConversionRateText));
     partial void OnHasDeviceFallbackEventsChanged(bool value) => OnPropertyChanged(nameof(DeviceFallbackWarning));
+    partial void OnOffersChanged(ObservableCollection<OfferAnalyticsDto> value) => RefreshOfferBreakdowns();
+
+    private void RefreshOfferBreakdowns()
+    {
+        OnPropertyChanged(nameof(TotalOffers));
+        OnPropertyChanged(nameof(ReviewOffers));
+        OnPropertyChanged(nameof(DraftOffers));
+        OnPropertyChanged(nameof(PublishedOfferItems));
+        OnPropertyChanged(nameof(ReviewOfferItems));
+        OnPropertyChanged(nameof(DraftOfferItems));
+        OnPropertyChanged(nameof(AttentionOfferItems));
+    }
+
+    private static bool IsPublishedOffer(OfferAnalyticsDto offer) =>
+        string.Equals(offer.Status, "published", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsReviewOffer(OfferAnalyticsDto offer) =>
+        string.Equals(offer.Status, "review", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsDraftOffer(OfferAnalyticsDto offer) =>
+        string.Equals(offer.Status, "draft", StringComparison.OrdinalIgnoreCase) ||
+        string.IsNullOrWhiteSpace(offer.Status);
 }

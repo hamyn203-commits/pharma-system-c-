@@ -1,8 +1,8 @@
-﻿<Window x:Class="AlNeda.Admin.LoginWindow"
+<Window x:Class="AlNeda.Admin.LoginWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:conv="clr-namespace:AlNeda.Admin.Converters"
-        Title="مخزن الندا - تسجيل الدخول"
+        Title="Al-Neda Warehouse - Login"
         Width="460" Height="600"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
@@ -99,7 +99,7 @@
                         </Grid>
                     </Grid>
 
-                    <TextBlock Text="مخزن الندا"
+                    <TextBlock Text="Al-Neda Warehouse"
                                FontSize="32" FontWeight="Bold"
                                Foreground="{StaticResource TextPrimaryBrush}"
                                HorizontalAlignment="Center" />
@@ -226,7 +226,7 @@
                 </Button>
 
                 <!-- Version -->
-                <TextBlock Text="الإصدار 1.0.0 | AlNeda Systems"
+                <TextBlock Text="Version 1.0.0 | Al-Neda Systems"
                            FontSize="10"
                            Foreground="#FF484F58"
                            HorizontalAlignment="Center"

@@ -222,7 +222,7 @@
                                             <Setter Property="Background" Value="{StaticResource GlassCardBrush}" />
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Source}" Value="mobile">
-                                                    <Setter Property="Background" Value="#FF1F3B2A" />
+                                                    <Setter Property="Background" Value="{StaticResource SuccessGlassBrush}" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -235,7 +235,7 @@
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding Source}" Value="mobile">
                                                         <Setter Property="Text" Value="طلب من التطبيق" />
-                                                        <Setter Property="Foreground" Value="#FF55D66B" />
+                                                        <Setter Property="Foreground" Value="{StaticResource SuccessBrush}" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -296,19 +296,19 @@
                                         <Style TargetType="Border">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Status}" Value="pending">
-                                                    <Setter Property="Background" Value="#FF3B2D1A" />
+                                                    <Setter Property="Background" Value="{StaticResource WarningGlassBrush}" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Status}" Value="reviewed">
-                                                    <Setter Property="Background" Value="#FF1A2D3D" />
+                                                    <Setter Property="Background" Value="{StaticResource PrimaryCyanGlassBrush}" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Status}" Value="in_store">
-                                                    <Setter Property="Background" Value="#FF1A2D3D" />
+                                                    <Setter Property="Background" Value="{StaticResource PrimaryCyanGlassBrush}" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Status}" Value="with_driver">
-                                                    <Setter Property="Background" Value="#FF2D1A3D" />
+                                                    <Setter Property="Background" Value="{StaticResource AccentPurpleLightBrush}" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Status}" Value="on_the_way">
-                                                    <Setter Property="Background" Value="#FF2D1A3D" />
+                                                    <Setter Property="Background" Value="{StaticResource AccentPurpleLightBrush}" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Status}" Value="delivered">
                                                     <Setter Property="Background" Value="{StaticResource PrimaryIndigoGlassBrush}" />
@@ -477,28 +477,28 @@
                                             <Style TargetType="Border">
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="delivered">
-                                                        <Setter Property="Background" Value="#FF1F3B2A" />
+                                                        <Setter Property="Background" Value="{StaticResource SuccessGlassBrush}" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="cancelled">
-                                                        <Setter Property="Background" Value="#FF3D1A1A" />
+                                                        <Setter Property="Background" Value="{StaticResource DangerGlassBrush}" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="pending">
-                                                        <Setter Property="Background" Value="#FF3B2D1A" />
+                                                        <Setter Property="Background" Value="{StaticResource WarningGlassBrush}" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="postponed">
-                                                        <Setter Property="Background" Value="#FF3B2D1A" />
+                                                        <Setter Property="Background" Value="{StaticResource WarningGlassBrush}" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="reviewed">
-                                                        <Setter Property="Background" Value="#FF1A2D3D" />
+                                                        <Setter Property="Background" Value="{StaticResource PrimaryCyanGlassBrush}" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="in_store">
-                                                        <Setter Property="Background" Value="#FF1A2D3D" />
+                                                        <Setter Property="Background" Value="{StaticResource PrimaryCyanGlassBrush}" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="with_driver">
-                                                        <Setter Property="Background" Value="#FF2D1A3D" />
+                                                        <Setter Property="Background" Value="{StaticResource AccentPurpleLightBrush}" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="on_the_way">
-                                                        <Setter Property="Background" Value="#FF2D1A3D" />
+                                                        <Setter Property="Background" Value="{StaticResource AccentPurpleLightBrush}" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -507,38 +507,38 @@
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="delivered">
-                                                            <Setter Property="Text" Value="تم التسليم" />
-                                                            <Setter Property="Foreground" Value="#FF55D66B" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="cancelled">
-                                                            <Setter Property="Text" Value="ملغي" />
-                                                            <Setter Property="Foreground" Value="#FFFF5C5C" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="pending">
-                                                            <Setter Property="Text" Value="قيد الانتظار" />
-                                                            <Setter Property="Foreground" Value="#FFD28A2D" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="postponed">
-                                                            <Setter Property="Text" Value="مؤجل" />
-                                                            <Setter Property="Foreground" Value="#FFD28A2D" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="reviewed">
-                                                            <Setter Property="Text" Value="تم المراجعة" />
-                                                            <Setter Property="Foreground" Value="#FF60A5FA" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="in_store">
-                                                            <Setter Property="Text" Value="في المخزن" />
-                                                            <Setter Property="Foreground" Value="#FF60A5FA" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="with_driver">
-                                                            <Setter Property="Text" Value="مع المندوب" />
-                                                            <Setter Property="Foreground" Value="#FFA78BFA" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="on_the_way">
-                                                            <Setter Property="Text" Value="في الطريق" />
-                                                            <Setter Property="Foreground" Value="#FFA78BFA" />
-                                                        </DataTrigger>
+                                                    <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="delivered">
+                                                        <Setter Property="Text" Value="تم التسليم" />
+                                                        <Setter Property="Foreground" Value="{StaticResource SuccessBrush}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="cancelled">
+                                                        <Setter Property="Text" Value="ملغي" />
+                                                        <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="pending">
+                                                        <Setter Property="Text" Value="قيد الانتظار" />
+                                                        <Setter Property="Foreground" Value="{StaticResource WarningBrush}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="postponed">
+                                                        <Setter Property="Text" Value="مؤجل" />
+                                                        <Setter Property="Foreground" Value="{StaticResource WarningBrush}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="reviewed">
+                                                        <Setter Property="Text" Value="تم المراجعة" />
+                                                        <Setter Property="Foreground" Value="{StaticResource PrimaryCyanBrush}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="in_store">
+                                                        <Setter Property="Text" Value="في المخزن" />
+                                                        <Setter Property="Foreground" Value="{StaticResource PrimaryCyanBrush}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="with_driver">
+                                                        <Setter Property="Text" Value="مع المندوب" />
+                                                        <Setter Property="Foreground" Value="{StaticResource AccentPurpleBrush}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding SelectedDetailOrder.Status}" Value="on_the_way">
+                                                        <Setter Property="Text" Value="في الطريق" />
+                                                        <Setter Property="Foreground" Value="{StaticResource AccentPurpleBrush}" />
+                                                    </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </TextBlock.Style>
@@ -623,25 +623,25 @@
                             <StackPanel>
                                 <TextBlock Text="تغيير الحالة" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,12" />
                                 <WrapPanel HorizontalAlignment="Center">
-                                    <Border CornerRadius="8" Background="#FF3B2D1A" Margin="0,0,6,6">
+                                    <Border CornerRadius="8" Background="{StaticResource WarningGlassBrush}" Margin="0,0,6,6">
                                         <Button Content="⏳ قيد الانتظار" Command="{Binding TransitionStatusCommand}" CommandParameter="pending"
-                                                Style="{StaticResource TransparentButtonStyle}" Foreground="#FFD28A2D" FontSize="12" Height="34" Padding="12,0" />
+                                                Style="{StaticResource TransparentButtonStyle}" Foreground="{StaticResource WarningBrush}" FontSize="12" Height="34" Padding="12,0" />
                                     </Border>
-                                    <Border CornerRadius="8" Background="#FF1A2D3D" Margin="0,0,6,6">
+                                    <Border CornerRadius="8" Background="{StaticResource PrimaryCyanGlassBrush}" Margin="0,0,6,6">
                                         <Button Content="مراجعة" Command="{Binding TransitionStatusCommand}" CommandParameter="reviewed"
-                                                Style="{StaticResource TransparentButtonStyle}" Foreground="#FF60A5FA" FontSize="12" Height="34" Padding="12,0" />
+                                                Style="{StaticResource TransparentButtonStyle}" Foreground="{StaticResource PrimaryCyanBrush}" FontSize="12" Height="34" Padding="12,0" />
                                     </Border>
-                                    <Border CornerRadius="8" Background="#FF1A2D3D" Margin="0,0,6,6">
+                                    <Border CornerRadius="8" Background="{StaticResource PrimaryCyanGlassBrush}" Margin="0,0,6,6">
                                         <Button Content="في المخزن" Command="{Binding TransitionStatusCommand}" CommandParameter="in_store"
-                                                Style="{StaticResource TransparentButtonStyle}" Foreground="#FF60A5FA" FontSize="12" Height="34" Padding="12,0" />
+                                                Style="{StaticResource TransparentButtonStyle}" Foreground="{StaticResource PrimaryCyanBrush}" FontSize="12" Height="34" Padding="12,0" />
                                     </Border>
-                                    <Border CornerRadius="8" Background="#FF2D1A3D" Margin="0,0,6,6">
+                                    <Border CornerRadius="8" Background="{StaticResource AccentPurpleLightBrush}" Margin="0,0,6,6">
                                         <Button Content="🚚 مع المندوب" Command="{Binding TransitionStatusCommand}" CommandParameter="with_driver"
-                                                Style="{StaticResource TransparentButtonStyle}" Foreground="#FFA78BFA" FontSize="12" Height="34" Padding="12,0" />
+                                                Style="{StaticResource TransparentButtonStyle}" Foreground="{StaticResource AccentPurpleBrush}" FontSize="12" Height="34" Padding="12,0" />
                                     </Border>
-                                    <Border CornerRadius="8" Background="#FF2D1A3D" Margin="0,0,6,6">
+                                    <Border CornerRadius="8" Background="{StaticResource AccentPurpleLightBrush}" Margin="0,0,6,6">
                                         <Button Content="🛣️ في الطريق" Command="{Binding TransitionStatusCommand}" CommandParameter="on_the_way"
-                                                Style="{StaticResource TransparentButtonStyle}" Foreground="#FFA78BFA" FontSize="12" Height="34" Padding="12,0" />
+                                                Style="{StaticResource TransparentButtonStyle}" Foreground="{StaticResource AccentPurpleBrush}" FontSize="12" Height="34" Padding="12,0" />
                                     </Border>
                                     <Button Content="تم التسليم" Command="{Binding TransitionStatusCommand}" CommandParameter="delivered"
                                             Style="{StaticResource PrimaryButtonStyle}" Height="34" Padding="14,0" FontSize="12" Margin="0,0,6,6" />

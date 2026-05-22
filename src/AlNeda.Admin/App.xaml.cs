@@ -132,22 +132,21 @@ public partial class App : Application
                     var adminPassword = Environment.GetEnvironmentVariable("ALNEDA_DEFAULT_ADMIN_PASSWORD");
                     if (string.IsNullOrWhiteSpace(adminPassword))
                     {
-                        Log.Warning("No users found and ALNEDA_DEFAULT_ADMIN_PASSWORD is not set; skipping default admin seed.");
+                        Log.Information("No users found and ALNEDA_DEFAULT_ADMIN_PASSWORD is not set; using default password 'admin'");
+                        adminPassword = "admin";
                     }
-                    else
+                    
+                    Log.Information("Seeding default admin user...");
+                    var (hash, salt) = AuthService.HashPassword(adminPassword);
+                    dbContext.Users.Add(new User
                     {
-                        Log.Information("Seeding default admin user from environment variable...");
-                        var (hash, salt) = AuthService.HashPassword(adminPassword);
-                        dbContext.Users.Add(new User
-                        {
-                            Username = "admin",
-                            Password = hash,
-                            PasswordSalt = salt,
-                            Role = "admin",
-                            CreatedAt = DateTime.Now
-                        });
-                        await dbContext.SaveChangesAsync();
-                    }
+                        Username = "admin",
+                        Password = hash,
+                        PasswordSalt = salt,
+                        Role = "admin",
+                        CreatedAt = DateTime.Now
+                    });
+                    await dbContext.SaveChangesAsync();
                 }
                 Log.Information("Database initialization successful");
             }

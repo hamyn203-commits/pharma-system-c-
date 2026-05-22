@@ -35,7 +35,6 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    [AllowAnonymous]
     [EnableRateLimiting("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
@@ -88,7 +87,7 @@ public class AuthController : ControllerBase
     [HttpPost("register/pharmacy")]
     [AllowAnonymous]
     [EnableRateLimiting("login")]
-    [ProducesResponseType(typeof(PharmacyRegisterResponseDto), StatusCodes.Status202Accepted)]
+    [ProducesResponseType(typeof(PharmacyRegisterResponseDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> RegisterPharmacy([FromBody] PharmacyRegisterRequest request)
     {
         var pharmacyName = request.PharmacyName.Trim();
@@ -141,7 +140,7 @@ public class AuthController : ControllerBase
         await _audit.LogAsync("mobile-registration", "register", "Pharmacy", pharmacy.Id.ToString(),
             $"طلب إنشاء حساب تطبيق جديد للصيدلية '{pharmacy.Name}' برقم '{pharmacy.Phone}'");
 
-        return Accepted(new PharmacyRegisterResponseDto
+        return Ok(new PharmacyRegisterResponseDto
         {
             PharmacyId = pharmacy.Id,
             UserId = user.Id,

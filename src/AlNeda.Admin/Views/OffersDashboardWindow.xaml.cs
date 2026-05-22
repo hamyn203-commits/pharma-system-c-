@@ -37,7 +37,7 @@ public partial class OffersDashboardWindowViewModel : ObservableObject
     [ObservableProperty] private bool _isSidebarOpen = true;
     [ObservableProperty] private string _selectedSection = "dashboard";
 
-    public GridLength SidebarWidth => IsSidebarOpen ? new GridLength(250) : new GridLength(64);
+    public GridLength SidebarWidth => IsSidebarOpen ? new GridLength(248) : new GridLength(64);
 
     public bool IsDashboardVisible => SelectedSection == "dashboard";
     public bool IsAllOffersVisible => SelectedSection == "all";
@@ -58,11 +58,11 @@ public partial class OffersDashboardWindowViewModel : ObservableObject
         "published" => "العروض المنشورة",
         "review" => "قيد المراجعة",
         "drafts" => "المسودات",
-        "editor" => "محرر العرض",
-        "products" => "المنتجات داخل العرض",
-        "targeting" => "الاستهداف",
+        "editor" => "بيانات العرض",
+        "products" => "منتجات العرض",
+        "targeting" => "استهداف الصيدليات",
         "preview" => "معاينة تطبيق الصيدلي",
-        "analytics" => "التحليلات",
+        "analytics" => "تحليلات العروض",
         "engagement" => "تفاعل الصيدليات",
         "images" => "إعدادات الصور",
         _ => "لوحة العروض"
@@ -70,18 +70,18 @@ public partial class OffersDashboardWindowViewModel : ObservableObject
 
     public string PageSubtitle => SelectedSection switch
     {
-        "all" => "بحث وفلترة وإدارة كل العروض في مساحة واسعة.",
-        "published" => "متابعة العروض المنشورة وإيقافها عند الحاجة.",
-        "review" => "مراجعة العروض قبل النشر وتسجيل أسباب التحذير.",
-        "drafts" => "مسودات غير منشورة يمكن استكمال تحريرها.",
-        "editor" => "صفحة كاملة لبيانات العرض والصورة والوصف وأزرار الحفظ والنشر.",
-        "products" => "إدارة المنتجات والكميات والأسعار والخصومات داخل العرض.",
-        "targeting" => "تحديد الجمهور والصيدليات التي سترى العرض.",
-        "preview" => "مراجعة شكل العرض كما يظهر على تطبيق الصيدلي.",
-        "analytics" => "تحليل المشاهدات والضغطات والطلبات ومعدل التحويل.",
-        "engagement" => "جدول تفاعل الصيدليات مع كل عرض.",
-        "images" => "إرشادات ومقاسات الصور لفريق الجرافيك.",
-        _ => "ملخص أداء العروض ومؤشرات المشاهدات والضغطات والتحويل."
+        "all" => "قائمة تشغيل كاملة للبحث، الفلترة، وفتح أي عرض للتعديل.",
+        "published" => "العروض الظاهرة حاليًا للصيدليات مع مؤشرات الأداء الأساسية.",
+        "review" => "العروض التي تحتاج مراجعة قبل النشر على تطبيق الصيدلي.",
+        "drafts" => "مسودات غير منشورة يمكن استكمالها وتجهيزها للنشر.",
+        "editor" => "بيانات العرض الأساسية، الأسعار، المدة، والحفظ أو النشر.",
+        "products" => "إدارة المنتجات والكميات والأسعار المرتبطة بالعرض.",
+        "targeting" => "حدد هل العرض لكل الصيدليات أم لفئة أو صيدليات بعينها.",
+        "preview" => "راجع شكل العرض كما سيظهر داخل تطبيق الصيدلي قبل النشر.",
+        "analytics" => "مشاهدات، ضغطات، طلبات، وتحويلات كل عرض.",
+        "engagement" => "متابعة الصيدليات التي شاهدت أو ضغطت أو طلبت من العرض.",
+        "images" => "مقاسات وإرشادات الصور لفريق الجرافيك.",
+        _ => "ملخص سريع لأداء العروض والمهام التي تحتاج قرار."
     };
 
     [RelayCommand]
@@ -109,7 +109,7 @@ public partial class OffersDashboardWindowViewModel : ObservableObject
     [RelayCommand]
     public async Task RefreshCurrentAsync()
     {
-        if (IsDashboardVisible || IsAnalyticsVisible)
+        if (IsDashboardVisible || IsAnalyticsVisible || IsPublishedVisible || IsReviewVisible || IsDraftsVisible)
             await Dashboard.LoadAsync();
         else
             await Editor.LoadAsync();

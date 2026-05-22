@@ -21,7 +21,7 @@
             <Setter Property="CornerRadius" Value="10" />
             <Setter Property="Padding" Value="8,4" />
             <Setter Property="Background" Value="#1822363E" />
-            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
     </UserControl.Resources>
@@ -122,60 +122,57 @@
                     </StackPanel>
 
                     <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                        <ItemsControl ItemsSource="{Binding FilteredOffers}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Button Command="{Binding DataContext.SelectOfferCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"
-                                            Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand"
-                                            Margin="0,0,0,8">
-                                        <Border Background="{Binding CardBackground}"
-                                                BorderBrush="{Binding ActiveBorder}" BorderThickness="1"
-                                                CornerRadius="12" Padding="10">
-                                            <StackPanel>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Text="{Binding Title}" Foreground="{StaticResource TextPrimaryBrush}"
-                                                               FontWeight="Bold" FontSize="13" TextWrapping="Wrap" />
-                                                    <Border Grid.Column="1" Background="{Binding Accent}" CornerRadius="8" Padding="6,3" Margin="6,0,0,0">
-                                                        <TextBlock Text="{Binding Status}" Foreground="White" FontSize="10" FontWeight="Bold" />
-                                                    </Border>
-                                                </Grid>
-                                                <TextBlock Text="{Binding TypeLabel}" Foreground="{StaticResource PrimaryCyanBrush}" FontSize="10" Margin="0,6,0,0" />
-                                                <UniformGrid Columns="3" Margin="0,8,0,0">
-                                                    <StackPanel>
-                                                        <TextBlock Text="{Binding Views}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="Bold" FontSize="12" />
-                                                        <TextBlock Text="مشاهدات" Foreground="{StaticResource TextMutedBrush}" FontSize="9" />
-                                                    </StackPanel>
-                                                    <StackPanel>
-                                                        <TextBlock Text="{Binding Orders}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="Bold" FontSize="12" />
-                                                        <TextBlock Text="طلبات" Foreground="{StaticResource TextMutedBrush}" FontSize="9" />
-                                                    </StackPanel>
-                                                    <StackPanel>
-                                                        <TextBlock Text="{Binding Conversion}" Foreground="{StaticResource SuccessBrush}" FontWeight="Bold" FontSize="12" />
-                                                        <TextBlock Text="تحويل" Foreground="{StaticResource TextMutedBrush}" FontSize="9" />
-                                                    </StackPanel>
-                                                </UniformGrid>
-                                                <TextBlock Text="{Binding EndsAtLabel}" Foreground="{StaticResource TextMutedBrush}" FontSize="10" Margin="0,6,0,0" />
-                                            </StackPanel>
-                                        </Border>
-                                    </Button>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                        <Grid>
+                            <ItemsControl ItemsSource="{Binding FilteredOffers}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.SelectOfferCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand"
+                                                Margin="0,0,0,8">
+                                            <Border Background="{Binding CardBackground}"
+                                                    BorderBrush="{Binding ActiveBorder}" BorderThickness="1"
+                                                    CornerRadius="12" Padding="10">
+                                                <StackPanel>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding Title}" Foreground="{StaticResource TextPrimaryBrush}"
+                                                                   FontWeight="Bold" FontSize="13" TextWrapping="Wrap" />
+                                                        <Border Grid.Column="1" Background="{Binding Accent}" CornerRadius="8" Padding="6,3" Margin="6,0,0,0">
+                                                            <TextBlock Text="{Binding Status}" Foreground="White" FontSize="10" FontWeight="Bold" />
+                                                        </Border>
+                                                    </Grid>
+                                                    <TextBlock Text="{Binding TypeLabel}" Foreground="{StaticResource PrimaryCyanBrush}" FontSize="10" Margin="0,6,0,0" />
+                                                    <UniformGrid Columns="3" Margin="0,8,0,0">
+                                                        <StackPanel>
+                                                            <TextBlock Text="{Binding Views}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="Bold" FontSize="12" />
+                                                            <TextBlock Text="مشاهدات" Foreground="{StaticResource TextMutedBrush}" FontSize="9" />
+                                                        </StackPanel>
+                                                        <StackPanel>
+                                                            <TextBlock Text="{Binding Orders}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="Bold" FontSize="12" />
+                                                            <TextBlock Text="طلبات" Foreground="{StaticResource TextMutedBrush}" FontSize="9" />
+                                                        </StackPanel>
+                                                        <StackPanel>
+                                                            <TextBlock Text="{Binding Conversion}" Foreground="{StaticResource SuccessBrush}" FontWeight="Bold" FontSize="12" />
+                                                            <TextBlock Text="تحويل" Foreground="{StaticResource TextMutedBrush}" FontSize="9" />
+                                                        </StackPanel>
+                                                    </UniformGrid>
+                                                    <TextBlock Text="{Binding EndsAtLabel}" Foreground="{StaticResource TextMutedBrush}" FontSize="10" Margin="0,6,0,0" />
+                                                </StackPanel>
+                                            </Border>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
 
-                        <!-- Empty state -->
-                        <ContentControl Visibility="{Binding FilteredOffers.Count, Converter={x:Null}}">
-                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,40,0,0">
-                                <TextBlock Text="&#xE7C1;" FontFamily="Segoe MDL2 Assets"
-                                           Foreground="{StaticResource TextMutedBrush}" FontSize="24" HorizontalAlignment="Center" Opacity="0.6" />
-                                <TextBlock Text="لا توجد عروض" Foreground="{StaticResource TextMutedBrush}"
-                                           FontSize="12" HorizontalAlignment="Center" Margin="0,6,0,0" />
-                            </StackPanel>
-                        </ContentControl>
+                            <!-- Empty state -->
+                            <TextBlock Text="&#xE7C1; لا توجد عروض" FontFamily="Segoe MDL2 Assets"
+                                       Foreground="{StaticResource TextMutedBrush}" FontSize="14"
+                                       HorizontalAlignment="Center" Margin="0,40,0,0" Opacity="0.5" />
+                        </Grid>
                     </ScrollViewer>
                 </Grid>
             </Border>
@@ -190,7 +187,7 @@
                     </Grid.RowDefinitions>
 
                     <!-- Editor steps header -->
-                    <Border Grid.Row="0" Background="#141E293B" BorderBrush="{StaticResource BorderBrush}"
+                    <Border Grid.Row="0" Background="{StaticResource GlassCardBrush}" BorderBrush="{StaticResource BorderDefaultBrush}"
                             BorderThickness="0,0,0,1" Padding="12" CornerRadius="12,12,0,0">
                         <ItemsControl ItemsSource="{Binding EditorSteps}">
                             <ItemsControl.ItemsPanel>
@@ -464,7 +461,7 @@
                     </ScrollViewer>
 
                     <!-- Bottom action bar -->
-                    <Border Grid.Row="2" Background="#F0142238" BorderBrush="{StaticResource BorderBrush}"
+                    <Border Grid.Row="2" Background="{StaticResource GlassCardBrush}" BorderBrush="{StaticResource BorderDefaultBrush}"
                             BorderThickness="0,1,0,0" Padding="10" CornerRadius="0,0,12,12">
                         <WrapPanel FlowDirection="RightToLeft">
                             <Button Content="نشر" Command="{Binding PublishCommand}"
@@ -503,10 +500,10 @@
                               Style="{StaticResource ModernComboBox}" Height="34" Margin="0,0,0,10" />
 
                     <!-- Phone mockup -->
-                    <Border Grid.Row="2" Background="#FF040A12" BorderBrush="{StaticResource BorderBrush}"
+                    <Border Grid.Row="2" Background="{StaticResource DarkBgBrush}" BorderBrush="{StaticResource BorderDefaultBrush}"
                             BorderThickness="1" CornerRadius="24" Padding="10"
                             HorizontalAlignment="Center" VerticalAlignment="Top" MaxWidth="260">
-                        <Border Background="#FF071314" CornerRadius="18" Padding="12">
+                        <Border Background="{StaticResource CardBgBrush}" CornerRadius="18" Padding="12">
                             <StackPanel>
                                 <!-- Pharmacy header -->
                                 <Border Background="#141E293B" CornerRadius="12" Padding="10" Margin="0,0,0,8">
@@ -523,8 +520,8 @@
                                                Visibility="{Binding OfferImagePath, Converter={StaticResource StringToVisibilityConverter}, FallbackValue=Collapsed}" />
                                         <Border Background="#55111E32" />
                                         <TextBlock Text="{Binding PreviewDiscountLabel}"
-                                                   Foreground="#FF022C22" FontWeight="Black"
-                                                   Background="#FF31D0AA" Padding="8,3"
+                                                   Foreground="{StaticResource PrimaryIndigoDarkBrush}" FontWeight="Black"
+                                                   Background="{StaticResource PrimaryIndigoBrush}" Padding="8,3"
                                                    HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10"
                                                    FontSize="13" />
                                         <TextBlock Text="&#xE722;" FontFamily="Segoe MDL2 Assets"
@@ -553,8 +550,9 @@
                                            FontSize="10" Margin="0,6,0,0" />
 
                                 <Button Content="أضف للطلب"
+                                        Command="{Binding PreviewAddToOrderCommand}"
                                         Style="{StaticResource PrimaryButtonStyle}" Height="34" Margin="0,10,0,0"
-                                        IsEnabled="False" />
+                                        IsEnabled="True" />
                             </StackPanel>
                         </Border>
                     </Border>

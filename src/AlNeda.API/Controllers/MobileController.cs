@@ -1,4 +1,3 @@
-using AlNeda.API.Authorization;
 using System.Security.Claims;
 using AlNeda.Core.Entities;
 using AlNeda.Core.Models;
@@ -6,14 +5,13 @@ using AlNeda.DomainLogic;
 using AlNeda.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlNeda.API.Controllers;
 
 [ApiController]
 [Route("api/mobile")]
-[Authorize(Policy = AuthPolicies.PharmacyApp)]
+[Authorize(Roles = "pharmacy")]
 [Tags("Mobile")]
 public class MobileController : ControllerBase
 {
@@ -59,10 +57,6 @@ public class MobileController : ControllerBase
     public async Task<IActionResult> Products([FromQuery] string? search)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-
-        var approvalCheck = await EnsurePharmacyApprovedAsync(db);
-        if (approvalCheck != null) return approvalCheck;
-
         var showUnavailable = GetMobileSettings().ShowUnavailableProducts;
         var query = db.Products.Include(p => p.CategoryObj).Where(p => p.IsActive == 1);
         if (!showUnavailable)
@@ -82,10 +76,6 @@ public class MobileController : ControllerBase
     public async Task<IActionResult> Product(int id)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
-
-        var approvalCheck = await EnsurePharmacyApprovedAsync(db);
-        if (approvalCheck != null) return approvalCheck;
-
         var showUnavailable = GetMobileSettings().ShowUnavailableProducts;
         var product = await db.Products.Include(p => p.CategoryObj)
             .FirstOrDefaultAsync(p => p.Id == id && p.IsActive == 1 && (showUnavailable || p.Quantity > 0));
@@ -158,16 +148,6 @@ public class MobileController : ControllerBase
 
         var total = requested.Sum(i => products[i.ProductId].UnitPrice * i.Quantity);
         var now = DateTime.Now;
-        MarketingOffer? sourceOffer = null;
-        if (request.SourceOfferId.HasValue)
-        {
-            sourceOffer = await db.MarketingOffers.FindAsync(request.SourceOfferId.Value);
-            if (sourceOffer == null || !MarketingOfferRules.IsActive(sourceOffer, now))
-                return BadRequest(Error("العرض المرتبط بالطلب غير نشط", "OFFER_NOT_ACTIVE"));
-            if (!await MarketingOfferRules.MatchesAudienceAsync(db, sourceOffer, pharmacy, now))
-                return BadRequest(Error("العرض غير متاح لهذه الصيدلية", "OFFER_NOT_TARGETED"));
-        }
-
         var order = new Order
         {
             OrderNumber = $"MOB-{now:yyyyMMdd}-{Random.Shared.Next(1000, 9999)}",
@@ -180,7 +160,6 @@ public class MobileController : ControllerBase
             BalanceAfter = OrderWorkflow.updateBalance(pharmacy.Balance, total, "order"),
             Status = "pending",
             Source = "mobile",
-            SourceOfferId = sourceOffer?.Id,
             ClientNotes = request.Notes ?? string.Empty,
             MobileCreatedAt = now,
             CreatedAt = now
@@ -209,107 +188,6 @@ public class MobileController : ControllerBase
             $"Mobile order #{order.OrderNumber} created for pharmacy '{pharmacy.Name}' with total {order.FinalTotal:N2}");
 
         return Ok(await LoadOrderDto(db, order.Id, pharmacy.Id));
-    }
-
-    [HttpGet("offers")]
-    [ProducesResponseType(typeof(List<MarketingOfferDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Offers()
-    {
-        var pharmacyId = GetPharmacyId();
-        if (pharmacyId == null) return PharmacyNotLinked();
-
-        await using var db = await _contextFactory.CreateDbContextAsync();
-        var pharmacy = await db.Pharmacies.FindAsync(pharmacyId.Value);
-        if (pharmacy == null) return PharmacyNotLinked();
-
-        var now = DateTime.Now;
-        var candidates = await db.MarketingOffers
-            .Where(o => o.Status == MarketingOfferRules.Published && o.StartsAt <= now && now < o.EndsAt)
-            .OrderByDescending(o => o.UpdatedAt)
-            .ToListAsync();
-
-        var result = new List<MarketingOfferDto>();
-        foreach (var offer in candidates.Where(o => MarketingOfferRules.IsActive(o, now)))
-        {
-            if (await MarketingOfferRules.MatchesAudienceAsync(db, offer, pharmacy, now))
-                result.Add(ToOfferDto(offer, now));
-        }
-
-        // Android clients should keep any local offers cache short (1-5 minutes) and invalidate on UpdatedAt/Version changes.
-        Response.Headers.CacheControl = "private, max-age=300";
-        return Ok(result);
-    }
-
-    [HttpPost("offers/{id:int}/events")]
-    [EnableRateLimiting("offer-events")]
-    [ProducesResponseType(typeof(OfferEventResponse), StatusCodes.Status200OK)]
-    public async Task<IActionResult> OfferEvent(int id, [FromBody] OfferEventRequest request)
-    {
-        var pharmacyId = GetPharmacyId();
-        if (pharmacyId == null) return PharmacyNotLinked();
-
-        var eventType = request.Type.Trim().ToLowerInvariant();
-        if (eventType is not ("impression" or "click"))
-            return BadRequest(Error("نوع الحدث غير صالح", "VALIDATION_ERROR"));
-
-        await using var db = await _contextFactory.CreateDbContextAsync();
-        var pharmacy = await db.Pharmacies.FindAsync(pharmacyId.Value);
-        if (pharmacy == null) return PharmacyNotLinked();
-
-        var now = DateTime.Now;
-        var offer = await db.MarketingOffers.FindAsync(id);
-        if (offer == null)
-            return NotFound(Error("العرض غير موجود", "OFFER_NOT_FOUND"));
-
-        var accepted = MarketingOfferRules.IsActive(offer, now)
-            && await MarketingOfferRules.MatchesAudienceAsync(db, offer, pharmacy, now);
-
-        var deviceKey = MarketingOfferRules.DeviceKey(request.DeviceId);
-        var dateKey = MarketingOfferRules.EventDateKey(now);
-        var usedFallback = MarketingOfferRules.UsesDeviceFallback(request.DeviceId);
-        var counted = false;
-
-        if (accepted && eventType == "impression")
-        {
-            counted = !await db.OfferEvents.AnyAsync(e =>
-                e.MarketingOfferId == id
-                && e.PharmacyId == pharmacy.Id
-                && e.DeviceKey == deviceKey
-                && e.EventDateKey == dateKey
-                && e.EventType == "impression"
-                && e.IsUniqueDailyImpression
-                && !e.IsRejected);
-        }
-        else if (accepted && eventType == "click")
-        {
-            counted = true;
-        }
-
-        db.OfferEvents.Add(new OfferEvent
-        {
-            MarketingOfferId = id,
-            PharmacyId = pharmacy.Id,
-            DeviceId = string.IsNullOrWhiteSpace(request.DeviceId) ? null : request.DeviceId.Trim(),
-            DeviceKey = deviceKey,
-            EventType = eventType,
-            OccurredAt = now,
-            EventDateKey = dateKey,
-            IsUniqueDailyImpression = eventType == "impression" && counted,
-            UsedDeviceFallback = usedFallback,
-            IsRejected = !accepted,
-            RejectionReason = accepted ? string.Empty : "offer_not_active_or_not_targeted"
-        });
-        await db.SaveChangesAsync();
-
-        return Ok(new OfferEventResponse
-        {
-            Accepted = accepted,
-            Counted = counted,
-            UsedDeviceFallback = usedFallback,
-            Message = accepted
-                ? (counted ? "تم تسجيل الحدث" : "تم تجاهل التكرار اليومي")
-                : "العرض غير نشط أو غير متاح لهذه الصيدلية"
-        });
     }
 
     [HttpGet("orders")]
@@ -566,22 +444,6 @@ public class MobileController : ControllerBase
         return int.TryParse(value, out var id) ? id : null;
     }
 
-    private async Task<bool> IsPharmacyApprovedAsync(Data.AppDbContext db, int pharmacyId)
-    {
-        var pharmacy = await db.Pharmacies.FindAsync(pharmacyId);
-        return pharmacy != null && pharmacy.IsApproved;
-    }
-
-    private async Task<IActionResult?> EnsurePharmacyApprovedAsync(Data.AppDbContext db)
-    {
-        var pid = GetPharmacyId();
-        if (pid == null) return PharmacyNotLinked();
-        if (!await IsPharmacyApprovedAsync(db, pid.Value))
-            return StatusCode(StatusCodes.Status403Forbidden,
-                Error("حسابك في انتظار موافقة إدارة المخزن", "ACCOUNT_PENDING"));
-        return null;
-    }
-
     private MobileSettingsDto GetMobileSettings()
     {
         var section = _configuration.GetSection("MobileApp");
@@ -630,7 +492,6 @@ public class MobileController : ControllerBase
         BalanceAfter = o.BalanceAfter,
         Status = o.Status,
         Source = o.Source,
-        SourceOfferId = o.SourceOfferId,
         ClientNotes = o.ClientNotes,
         MobileCreatedAt = o.MobileCreatedAt,
         CancellationRequestedAt = o.CancellationRequestedAt,
@@ -645,27 +506,6 @@ public class MobileController : ControllerBase
             UnitPrice = i.UnitPrice,
             TotalPrice = i.TotalPrice
         }).ToList()
-    };
-
-    private static MarketingOfferDto ToOfferDto(MarketingOffer offer, DateTime now) => new()
-    {
-        Id = offer.Id,
-        Title = offer.Title,
-        Subtitle = offer.Subtitle,
-        Description = offer.Description,
-        ImageUrl = offer.ImageUrl,
-        OfferType = offer.OfferType,
-        AudienceRule = offer.AudienceRule,
-        StartsAt = offer.StartsAt,
-        EndsAt = offer.EndsAt,
-        Status = offer.Status,
-        QuantityLimit = offer.QuantityLimit,
-        RemainingQuantity = offer.RemainingQuantity,
-        OldPrice = offer.OldPrice,
-        NewPrice = offer.NewPrice,
-        DiscountPercent = offer.DiscountPercent,
-        UpdatedAt = offer.UpdatedAt,
-        IsActive = MarketingOfferRules.IsActive(offer, now)
     };
 
     private static ReturnDto ToReturnDto(Return r) => new()

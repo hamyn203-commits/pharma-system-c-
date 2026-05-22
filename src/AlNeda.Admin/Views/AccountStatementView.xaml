@@ -18,11 +18,11 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Border Grid.RowSpan="4" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+        <Border Grid.RowSpan="4" Background="{StaticResource DarkOverlayBgBrush}" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="100">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="4"
-                             Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
+                             Foreground="{StaticResource SuccessBrush}" Style="{StaticResource ModernProgressBar}" />
                 <TextBlock Text="جاري تحميل الكشف..." Foreground="{StaticResource TextMutedBrush}"
                            HorizontalAlignment="Center" Margin="0,12,0,0" />
             </StackPanel>
@@ -98,7 +98,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                     <TextBlock Text="{Binding LedgerText}" 
                                FontFamily="Consolas" FontSize="12" 
-                               Foreground="#FFADBAC7" 
+                               Foreground="{StaticResource TextSecondaryBrush}" 
                                TextWrapping="Wrap" />
                 </ScrollViewer>
 

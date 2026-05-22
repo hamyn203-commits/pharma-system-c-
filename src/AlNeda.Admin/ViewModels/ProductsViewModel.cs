@@ -76,7 +76,7 @@ public partial class ProductsViewModel : ObservableObject
         if (found.Count == 1)
         {
             SelectedProduct = found[0];
-            EditSelected();
+            EditSelected(found[0]);
         }
     }
 
@@ -94,24 +94,27 @@ public partial class ProductsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void EditSelected()
+    private void EditSelected(ProductDto? product = null)
     {
-        if (SelectedProduct == null) return;
+        product ??= SelectedProduct;
+        if (product == null) return;
+
+        SelectedProduct = product;
         EditProduct = new Product
         {
-            Id = SelectedProduct.Id,
-            Name = SelectedProduct.Name ?? string.Empty,
-            Barcode = SelectedProduct.Barcode,
-            CategoryId = SelectedProduct.CategoryId,
-            Category = SelectedProduct.CategoryName ?? SelectedProduct.Category ?? "عام",
-            Company = SelectedProduct.Company ?? "غير محدد",
-            Quantity = SelectedProduct.Quantity,
-            UnitPrice = SelectedProduct.UnitPrice,
-            ExpiryDate = SelectedProduct.ExpiryDate,
-            ImagePath = SelectedProduct.ImagePath,
-            ImageUrl = SelectedProduct.ImageUrl,
-            IsActive = SelectedProduct.IsActive,
-            Description = SelectedProduct.Description ?? string.Empty,
+            Id = product.Id,
+            Name = product.Name ?? string.Empty,
+            Barcode = product.Barcode,
+            CategoryId = product.CategoryId,
+            Category = product.CategoryName ?? product.Category ?? "عام",
+            Company = product.Company ?? "غير محدد",
+            Quantity = product.Quantity,
+            UnitPrice = product.UnitPrice,
+            ExpiryDate = product.ExpiryDate,
+            ImagePath = product.ImagePath,
+            ImageUrl = product.ImageUrl,
+            IsActive = product.IsActive,
+            Description = product.Description ?? string.Empty,
         };
         ShowEditor = true;
     }

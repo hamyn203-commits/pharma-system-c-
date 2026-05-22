@@ -19,6 +19,9 @@ public class Pharmacy : IEntity
     [Column(TypeName = "decimal(18,2)")]
     public decimal Balance { get; set; }
 
+    [Timestamp]
+    public byte[]? RowVersion { get; set; }
+
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     [MaxLength(20)]

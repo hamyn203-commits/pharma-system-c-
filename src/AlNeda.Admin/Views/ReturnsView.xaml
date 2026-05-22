@@ -12,11 +12,11 @@
             <RowDefinition Height="*" />    <!-- Grid -->
         </Grid.RowDefinitions>
 
-        <Border Grid.RowSpan="3" Background="#E60D1117" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+        <Border Grid.RowSpan="3" Background="{StaticResource DarkOverlayBgBrush}" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="100">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="4"
-                             Foreground="#FF55D66B" Style="{StaticResource ModernProgressBar}" />
+                             Foreground="{StaticResource SuccessBrush}" Style="{StaticResource ModernProgressBar}" />
                 <TextBlock Text="جاري تحميل المرتجعات..." Foreground="{StaticResource TextMutedBrush}"
                            HorizontalAlignment="Center" Margin="0,12,0,0" />
             </StackPanel>
@@ -44,7 +44,7 @@
                 <StackPanel>
                     <TextBlock Text="إجمالي مبالغ المرتجعات" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
-                        <TextBlock Text="4,200" FontSize="28" FontWeight="Bold" Foreground="#FFFF5C5C" />
+                        <TextBlock Text="4,200" FontSize="28" FontWeight="Bold" Foreground="{StaticResource DangerBrush}" />
                         <TextBlock Text="💵" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
                     </Grid>
                 </StackPanel>
@@ -54,7 +54,7 @@
                 <StackPanel>
                     <TextBlock Text="طلبات معلقة" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
-                        <TextBlock Text="2" FontSize="28" FontWeight="Bold" Foreground="#FFD29922" />
+                        <TextBlock Text="2" FontSize="28" FontWeight="Bold" Foreground="{StaticResource WarningBrush}" />
                         <TextBlock Text="⏳" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
                     </Grid>
                 </StackPanel>
@@ -68,7 +68,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Text="إدارة المرتجعات" FontSize="22" FontWeight="Bold" Foreground="#FF55D66B" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="0" Text="إدارة المرتجعات" FontSize="22" FontWeight="Bold" Foreground="{StaticResource SuccessBrush}" VerticalAlignment="Center" />
 
             <Button Grid.Column="1" Content="+ إنشاء مرتجع جديد" Command="{Binding NewReturnCommand}"
                     Style="{StaticResource PrimaryButtonStyle}" Height="44" Padding="24,0" />
@@ -96,13 +96,13 @@
                                         <Style TargetType="Border">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Status}" Value="approved">
-                                                    <Setter Property="Background" Value="#FF1F3B2A" />
+                                                    <Setter Property="Background" Value="{StaticResource SuccessGlassBrush}" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Status}" Value="pending">
-                                                    <Setter Property="Background" Value="#FF3B2D1A" />
+                                                    <Setter Property="Background" Value="{StaticResource WarningGlassBrush}" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Status}" Value="rejected">
-                                                    <Setter Property="Background" Value="#FF3D1A1A" />
+                                                    <Setter Property="Background" Value="{StaticResource DangerGlassBrush}" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -113,15 +113,15 @@
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding Status}" Value="approved">
                                                         <Setter Property="Text" Value="موافق عليه" />
-                                                        <Setter Property="Foreground" Value="#FF55D66B" />
+                                                        <Setter Property="Foreground" Value="{StaticResource SuccessBrush}" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Status}" Value="pending">
                                                         <Setter Property="Text" Value="قيد الانتظار" />
-                                                        <Setter Property="Foreground" Value="#FFD29922" />
+                                                        <Setter Property="Foreground" Value="{StaticResource WarningBrush}" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Status}" Value="rejected">
                                                         <Setter Property="Text" Value="مرفوض" />
-                                                        <Setter Property="Foreground" Value="#FFFF5C5C" />
+                                                        <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -136,17 +136,17 @@
         </Border>
 
         <!-- Editor Overlay -->
-        <Border Grid.RowSpan="3" Background="#E60D1117"
+        <Border Grid.RowSpan="3" Background="{StaticResource DarkOverlayBgBrush}"
                 Visibility="{Binding ShowEditor, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Panel.ZIndex="200">
             <Border Style="{StaticResource CardStyle}" Width="480"
                     HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel>
-                    <TextBlock Text="إضافة مرتجع جديد" FontSize="20" FontWeight="Bold" Foreground="#FF55D66B" Margin="0,0,0,20" />
+                    <TextBlock Text="إضافة مرتجع جديد" FontSize="20" FontWeight="Bold" Foreground="{StaticResource SuccessBrush}" Margin="0,0,0,20" />
 
-                    <Border Background="#FF3D1A1A" CornerRadius="8" Padding="12,8" Margin="0,0,0,12"
+                    <Border Background="{StaticResource DangerGlassBrush}" CornerRadius="8" Padding="12,8" Margin="0,0,0,12"
                             Visibility="{Binding ValidationMessage, Converter={StaticResource StringToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <TextBlock Text="{Binding ValidationMessage}" Foreground="#FFFF5C5C" FontSize="12" />
+                        <TextBlock Text="{Binding ValidationMessage}" Foreground="{StaticResource DangerBrush}" FontSize="12" />
                     </Border>
 
                     <StackPanel Margin="0,0,0,12">

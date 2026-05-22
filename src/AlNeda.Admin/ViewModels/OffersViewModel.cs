@@ -4,6 +4,8 @@ using AlNeda.Core.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
+using System.IO;
+using System.Text;
 
 namespace AlNeda.Admin.ViewModels;
 
@@ -24,12 +26,20 @@ public partial class OffersViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _dateFilters = [];
     [ObservableProperty] private ObservableCollection<string> _previewModes = [];
     [ObservableProperty] private ObservableCollection<string> _productNames = [];
+    [ObservableProperty] private ObservableCollection<ProductPickerItem> _productCatalog = [];
     [ObservableProperty] private ObservableCollection<OfferProductItem> _offerProducts = [];
+    [ObservableProperty] private ObservableCollection<OfferImageItem> _offerImages = [];
     [ObservableProperty] private ObservableCollection<TargetRuleItem> _targetRules = [];
     [ObservableProperty] private ObservableCollection<PharmacyTargetItem> _targetPharmacies = [];
     [ObservableProperty] private ObservableCollection<ReadinessCheckItem> _readinessChecks = [];
     [ObservableProperty] private ObservableCollection<PharmacyInteractionItem> _pharmacyInteractions = [];
+    [ObservableProperty] private ObservableCollection<OfferCalendarItem> _offerCalendarItems = [];
+    [ObservableProperty] private ObservableCollection<ImageAssetItem> _imageAssetItems = [];
+    [ObservableProperty] private ObservableCollection<VisibilityAuditItem> _visibilityAuditItems = [];
+    [ObservableProperty] private ObservableCollection<PublishChecklistItem> _publishChecklistItems = [];
     [ObservableProperty] private OfferDesignItem? _selectedOffer;
+    [ObservableProperty] private PharmacyTargetItem? _selectedPreviewPharmacy;
+    [ObservableProperty] private ProductPickerItem? _selectedCatalogProduct;
 
     [ObservableProperty] private string _offerSearch = string.Empty;
     [ObservableProperty] private string _statusFilter = "الكل";
@@ -67,6 +77,13 @@ public partial class OffersViewModel : ObservableObject
     public string ProductPreviewSummary => OfferProducts.Count == 0
         ? "لا توجد منتجات داخل العرض بعد"
         : string.Join("، ", OfferProducts.Take(3).Select(p => p.ProductName));
+    public string ProductCatalogSummary => ProductCatalog.Count == 0
+        ? "لم يتم تحميل منتجات من المخزون بعد"
+        : $"{ProductCatalog.Count:N0} منتج متاح للاختيار من المخزون الرئيسي";
+    public string ImagesSummaryLabel => OfferImages.Count == 0
+        ? "لا توجد صور مضافة بعد"
+        : $"{OfferImages.Count:N0} صورة - الرئيسية: {OfferImages.FirstOrDefault(x => x.IsPrimary)?.DisplayName ?? OfferImages.First().DisplayName}";
+
     public string TargetedPharmaciesLabel
     {
         get
@@ -86,6 +103,23 @@ public partial class OffersViewModel : ObservableObject
     }
     public string AudienceRule => TargetRules.FirstOrDefault(x => x.IsSelected)?.Key == "manual" ? "selected_pharmacies" : "all";
     public bool IsSpecificAudience => AudienceRule == "selected_pharmacies";
+    public string PreviewPharmacyName => SelectedPreviewPharmacy?.Name ?? TargetPharmacies.FirstOrDefault()?.Name ?? "صيدلية تجريبية";
+    public string PreviewVisibilityResult
+    {
+        get
+        {
+            var pharmacy = SelectedPreviewPharmacy ?? TargetPharmacies.FirstOrDefault();
+            if (pharmacy == null)
+                return "أضف صيدليات أولًا حتى تراجع ظهور العرض على تطبيق الصيدلي.";
+            if (ReadinessChecks.Any(x => !x.IsOk))
+                return $"لن يظهر العرض لـ {pharmacy.Name} قبل معالجة تحذيرات الجاهزية.";
+            if (IsSpecificAudience && !pharmacy.IsSelected)
+                return $"لن يظهر العرض لـ {pharmacy.Name} لأنها خارج قائمة الاستهداف اليدوي.";
+            if (EndsAt <= DateTime.Today)
+                return $"لن يظهر العرض لـ {pharmacy.Name} لأن تاريخ الانتهاء غير صالح.";
+            return $"العرض جاهز للظهور لـ {pharmacy.Name} على تطبيق الصيدلي.";
+        }
+    }
 
     public OffersViewModel(IAlNedaApiClient api)
     {
@@ -130,6 +164,9 @@ public partial class OffersViewModel : ObservableObject
             Offers = new ObservableCollection<OfferDesignItem>(offers.Select(OfferDesignItem.FromDto));
 
             var products = await _api.GetProductsAsync();
+            ProductCatalog = new ObservableCollection<ProductPickerItem>(
+                products.Select(ProductPickerItem.FromDto).OrderBy(p => p.Name));
+            SelectedCatalogProduct ??= ProductCatalog.FirstOrDefault();
             ProductNames = new ObservableCollection<string>(products.Select(p => p.Name).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct());
             if (ProductNames.Count == 0)
                 ProductNames = ["باراسيتامول 500 مجم", "أموكسيسيلين 500 مجم", "فيتامين د نقط"];
@@ -137,6 +174,7 @@ public partial class OffersViewModel : ObservableObject
             var pharmacies = await _api.GetPharmaciesAsync();
             TargetPharmacies = new ObservableCollection<PharmacyTargetItem>(
                 pharmacies.Select(p => new PharmacyTargetItem(p.Id, p.Name, p.Phone ?? "", p.Balance)));
+            SelectedPreviewPharmacy ??= TargetPharmacies.FirstOrDefault();
 
             if (Offers.Count == 0)
                 SeedDemoOffers();
@@ -152,6 +190,10 @@ public partial class OffersViewModel : ObservableObject
                 SeedDemoOffers();
             if (ProductNames.Count == 0)
                 ProductNames = ["باراسيتامول 500 مجم", "أموكسيسيلين 500 مجم", "فيتامين د نقط", "سيتريزين أقراص"];
+            if (ProductCatalog.Count == 0)
+                ProductCatalog = new ObservableCollection<ProductPickerItem>(
+                    ProductNames.Select((name, index) => new ProductPickerItem(0, name, 0, 0, "بيانات تجريبية")));
+            SelectedCatalogProduct ??= ProductCatalog.FirstOrDefault();
             if (TargetPharmacies.Count == 0)
                 TargetPharmacies = [
                     new(1, "صيدلية النور", "01000000001", 1200),
@@ -160,6 +202,7 @@ public partial class OffersViewModel : ObservableObject
                 ];
             if (SelectedOffer == null && Offers.Count > 0)
                 SelectOffer(Offers[0]);
+            SelectedPreviewPharmacy ??= TargetPharmacies.FirstOrDefault();
             StatusMessage = $"تعذر الاتصال بالـ API، تم عرض بيانات تجريبية للواجهة: {ex.Message}";
         }
         finally
@@ -190,6 +233,9 @@ public partial class OffersViewModel : ObservableObject
             OfferType = ToDisplayOfferType(dto.OfferType);
             OfferState = ToDisplayStatus(dto.Status);
             OfferImagePath = dto.ImageUrl;
+            OfferImages = new ObservableCollection<OfferImageItem>(
+                (dto.ImageUrls.Count > 0 ? dto.ImageUrls : string.IsNullOrWhiteSpace(dto.ImageUrl) ? [] : [dto.ImageUrl])
+                .Select((url, index) => new OfferImageItem(url, index == 0)));
             OldPrice = dto.OldPrice ?? 0;
             NewPrice = dto.NewPrice ?? 0;
             DiscountPercent = dto.DiscountPercent ?? 0;
@@ -198,6 +244,8 @@ public partial class OffersViewModel : ObservableObject
             EndsAt = dto.EndsAt;
             foreach (var pharmacy in TargetPharmacies)
                 pharmacy.IsSelected = dto.TargetPharmacyIds.Contains(pharmacy.Id);
+            OfferProducts = new ObservableCollection<OfferProductItem>(dto.OfferProducts.Select(OfferProductItem.FromDto));
+            TrackProductRows();
         }
         else
         {
@@ -208,9 +256,9 @@ public partial class OffersViewModel : ObservableObject
             NewPrice = 355;
             DiscountPercent = 15;
             RemainingQuantity = 80;
+            BuildDemoRows();
         }
 
-        BuildDemoRows();
         StatusMessage = $"تم فتح العرض: {offer.Title}";
         RefreshAll();
     }
@@ -232,6 +280,7 @@ public partial class OffersViewModel : ObservableObject
         OfferTerms = "يسري العرض حتى نفاد الكمية ولا يمكن جمعه مع عروض أخرى.";
         InternalNotes = "ملاحظات داخلية لفريق المبيعات لا تظهر للصيدلي.";
         OfferImagePath = "";
+        OfferImages.Clear();
         OldPrice = 0;
         NewPrice = 0;
         DiscountPercent = 0;
@@ -239,7 +288,8 @@ public partial class OffersViewModel : ObservableObject
         StartsAt = DateTime.Today;
         EndsAt = DateTime.Today.AddDays(7);
         OfferProducts.Clear();
-        AddOfferProduct();
+        if (SelectedCatalogProduct != null)
+            AddOfferProductFromCatalog(SelectedCatalogProduct);
         foreach (var target in TargetRules)
             target.IsSelected = target.Key == "all";
         StatusMessage = "تم تجهيز عرض جديد. أكمل المنتجات والصورة والاستهداف قبل النشر.";
@@ -249,8 +299,15 @@ public partial class OffersViewModel : ObservableObject
     [RelayCommand]
     private void AddOfferProduct()
     {
+        if (SelectedCatalogProduct != null)
+        {
+            AddOfferProductFromCatalog(SelectedCatalogProduct);
+            return;
+        }
+
         var product = new OfferProductItem
         {
+            ProductId = 0,
             ProductName = ProductNames.FirstOrDefault() ?? "منتج جديد",
             AvailableQuantity = 120,
             OfferQuantity = 20,
@@ -258,8 +315,52 @@ public partial class OffersViewModel : ObservableObject
             NewPrice = NewPrice > 0 ? NewPrice : 85,
             MinimumOrder = 1
         };
-        product.PropertyChanged += (_, _) => RefreshAll();
+        TrackProductRow(product);
         OfferProducts.Add(product);
+        RefreshAll();
+    }
+
+    [RelayCommand]
+    private void AddSelectedProductToOffer()
+    {
+        if (SelectedCatalogProduct == null)
+        {
+            StatusMessage = "اختار منتج من مخزون البرنامج الأول.";
+            return;
+        }
+
+        AddOfferProductFromCatalog(SelectedCatalogProduct);
+    }
+
+    private void AddOfferProductFromCatalog(ProductPickerItem selectedProduct)
+    {
+        var existing = OfferProducts.FirstOrDefault(p => p.ProductId == selectedProduct.Id && selectedProduct.Id > 0);
+        if (existing != null)
+        {
+            var nextQuantity = Math.Max(existing.OfferQuantity + 1, 1);
+            existing.OfferQuantity = existing.AvailableQuantity > 0
+                ? Math.Min(nextQuantity, existing.AvailableQuantity)
+                : nextQuantity;
+            StatusMessage = $"تم تحديث كمية {existing.ProductName} داخل العرض.";
+            RefreshAll();
+            return;
+        }
+
+        var price = selectedProduct.UnitPrice > 0 ? selectedProduct.UnitPrice : 100;
+        var product = new OfferProductItem
+        {
+            ProductId = selectedProduct.Id,
+            ProductName = selectedProduct.Name,
+            AvailableQuantity = selectedProduct.Quantity,
+            OfferQuantity = Math.Max(1, Math.Min(20, selectedProduct.Quantity > 0 ? selectedProduct.Quantity : 20)),
+            OldPrice = price,
+            NewPrice = Math.Round(price * 0.90m, 2),
+            MinimumOrder = 1
+        };
+
+        TrackProductRow(product);
+        OfferProducts.Add(product);
+        StatusMessage = $"تم ربط {selectedProduct.Name} بالعرض من ملف المنتجات.";
         RefreshAll();
     }
 
@@ -283,8 +384,70 @@ public partial class OffersViewModel : ObservableObject
         if (dialog.ShowDialog() == true)
         {
             OfferImagePath = dialog.FileName;
+            OfferImages.Clear();
+            OfferImages.Add(new OfferImageItem(dialog.FileName, true));
             StatusMessage = "تم تحميل الصورة للمعاينة. سيتم رفعها للخادم عند الحفظ.";
         }
+    }
+
+    [RelayCommand]
+    private void AddOfferImages()
+    {
+        var dialog = new OpenFileDialog
+        {
+            Title = "اختيار صور العرض",
+            Filter = "Images|*.png;*.jpg;*.jpeg;*.webp|All files|*.*",
+            Multiselect = true
+        };
+
+        if (dialog.ShowDialog() != true)
+            return;
+
+        foreach (var file in dialog.FileNames)
+        {
+            if (OfferImages.Any(x => string.Equals(x.Path, file, StringComparison.OrdinalIgnoreCase)))
+                continue;
+
+            OfferImages.Add(new OfferImageItem(file, OfferImages.Count == 0));
+        }
+
+        var primary = OfferImages.FirstOrDefault(x => x.IsPrimary) ?? OfferImages.FirstOrDefault();
+        if (primary != null)
+        {
+            primary.IsPrimary = true;
+            OfferImagePath = primary.Path;
+        }
+
+        StatusMessage = $"تمت إضافة {dialog.FileNames.Length:N0} صورة للعرض. سيتم رفعها عند الإنشاء أو النشر.";
+        RefreshAll();
+    }
+
+    [RelayCommand]
+    private void RemoveOfferImage(OfferImageItem? image)
+    {
+        if (image == null)
+            return;
+
+        var wasPrimary = image.IsPrimary;
+        OfferImages.Remove(image);
+        if (OfferImages.Count > 0 && wasPrimary)
+            OfferImages[0].IsPrimary = true;
+
+        OfferImagePath = OfferImages.FirstOrDefault(x => x.IsPrimary)?.Path ?? OfferImages.FirstOrDefault()?.Path ?? string.Empty;
+        RefreshAll();
+    }
+
+    [RelayCommand]
+    private void SetPrimaryImage(OfferImageItem? image)
+    {
+        if (image == null)
+            return;
+
+        foreach (var item in OfferImages)
+            item.IsPrimary = false;
+        image.IsPrimary = true;
+        OfferImagePath = image.Path;
+        RefreshAll();
     }
 
     [RelayCommand]
@@ -296,6 +459,9 @@ public partial class OffersViewModel : ObservableObject
         OfferState = "قيد المراجعة";
         await SaveAsync("review");
     }
+
+    [RelayCommand]
+    private async Task CreateAndPublishAsync() => await PublishAsync();
 
     [RelayCommand]
     private async Task PublishAsync()
@@ -327,40 +493,142 @@ public partial class OffersViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Duplicate()
+    private async Task DuplicateAsync()
     {
+        if (IsBusy) return;
         _editingOfferId = null;
         SelectedOffer = null;
         OfferTitle = $"{OfferTitle} - نسخة";
         OfferState = "مسودة";
-        StatusMessage = "تم إنشاء نسخة مسودة من العرض بنفس المنتجات والاستهداف.";
-        RefreshAll();
+        var saved = await SaveAsync("draft");
+        StatusMessage = saved == null
+            ? "تعذر حفظ نسخة العرض."
+            : $"تم نسخ العرض وحفظه كمسودة جديدة رقم {saved.Id}.";
     }
 
     [RelayCommand]
-    private void DeleteOffer()
+    private async Task DeleteOfferAsync()
     {
-        if (SelectedOffer != null)
-            Offers.Remove(SelectedOffer);
-        SelectedOffer = null;
-        StatusMessage = "تم حذف العرض محلياً من القائمة. TODO: إضافة DELETE /api/offers/{id}.";
-        ApplyFilters();
-        RefreshAll();
+        if (IsBusy) return;
+        try
+        {
+            IsBusy = true;
+            if (_editingOfferId.HasValue)
+                await _api.DeleteOfferAsync(_editingOfferId.Value);
+            else if (SelectedOffer != null)
+                Offers.Remove(SelectedOffer);
+
+            _editingOfferId = null;
+            SelectedOffer = null;
+            IsBusy = false;
+            await LoadAsync();
+            StatusMessage = "تم حذف العرض من قاعدة البيانات.";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"تعذر حذف العرض: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
+            ApplyFilters();
+            RefreshAll();
+        }
     }
 
     [RelayCommand]
-    private void SendTest()
+    private async Task SendTestAsync()
     {
-        var pharmacy = TargetPharmacies.FirstOrDefault(x => x.IsSelected) ?? TargetPharmacies.FirstOrDefault();
-        StatusMessage = pharmacy == null
-            ? "لا توجد صيدلية متاحة لإرسال التجربة."
-            : $"تم تجهيز تجربة العرض لصيدلية واحدة: {pharmacy.Name}. TODO: POST /api/offers/{{id}}/test-send";
+        if (IsBusy) return;
+        var pharmacy = SelectedPreviewPharmacy ?? TargetPharmacies.FirstOrDefault(x => x.IsSelected) ?? TargetPharmacies.FirstOrDefault();
+        if (pharmacy == null)
+        {
+            StatusMessage = "لا توجد صيدلية متاحة لإرسال التجربة.";
+            return;
+        }
+
+        try
+        {
+            var saved = _editingOfferId.HasValue
+                ? await SaveAsync(ToApiStatus(OfferState))
+                : await SaveAsync("draft");
+            if (saved == null)
+                return;
+
+            var result = await _api.TestSendOfferAsync(saved.Id, new OfferTestSendRequest { PharmacyId = pharmacy.Id });
+            StatusMessage = result?.Message ?? $"تم إرسال تجربة العرض إلى {pharmacy.Name}.";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"تعذر إرسال التجربة: {ex.Message}";
+        }
     }
 
     [RelayCommand]
     private void ExportReport()
     {
-        StatusMessage = "تم تجهيز تقرير العروض للتصدير. TODO: ربط التصدير بملف Excel/PDF.";
+        var dialog = new SaveFileDialog
+        {
+            Title = "تصدير تقرير العروض",
+            Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*",
+            FileName = $"offers_report_{DateTime.Now:yyyyMMdd_HHmm}.csv"
+        };
+
+        if (dialog.ShowDialog() != true)
+            return;
+
+        var csv = BuildOffersReportCsv();
+        File.WriteAllText(dialog.FileName, "\uFEFF" + csv, Encoding.UTF8);
+        StatusMessage = $"تم تصدير تقرير العروض: {dialog.FileName}";
+    }
+
+    [RelayCommand]
+    private void PreviewAddToOrder()
+    {
+        var pharmacy = SelectedPreviewPharmacy ?? TargetPharmacies.FirstOrDefault();
+        var product = OfferProducts.FirstOrDefault();
+        StatusMessage = product == null
+            ? "المعاينة لا تحتوي على منتج لإضافته للطلب."
+            : $"تم اختبار زر أضف للطلب في المعاينة: {product.ProductName} لصيدلية {pharmacy?.Name ?? "تجريبية"}.";
+    }
+
+    private string BuildOffersReportCsv()
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine("العرض,الحالة,النوع,المشاهدات,الطلبات,التحويل,ينتهي في,المنتجات,الصيدليات المستهدفة");
+        foreach (var offer in Offers.OrderByDescending(o => o.EndsAt))
+        {
+            var sourceProducts = offer.Source?.OfferProducts.Select(p => p.ProductName).Where(x => !string.IsNullOrWhiteSpace(x)).ToList() ?? [];
+            var products = sourceProducts.Count > 0
+                ? string.Join(" | ", sourceProducts)
+                : offer.Id == SelectedOffer?.Id ? ProductPreviewSummary : "-";
+            var targetCount = offer.Source?.AudienceRule == "selected_pharmacies"
+                ? offer.Source.TargetPharmacyIds.Count.ToString("N0")
+                : "كل الصيدليات";
+            sb.AppendLine(string.Join(",",
+                Csv(offer.Title),
+                Csv(offer.Status),
+                Csv(offer.TypeLabel),
+                Csv(offer.Views),
+                Csv(offer.Orders),
+                Csv(offer.Conversion),
+                Csv(offer.EndsAtLabel),
+                Csv(products),
+                Csv(targetCount)));
+        }
+
+        sb.AppendLine();
+        sb.AppendLine("ملخص,القيمة");
+        foreach (var card in StatCards)
+            sb.AppendLine($"{Csv(card.Title)},{Csv(card.Value)}");
+
+        return sb.ToString();
+    }
+
+    private static string Csv(string? value)
+    {
+        value ??= string.Empty;
+        return $"\"{value.Replace("\"", "\"\"")}\"";
     }
 
     private async Task<MarketingOfferDto?> SaveAsync(string status)
@@ -380,13 +648,15 @@ public partial class OffersViewModel : ObservableObject
                 return null;
             }
 
-            var imageUrl = await EnsureImageUploadedAsync();
+            var imageUrls = await EnsureImagesUploadedAsync();
+            var imageUrl = imageUrls.FirstOrDefault() ?? string.Empty;
             var request = new UpdateMarketingOfferRequest
             {
                 Title = OfferTitle,
                 Subtitle = OfferSubtitle,
                 Description = OfferDescription,
                 ImageUrl = imageUrl,
+                ImageUrls = imageUrls,
                 OfferType = ToApiOfferType(OfferType),
                 AudienceRule = AudienceRule,
                 StartsAt = StartsAt,
@@ -396,6 +666,18 @@ public partial class OffersViewModel : ObservableObject
                 OldPrice = OldPrice > 0 ? OldPrice : OfferProducts.FirstOrDefault()?.OldPrice,
                 NewPrice = NewPrice > 0 ? NewPrice : OfferProducts.FirstOrDefault()?.NewPrice,
                 DiscountPercent = DiscountPercent > 0 ? DiscountPercent : OfferProducts.FirstOrDefault()?.DiscountPercent,
+                OfferProducts = OfferProducts
+                    .Where(p => p.ProductId > 0)
+                    .Select(p => new MarketingOfferProductRequest
+                    {
+                        ProductId = p.ProductId,
+                        OfferQuantity = p.OfferQuantity,
+                        MinimumOrder = p.MinimumOrder,
+                        OldPrice = p.OldPrice,
+                        NewPrice = p.NewPrice,
+                        GiftProduct = p.GiftProduct
+                    })
+                    .ToList(),
                 TargetPharmacyIds = IsSpecificAudience
                     ? TargetPharmacies.Where(p => p.IsSelected).Select(p => p.Id).ToList()
                     : []
@@ -416,7 +698,14 @@ public partial class OffersViewModel : ObservableObject
                 "review" => "تم إرسال العرض للمراجعة",
                 _ => "تم حفظ العرض كمسودة"
             };
+            IsBusy = false;
             await LoadAsync();
+            if (saved != null)
+            {
+                var savedOffer = Offers.FirstOrDefault(o => o.Id == saved.Id);
+                if (savedOffer != null)
+                    SelectOffer(savedOffer);
+            }
             return saved;
         }
         catch (Exception ex)
@@ -428,6 +717,51 @@ public partial class OffersViewModel : ObservableObject
         {
             IsBusy = false;
         }
+    }
+
+    private async Task<List<string>> EnsureImagesUploadedAsync()
+    {
+        if (OfferImages.Count == 0 && !string.IsNullOrWhiteSpace(OfferImagePath))
+            OfferImages.Add(new OfferImageItem(OfferImagePath, true));
+
+        if (OfferImages.Count == 0)
+            return [];
+
+        var orderedImages = OfferImages
+            .OrderByDescending(x => x.IsPrimary)
+            .ThenBy(x => x.DisplayName)
+            .ToList();
+
+        var urls = new List<string>();
+        foreach (var image in orderedImages)
+        {
+            if (string.IsNullOrWhiteSpace(image.Path))
+                continue;
+
+            if (image.Path.StartsWith("/") || image.Path.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            {
+                urls.Add(image.Path);
+                continue;
+            }
+
+            var uploaded = await _api.UploadOfferImageAsync(image.Path);
+            var url = uploaded?.ImageUrl ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                image.Path = url;
+                urls.Add(url);
+            }
+        }
+
+        if (urls.Count > 0)
+        {
+            _savedImageUrl = urls[0];
+            OfferImagePath = urls[0];
+            if (!OfferImages.Any(x => x.IsPrimary))
+                OfferImages[0].IsPrimary = true;
+        }
+
+        return urls.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
     }
 
     private async Task<string> EnsureImageUploadedAsync()
@@ -447,12 +781,35 @@ public partial class OffersViewModel : ObservableObject
 
     private void BuildDemoRows()
     {
+        var firstProduct = ProductCatalog.FirstOrDefault();
+        var secondProduct = ProductCatalog.Skip(1).FirstOrDefault();
+        var firstPrice = firstProduct is { UnitPrice: > 0 } ? firstProduct.UnitPrice : 120m;
+        var secondPrice = secondProduct is { UnitPrice: > 0 } ? secondProduct.UnitPrice : 80m;
+
         OfferProducts = [
-            new OfferProductItem { ProductName = ProductNames.FirstOrDefault() ?? "باراسيتامول 500 مجم", AvailableQuantity = 90, OfferQuantity = 24, OldPrice = 120, NewPrice = 96, MinimumOrder = 2 },
-            new OfferProductItem { ProductName = ProductNames.Skip(1).FirstOrDefault() ?? "سيتريزين أقراص", AvailableQuantity = 12, OfferQuantity = 20, OldPrice = 80, NewPrice = 68, MinimumOrder = 1, GiftProduct = "شرائط عينات" }
+            new OfferProductItem
+            {
+                ProductId = firstProduct?.Id ?? 0,
+                ProductName = firstProduct?.Name ?? ProductNames.FirstOrDefault() ?? "باراسيتامول 500 مجم",
+                AvailableQuantity = firstProduct?.Quantity ?? 90,
+                OfferQuantity = 24,
+                OldPrice = firstPrice,
+                NewPrice = Math.Round(firstPrice * 0.80m, 2),
+                MinimumOrder = 2
+            },
+            new OfferProductItem
+            {
+                ProductId = secondProduct?.Id ?? 0,
+                ProductName = secondProduct?.Name ?? ProductNames.Skip(1).FirstOrDefault() ?? "سيتريزين أقراص",
+                AvailableQuantity = secondProduct?.Quantity ?? 12,
+                OfferQuantity = 20,
+                OldPrice = secondPrice,
+                NewPrice = Math.Round(secondPrice * 0.85m, 2),
+                MinimumOrder = 1,
+                GiftProduct = "شرائط عينات"
+            }
         ];
-        foreach (var product in OfferProducts)
-            product.PropertyChanged += (_, _) => RefreshAll();
+        TrackProductRows();
 
         PharmacyInteractions = [
             new("صيدلية النور", "01000000001", "اليوم 10:42", true, true, true, "#1042", "1,850 ج.م"),
@@ -460,6 +817,14 @@ public partial class OffersViewModel : ObservableObject
             new("صيدلية الرحمة", "01000000003", "هذا الأسبوع", true, true, true, "#1036", "920 ج.م")
         ];
     }
+
+    private void TrackProductRows()
+    {
+        foreach (var product in OfferProducts)
+            TrackProductRow(product);
+    }
+
+    private void TrackProductRow(OfferProductItem product) => product.PropertyChanged += (_, _) => RefreshAll();
 
     private void SeedDemoOffers()
     {
@@ -477,16 +842,52 @@ public partial class OffersViewModel : ObservableObject
         BuildReadiness();
         BuildAnalytics();
         BuildEditorSteps();
+        BuildOperationalPanels();
         OnPropertyChanged(nameof(PreviewDiscountLabel));
         OnPropertyChanged(nameof(PreviewPriceLabel));
         OnPropertyChanged(nameof(PreviewOldPriceLabel));
         OnPropertyChanged(nameof(PreviewExpiryLabel));
         OnPropertyChanged(nameof(PreviewImagePath));
         OnPropertyChanged(nameof(ImageShortLabel));
+        OnPropertyChanged(nameof(ImagesSummaryLabel));
         OnPropertyChanged(nameof(ProductPreviewSummary));
+        OnPropertyChanged(nameof(ProductCatalogSummary));
         OnPropertyChanged(nameof(TargetedPharmaciesLabel));
         OnPropertyChanged(nameof(AudienceRule));
         OnPropertyChanged(nameof(IsSpecificAudience));
+        OnPropertyChanged(nameof(PreviewPharmacyName));
+        OnPropertyChanged(nameof(PreviewVisibilityResult));
+    }
+
+    private void BuildOperationalPanels()
+    {
+        PublishChecklistItems = new ObservableCollection<PublishChecklistItem>([
+            new("بيانات العرض", !string.IsNullOrWhiteSpace(OfferTitle) && OfferTitle.Length >= 4, "العنوان والوصف واضحين للصيدلي"),
+            new("المنتجات", OfferProducts.Count > 0, $"{OfferProducts.Count:N0} منتج داخل العرض"),
+            new("الأسعار", NewPrice > 0 || OfferProducts.Any(x => x.NewPrice > 0), "أسعار وخصومات قابلة للمراجعة"),
+            new("الاستهداف", !IsSpecificAudience || TargetPharmacies.Any(x => x.IsSelected), TargetedPharmaciesLabel),
+            new("الصورة", !string.IsNullOrWhiteSpace(OfferImagePath), ImageShortLabel),
+            new("المدة", EndsAt > StartsAt && EndsAt > DateTime.Today, $"{StartsAt:yyyy-MM-dd} إلى {EndsAt:yyyy-MM-dd}")
+        ]);
+
+        ImageAssetItems = new ObservableCollection<ImageAssetItem>([
+            new("Banner", "1920x700", !string.IsNullOrWhiteSpace(OfferImagePath), "للواجهة الرئيسية داخل تطبيق الصيدلي"),
+            new("Card", "1080x1350", !string.IsNullOrWhiteSpace(OfferImagePath), "لكارت العرض في قائمة العروض"),
+            new("Thumbnail", "600x600", !string.IsNullOrWhiteSpace(OfferImagePath), "للقوائم الصغيرة والتنبيهات")
+        ]);
+
+        OfferCalendarItems = new ObservableCollection<OfferCalendarItem>(Offers
+            .OrderBy(x => x.EndsAt)
+            .Take(6)
+            .Select(x => new OfferCalendarItem(x.Title, x.Status, x.EndsAt, x.EndsAt <= DateTime.Today.AddDays(3) ? "ينتهي قريبًا" : "مجدول")));
+
+        var previewPharmacies = TargetPharmacies.Take(5).DefaultIfEmpty(new PharmacyTargetItem(0, "صيدلية تجريبية", "-", 0));
+        VisibilityAuditItems = new ObservableCollection<VisibilityAuditItem>(previewPharmacies.Select(p =>
+        {
+            var isVisible = !ReadinessChecks.Any(x => !x.IsOk) && (!IsSpecificAudience || p.IsSelected);
+            var reason = isVisible ? "سيظهر العرض" : IsSpecificAudience && !p.IsSelected ? "خارج الاستهداف" : "تحذيرات قبل النشر";
+            return new VisibilityAuditItem(p.Name, p.Phone, isVisible, reason);
+        }));
     }
 
     private void ApplyFilters()
@@ -519,6 +920,7 @@ public partial class OffersViewModel : ObservableObject
         var checks = new List<ReadinessCheckItem>();
         AddCheck(string.IsNullOrWhiteSpace(OfferImagePath), "الصورة غير مرفوعة");
         AddCheck(OfferProducts.Count == 0, "لا توجد منتجات مرتبطة");
+        AddCheck(OfferProducts.Any(x => x.ProductId <= 0), "اختار المنتجات من ملف المخزون الرئيسي");
         AddCheck(EndsAt <= StartsAt, "تاريخ النهاية قبل البداية");
         AddCheck(OfferProducts.Any(x => x.DiscountPercent > 60), "الخصم أكبر من المسموح");
         AddCheck(OfferProducts.Any(x => x.OfferQuantity > x.AvailableQuantity), "الكمية غير كافية");
@@ -582,6 +984,11 @@ public partial class OffersViewModel : ObservableObject
     partial void OnRemainingQuantityChanged(int value) => RefreshAll();
     partial void OnStartsAtChanged(DateTime value) => RefreshAll();
     partial void OnEndsAtChanged(DateTime value) => RefreshAll();
+    partial void OnSelectedPreviewPharmacyChanged(PharmacyTargetItem? value)
+    {
+        OnPropertyChanged(nameof(PreviewPharmacyName));
+        OnPropertyChanged(nameof(PreviewVisibilityResult));
+    }
 
     private static string ToApiOfferType(string display) => display switch
     {
@@ -610,6 +1017,15 @@ public partial class OffersViewModel : ObservableObject
         "paused" => "موقوف",
         "expired" => "منتهي",
         _ => "مسودة"
+    };
+
+    private static string ToApiStatus(string display) => display switch
+    {
+        "منشور" => "published",
+        "قيد المراجعة" => "review",
+        "موقوف" => "paused",
+        "منتهي" => "expired",
+        _ => "draft"
     };
 }
 
@@ -679,6 +1095,7 @@ public partial class OfferDesignItem : ObservableObject
 
 public partial class OfferProductItem : ObservableObject
 {
+    [ObservableProperty] private int _productId;
     [ObservableProperty] private string _productName = string.Empty;
     [ObservableProperty] private int _availableQuantity;
     [ObservableProperty] private int _offerQuantity;
@@ -693,6 +1110,18 @@ public partial class OfferProductItem : ObservableObject
         ? "الكمية غير كافية"
         : AvailableQuantity <= 15 ? "كمية قليلة" : "";
 
+    public static OfferProductItem FromDto(MarketingOfferProductDto dto) => new()
+    {
+        ProductId = dto.ProductId,
+        ProductName = dto.ProductName,
+        AvailableQuantity = dto.AvailableQuantity,
+        OfferQuantity = dto.OfferQuantity,
+        OldPrice = dto.OldPrice,
+        NewPrice = dto.NewPrice,
+        MinimumOrder = dto.MinimumOrder,
+        GiftProduct = dto.GiftProduct
+    };
+
     partial void OnOldPriceChanged(decimal value) => Refresh();
     partial void OnNewPriceChanged(decimal value) => Refresh();
     partial void OnOfferQuantityChanged(int value) => Refresh();
@@ -703,6 +1132,35 @@ public partial class OfferProductItem : ObservableObject
         OnPropertyChanged(nameof(DiscountPercent));
         OnPropertyChanged(nameof(DiscountLabel));
         OnPropertyChanged(nameof(Warning));
+    }
+}
+
+public partial class OfferImageItem : ObservableObject
+{
+    [ObservableProperty] private string _path = string.Empty;
+    [ObservableProperty] private bool _isPrimary;
+
+    public OfferImageItem(string path, bool isPrimary = false)
+    {
+        _path = path;
+        _isPrimary = isPrimary;
+    }
+
+    public string DisplayName => string.IsNullOrWhiteSpace(Path) ? "صورة بدون اسم" : System.IO.Path.GetFileName(Path);
+    public string StatusText => Path.StartsWith("/") || Path.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? "مرفوعة" : "جاهزة للرفع";
+    public string PrimaryText => IsPrimary ? "رئيسية" : "اجعلها رئيسية";
+    public string Accent => IsPrimary ? "#FF31D0AA" : "#FF38BDF8";
+
+    partial void OnPathChanged(string value)
+    {
+        OnPropertyChanged(nameof(DisplayName));
+        OnPropertyChanged(nameof(StatusText));
+    }
+
+    partial void OnIsPrimaryChanged(bool value)
+    {
+        OnPropertyChanged(nameof(PrimaryText));
+        OnPropertyChanged(nameof(Accent));
     }
 }
 
@@ -723,6 +1181,22 @@ public partial class PharmacyTargetItem(int id, string name, string phone, decim
     public string Phone { get; } = phone;
     public decimal Balance { get; } = balance;
     [ObservableProperty] private bool _isSelected;
+
+    public override string ToString() => Name;
+}
+
+public record ProductPickerItem(int Id, string Name, int Quantity, decimal UnitPrice, string Category)
+{
+    public string DisplayName => $"{Name} | المتاح {Quantity:N0} | {UnitPrice:N0} ج.م";
+
+    public static ProductPickerItem FromDto(ProductDto product) => new(
+        product.Id,
+        product.Name,
+        product.Quantity,
+        product.UnitPrice,
+        product.CategoryName ?? product.Category);
+
+    public override string ToString() => DisplayName;
 }
 
 public record MetricCard(string Title, string Value, string Icon, string Accent);
@@ -741,3 +1215,27 @@ public record PharmacyInteractionItem(
     bool Ordered,
     string LastOrder,
     string OrderValue);
+
+public record PublishChecklistItem(string Title, bool IsOk, string Detail)
+{
+    public string StatusText => IsOk ? "جاهز" : "ناقص";
+    public string Accent => IsOk ? "#FF31D0AA" : "#FFF59E0B";
+}
+
+public record ImageAssetItem(string Title, string Size, bool IsReady, string Usage)
+{
+    public string StatusText => IsReady ? "جاهزة" : "تحتاج صورة";
+    public string Accent => IsReady ? "#FF31D0AA" : "#FFFF6FAE";
+}
+
+public record OfferCalendarItem(string Title, string Status, DateTime Date, string Hint)
+{
+    public string DateLabel => Date.ToString("yyyy-MM-dd");
+    public string Accent => Hint.Contains("قريب") ? "#FFF59E0B" : "#FF38BDF8";
+}
+
+public record VisibilityAuditItem(string PharmacyName, string Phone, bool IsVisible, string Reason)
+{
+    public string StatusText => IsVisible ? "ظاهر" : "غير ظاهر";
+    public string Accent => IsVisible ? "#FF31D0AA" : "#FFFF6FAE";
+}
