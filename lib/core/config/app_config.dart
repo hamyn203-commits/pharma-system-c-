@@ -1,7 +1,7 @@
 abstract final class AppConfig {
   static const dotnetApiBaseUrl = String.fromEnvironment(
     'ALNEDA_API_BASE_URL',
-    defaultValue: 'http://localhost:5000',
+    defaultValue: 'https://alneda-api.azurewebsites.net',
   );
 
   static const analyticsApiBaseUrl = String.fromEnvironment(
