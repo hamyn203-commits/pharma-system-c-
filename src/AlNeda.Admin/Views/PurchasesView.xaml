@@ -143,7 +143,7 @@
                     <DataGridTemplateColumn Header="الإجراءات" Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="👁️ عرض" Command="{Binding DataContext.ViewDetailCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                <Button Content="&#xE8AF; عرض" Command="{Binding DataContext.ViewDetailCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                         Style="{StaticResource ActionButtonStyle}" ToolTip="عرض تفاصيل الفاتورة" HorizontalAlignment="Center" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -203,7 +203,7 @@
                                 <DataGridTemplateColumn Width="40">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Button Content="🗑️" Command="{Binding DataContext.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            <Button Content="&#xE74D;" Command="{Binding DataContext.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding}" Background="Transparent" BorderThickness="0" Cursor="Hand" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>

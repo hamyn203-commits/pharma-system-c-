@@ -44,14 +44,14 @@ public partial class OffersViewModel : ObservableObject
     [ObservableProperty] private string _offerSearch = string.Empty;
     [ObservableProperty] private string _statusFilter = "الكل";
     [ObservableProperty] private string _dateFilter = "هذا الشهر";
-    [ObservableProperty] private string _offerTitle = "عرض جديد للصيدليات";
-    [ObservableProperty] private string _offerSubtitle = "خصم خاص لفترة محدودة على تطبيق الصيدلي";
+    [ObservableProperty] private string _offerTitle = string.Empty;
+    [ObservableProperty] private string _offerSubtitle = string.Empty;
     [ObservableProperty] private string _offerType = "خصم مباشر";
     [ObservableProperty] private string _offerState = "مسودة";
     [ObservableProperty] private string _previewMode = "كارت الصفحة الرئيسية";
-    [ObservableProperty] private string _offerDescription = "اكتب وصف العرض وفائدته للصيدلية بشكل واضح ومختصر.";
-    [ObservableProperty] private string _offerTerms = "يسري العرض حتى نفاد الكمية ولا يمكن جمعه مع عروض أخرى.";
-    [ObservableProperty] private string _internalNotes = "ملاحظات داخلية لفريق المبيعات لا تظهر للصيدلي.";
+    [ObservableProperty] private string _offerDescription = string.Empty;
+    [ObservableProperty] private string _offerTerms = string.Empty;
+    [ObservableProperty] private string _internalNotes = string.Empty;
     [ObservableProperty] private string _offerImagePath = "";
     [ObservableProperty] private decimal _oldPrice;
     [ObservableProperty] private decimal _newPrice;
@@ -60,10 +60,11 @@ public partial class OffersViewModel : ObservableObject
     [ObservableProperty] private DateTime _startsAt = DateTime.Today;
     [ObservableProperty] private DateTime _endsAt = DateTime.Today.AddDays(7);
     [ObservableProperty] private bool _isBusy;
-    [ObservableProperty] private string _statusMessage = "جاهز لإنشاء عرض جديد ومعاينته قبل النشر";
+    [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] private string _statusMessage = "لا توجد عروض حالياً. اضغط على + عرض جديد للبدء";
 
-    public string PreviewDiscountLabel => DiscountPercent > 0 ? $"-{DiscountPercent}%" : "عرض خاص";
-    public string PreviewPriceLabel => NewPrice > 0 ? $"{NewPrice:N0} ج.م" : "سعر خاص";
+    public string PreviewDiscountLabel => DiscountPercent > 0 ? $"-{DiscountPercent}%" : "";
+    public string PreviewPriceLabel => NewPrice > 0 ? $"{NewPrice:N0} ج.م" : "";
     public string PreviewOldPriceLabel => OldPrice > 0 ? $"{OldPrice:N0} ج.م" : "";
     public string PreviewExpiryLabel => EndsAt.Date <= DateTime.Today
         ? "ينتهي اليوم"
@@ -158,6 +159,7 @@ public partial class OffersViewModel : ObservableObject
     {
         if (IsBusy) return;
         IsBusy = true;
+        IsLoading = true;
         try
         {
             var offers = await _api.GetOffersAsync();
@@ -176,8 +178,13 @@ public partial class OffersViewModel : ObservableObject
                 pharmacies.Select(p => new PharmacyTargetItem(p.Id, p.Name, p.Phone ?? "", p.Balance)));
             SelectedPreviewPharmacy ??= TargetPharmacies.FirstOrDefault();
 
+            // لا تقم بإنشاء عروض وهمية — اترك القائمة فارغة حتى ينشئ المستخدم عروضاً حقيقية
             if (Offers.Count == 0)
-                SeedDemoOffers();
+            {
+                SelectedOffer = null;
+                ApplyFilters();
+                BuildStats();
+            }
 
             if (SelectedOffer == null && Offers.Count > 0)
                 SelectOffer(Offers[0]);
@@ -187,7 +194,11 @@ public partial class OffersViewModel : ObservableObject
         catch (Exception ex)
         {
             if (Offers.Count == 0)
-                SeedDemoOffers();
+            {
+                SelectedOffer = null;
+                ApplyFilters();
+                BuildStats();
+            }
             if (ProductNames.Count == 0)
                 ProductNames = ["باراسيتامول 500 مجم", "أموكسيسيلين 500 مجم", "فيتامين د نقط", "سيتريزين أقراص"];
             if (ProductCatalog.Count == 0)
@@ -208,6 +219,7 @@ public partial class OffersViewModel : ObservableObject
         finally
         {
             IsBusy = false;
+            IsLoading = false;
             RefreshAll();
         }
     }
@@ -271,14 +283,14 @@ public partial class OffersViewModel : ObservableObject
         foreach (var item in Offers)
             item.IsSelected = false;
         SelectedOffer = null;
-        OfferTitle = "عرض جديد للصيدليات";
-        OfferSubtitle = "خصم خاص لفترة محدودة على تطبيق الصيدلي";
+        OfferTitle = string.Empty;
+        OfferSubtitle = string.Empty;
         OfferType = OfferTypes.First();
         OfferState = "مسودة";
         PreviewMode = PreviewModes.First();
-        OfferDescription = "اكتب وصف العرض وفائدته للصيدلية بشكل واضح ومختصر.";
-        OfferTerms = "يسري العرض حتى نفاد الكمية ولا يمكن جمعه مع عروض أخرى.";
-        InternalNotes = "ملاحظات داخلية لفريق المبيعات لا تظهر للصيدلي.";
+        OfferDescription = string.Empty;
+        OfferTerms = string.Empty;
+        InternalNotes = string.Empty;
         OfferImagePath = "";
         OfferImages.Clear();
         OldPrice = 0;
@@ -1085,6 +1097,34 @@ public partial class OfferDesignItem : ObservableObject
     {
         return new OfferDesignItem(id, title, status, typeLabel, views, orders, endsAt, null) { IsSelected = selected };
     }
+
+    public double ProgressPercent
+    {
+        get
+        {
+            var start = Source?.StartsAt ?? EndsAt.AddDays(-30);
+            var end = EndsAt;
+            if (end <= start) return 100;
+            var totalDays = (end - start).TotalDays;
+            var elapsed = (DateTime.Today - start).TotalDays;
+            return Math.Clamp(Math.Round(elapsed / totalDays * 100, 1), 0, 100);
+        }
+    }
+
+    public string ProgressColor => ProgressPercent switch
+    {
+        < 50 => "#FF31D0AA",
+        < 80 => "#FFF59E0B",
+        _ => "#FFFB7185"
+    };
+
+    public string RemainingDaysLabel =>
+        (EndsAt.Date - DateTime.Today).TotalDays switch
+        {
+            <= 0 => "انتهى",
+            <= 1 => "يوم واحد",
+            var d => $"متبقي {d:N0} يوم"
+        };
 
     partial void OnIsSelectedChanged(bool value)
     {

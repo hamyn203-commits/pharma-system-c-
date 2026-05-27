@@ -435,6 +435,93 @@ public class MobileController : ControllerBase
             ServerTime = DateTime.UtcNow
         });
     }
+    [HttpGet("offers")]
+    [ProducesResponseType(typeof(List<MarketingOfferDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Offers()
+    {
+        var pharmacyId = GetPharmacyId();
+        if (pharmacyId == null) return PharmacyNotLinked();
+
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        var pharmacy = await db.Pharmacies.FindAsync(pharmacyId.Value);
+        if (pharmacy == null) return PharmacyNotLinked();
+
+        var now = DateTime.Now;
+        var offers = await db.MarketingOffers
+            .Include(o => o.PharmacyTargets)
+            .Include(o => o.OfferProducts).ThenInclude(p => p.Product)
+            .Where(o => o.Status == "published" && o.StartsAt <= now && o.EndsAt > now && (o.RemainingQuantity == null || o.RemainingQuantity > 0))
+            .ToListAsync();
+
+        var visibleOffers = new List<MarketingOffer>();
+        foreach (var offer in offers)
+        {
+            if (await MarketingOfferRules.MatchesAudienceAsync(db, offer, pharmacy, now))
+                visibleOffers.Add(offer);
+        }
+
+        return Ok(visibleOffers.Select(o => MarketingOfferMapper.ToDto(o, now)).ToList());
+    }
+
+    [HttpPost("offers/{id:int}/events")]
+    public async Task<IActionResult> RecordOfferEvent(int id, [FromBody] OfferEventRequest request)
+    {
+        var pharmacyId = GetPharmacyId();
+        if (pharmacyId == null) return PharmacyNotLinked();
+
+        if (string.IsNullOrWhiteSpace(request.Type))
+            return BadRequest(Error("نوع الحدث مطلوب", "VALIDATION_ERROR"));
+
+        var type = request.Type.Trim().ToLowerInvariant();
+        if (type != "impression" && type != "click" && type != "dismiss")
+            return BadRequest(Error("نوع حدث غير معروف", "VALIDATION_ERROR"));
+
+        var deviceId = string.IsNullOrWhiteSpace(request.DeviceId) ? null : request.DeviceId.Trim();
+        var deviceKey = MarketingOfferRules.DeviceKey(deviceId);
+        var dateKey = MarketingOfferRules.EventDateKey(DateTime.Now);
+
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        var isUnique = true;
+        if (type == "impression")
+        {
+            isUnique = !await db.OfferEvents.AnyAsync(e =>
+                e.MarketingOfferId == id &&
+                e.PharmacyId == pharmacyId.Value &&
+                e.DeviceKey == deviceKey &&
+                e.EventDateKey == dateKey &&
+                e.EventType == "impression" &&
+                !e.IsRejected);
+        }
+        else
+        {
+            isUnique = false;
+        }
+
+        db.OfferEvents.Add(new OfferEvent
+        {
+            MarketingOfferId = id,
+            PharmacyId = pharmacyId.Value,
+            DeviceId = deviceId,
+            DeviceKey = deviceKey,
+            EventType = type,
+            OccurredAt = DateTime.Now,
+            EventDateKey = dateKey,
+            IsUniqueDailyImpression = isUnique,
+            UsedDeviceFallback = MarketingOfferRules.UsesDeviceFallback(deviceId),
+            IsRejected = false,
+            RejectionReason = string.Empty
+        });
+
+        await db.SaveChangesAsync();
+
+        return Ok(new OfferEventResponse
+        {
+            Accepted = true,
+            Counted = isUnique,
+            UsedDeviceFallback = MarketingOfferRules.UsesDeviceFallback(deviceId),
+            Message = "تم تسجيل الحدث بنجاح"
+        });
+    }
 
     private int? GetPharmacyId()
     {

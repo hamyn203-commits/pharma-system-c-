@@ -1,4 +1,5 @@
 using System.Text;
+using AlNeda.API.BackgroundServices;
 using AlNeda.API.Middleware;
 using AlNeda.Core.Entities;
 using AlNeda.Data.Configuration;
@@ -72,6 +73,16 @@ builder.Services.AddScoped<IReportExporter, ReportExporterService>();
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<AlertService>();
 
+// ─── خدمات العروض المتقدمة ──────────────────────────────────────
+builder.Services.AddSingleton<IQrCodeService, QrCodeService>();
+builder.Services.AddScoped<INotificationsService, NotificationsService>();
+builder.Services.AddScoped<ICouponService, CouponService>();
+builder.Services.AddScoped<IBogoOfferService, BogoOfferService>();
+builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+
+// ─── خدمة النشر التلقائي للعروض ──────────────────────────────────
+builder.Services.AddHostedService<OfferAutoPublishService>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -112,7 +123,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(AlNeda.API.Authorization.AuthPolicies.Staff, policy => 
+        policy.RequireRole("admin", "accountant", "rep"));
+    options.AddPolicy(AlNeda.API.Authorization.AuthPolicies.PharmacyApp, policy => 
+        policy.RequireRole("pharmacy"));
+    options.AddPolicy(AlNeda.API.Authorization.AuthPolicies.AdminOnly, policy => 
+        policy.RequireRole("admin"));
+});
 builder.Services.AddRateLimiter(options =>
 {
     options.AddPolicy("login", context =>
@@ -172,8 +191,16 @@ try
 {
     var dbFactory = app.Services.GetRequiredService<IDbContextFactory<AlNeda.Data.AppDbContext>>();
     using var initDb = dbFactory.CreateDbContext();
+
+    // Use EnsureCreated for all providers (avoids migration compatibility issues)
     await initDb.Database.EnsureCreatedAsync();
-    await EnsureMobileSchemaAsync(initDb);
+
+    // SQLite-specific schema additions
+    var provider = (app.Services.GetRequiredService<DatabaseConfig>()).Provider?.ToLowerInvariant();
+    if (provider == "sqlite" || provider == "sqlite3")
+    {
+        await EnsureMobileSchemaAsync(initDb);
+    }
 
     if (!await initDb.Users.AnyAsync())
     {
@@ -259,6 +286,6 @@ static async Task EnsureMobileSchemaAsync(AlNeda.Data.AppDbContext db)
         await db.Database.ExecuteSqlRawAsync("ALTER TABLE Orders ADD COLUMN MobileCreatedAt TEXT NULL");
     if (!orderColumns.Contains("CancellationRequestedAt"))
         await db.Database.ExecuteSqlRawAsync("ALTER TABLE Orders ADD COLUMN CancellationRequestedAt TEXT NULL");
-    if (!orderColumns.Contains("CancellationReason"))
-        await db.Database.ExecuteSqlRawAsync("ALTER TABLE Orders ADD COLUMN CancellationReason TEXT NOT NULL DEFAULT ''");
 }
+
+public partial class Program { }

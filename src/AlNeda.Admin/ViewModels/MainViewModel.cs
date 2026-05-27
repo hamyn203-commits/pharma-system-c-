@@ -162,7 +162,8 @@ public partial class MainViewModel : ObservableObject, INavigationService
         }
 
         _offersWindow = _services.GetRequiredService<OffersDashboardWindow>();
-        _offersWindow.Owner = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
+        _offersWindow.Owner = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault()
+            ?? Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
         _offersWindow.Closed += (_, _) => _offersWindow = null;
         _offersWindow.Show();
         _offersWindow.Activate();

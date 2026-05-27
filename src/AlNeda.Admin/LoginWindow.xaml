@@ -3,12 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:conv="clr-namespace:AlNeda.Admin.Converters"
         Title="Al-Neda Warehouse - Login"
-        Width="460" Height="600"
+        Width="980" Height="640"
+        MinWidth="920" MinHeight="600"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
-        ResizeMode="NoResize">
+        ResizeMode="CanResizeWithGrip"
+        FlowDirection="RightToLeft"
+        TextOptions.TextFormattingMode="Display"
+        SnapsToDevicePixels="True">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -18,6 +22,42 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <conv:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
             <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+
+            <LinearGradientBrush x:Key="LoginHeroBrush" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#FF102238" Offset="0" />
+                <GradientStop Color="#FF123B35" Offset="0.55" />
+                <GradientStop Color="#FF101827" Offset="1" />
+            </LinearGradientBrush>
+
+            <Style x:Key="LoginFieldLabel" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+                <Setter Property="Margin" Value="0,0,0,8" />
+            </Style>
+
+            <Style x:Key="LoginTextBox" TargetType="TextBox">
+                <Setter Property="Height" Value="48" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Background" Value="{StaticResource CardElevatedBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Padding" Value="14,12" />
+                <Setter Property="CaretBrush" Value="{StaticResource PrimaryCyanBrush}" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="LoginPasswordBox" TargetType="PasswordBox">
+                <Setter Property="Height" Value="48" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Background" Value="{StaticResource CardElevatedBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Padding" Value="14,12,46,12" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
         </ResourceDictionary>
     </Window.Resources>
 
@@ -25,213 +65,271 @@
         <KeyBinding Key="Enter" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=PasswordBox}" />
     </Window.InputBindings>
 
-    <Border Background="{StaticResource WarmSurfaceBrush}" CornerRadius="24" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1">
+    <Border Background="{StaticResource PageBgBrush}"
+            CornerRadius="28"
+            BorderBrush="{StaticResource AccentBorderBrush}"
+            BorderThickness="1">
         <Border.Effect>
-            <DropShadowEffect ShadowDepth="0" BlurRadius="60" Color="{StaticResource PrimaryIndigo}" Opacity="0.15" />
+            <DropShadowEffect ShadowDepth="0" BlurRadius="58" Color="#FF020617" Opacity="0.45" />
         </Border.Effect>
 
         <Grid>
-            <!-- Subtle grid pattern overlay -->
-            <Border CornerRadius="24" Opacity="0.03">
-                <Border.Background>
-                    <DrawingBrush TileMode="Tile" Viewport="0,0,40,40" ViewportUnits="Absolute">
-                        <DrawingBrush.Drawing>
-                            <GeometryDrawing>
-                                <GeometryDrawing.Geometry>
-                                    <GeometryGroup>
-                                        <LineGeometry StartPoint="0,0" EndPoint="40,0" />
-                                        <LineGeometry StartPoint="0,0" EndPoint="0,40" />
-                                    </GeometryGroup>
-                                </GeometryDrawing.Geometry>
-                                <GeometryDrawing.Pen>
-                                    <Pen Brush="{StaticResource BorderDefaultBrush}" Thickness="1" />
-                                </GeometryDrawing.Pen>
-                            </GeometryDrawing>
-                        </DrawingBrush.Drawing>
-                    </DrawingBrush>
-                </Border.Background>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.1*" />
+                <ColumnDefinition Width="430" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0"
+                    Margin="18"
+                    Padding="34"
+                    Background="{StaticResource LoginHeroBrush}"
+                    BorderBrush="{StaticResource AccentBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="22">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" FlowDirection="RightToLeft">
+                        <Grid Width="58" Height="58" Margin="0,0,14,0">
+                            <Ellipse Fill="{StaticResource PrimaryCyanGlassBrush}" Stroke="{StaticResource AccentBorderBrush}" StrokeThickness="1" />
+                            <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="25"
+                                       Foreground="{StaticResource PrimaryCyanLightBrush}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="مخزن الندى" FontSize="26" FontWeight="Black" Foreground="{StaticResource TextPrimaryBrush}" />
+                            <TextBlock Text="نظام إدارة مخازن الأدوية والصيدليات" FontSize="13" Foreground="{StaticResource TextMutedBrush}" Margin="0,3,0,0" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" VerticalAlignment="Center">
+                        <TextBlock Text="واجهة تشغيل أسرع، أوضح، وأكثر أماناً"
+                                   FontSize="38"
+                                   FontWeight="Black"
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   TextWrapping="Wrap"
+                                   LineHeight="48" />
+                        <TextBlock Text="تابع الطلبات، المديونيات، المخزون والتنبيهات من مركز واحد مصمم للعمل اليومي داخل المخزن."
+                                   FontSize="15"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   TextWrapping="Wrap"
+                                   Margin="0,18,0,0"
+                                   LineHeight="26" />
+                    </StackPanel>
+
+                    <UniformGrid Grid.Row="2" Columns="3" Margin="0,28,0,0">
+                        <Border Background="#2422D3EE" BorderBrush="#4422D3EE" BorderThickness="1" CornerRadius="14" Padding="16" Margin="0,0,10,0">
+                            <StackPanel>
+                                <TextBlock Text="API" Foreground="{StaticResource PrimaryCyanLightBrush}" FontSize="12" FontWeight="Bold" />
+                                <TextBlock Text="متصل" Foreground="{StaticResource TextPrimaryBrush}" FontSize="20" FontWeight="Black" Margin="0,8,0,0" />
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#2434D399" BorderBrush="#4434D399" BorderThickness="1" CornerRadius="14" Padding="16" Margin="5,0,5,0">
+                            <StackPanel>
+                                <TextBlock Text="الأمان" Foreground="{StaticResource PrimaryIndigoLightBrush}" FontSize="12" FontWeight="Bold" />
+                                <TextBlock Text="JWT" Foreground="{StaticResource TextPrimaryBrush}" FontSize="20" FontWeight="Black" Margin="0,8,0,0" />
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#24FBBF24" BorderBrush="#44FBBF24" BorderThickness="1" CornerRadius="14" Padding="16" Margin="10,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="الجاهزية" Foreground="{StaticResource WarningLightBrush}" FontSize="12" FontWeight="Bold" />
+                                <TextBlock Text="فوري" Foreground="{StaticResource TextPrimaryBrush}" FontSize="20" FontWeight="Black" Margin="0,8,0,0" />
+                            </StackPanel>
+                        </Border>
+                    </UniformGrid>
+                </Grid>
             </Border>
 
-            <!-- Control Buttons -->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20">
-                <Button x:Name="CloseButton"
-                        Click="CloseButton_Click"
-                        Width="32" Height="32"
-                        Background="Transparent" BorderThickness="0"
-                        Foreground="{StaticResource TextMutedBrush}" FontSize="18"
-                        Cursor="Hand">
-                    <TextBlock Text="&#xE8BB;" FontFamily="Segoe MDL2 Assets" FontSize="12" />
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border x:Name="B" Background="{TemplateBinding Background}" CornerRadius="16">
+            <Border Grid.Column="1"
+                    Margin="0,18,18,18"
+                    Padding="30"
+                    Background="{StaticResource WarmSurfaceBrush}"
+                    BorderBrush="{StaticResource BorderDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="22">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <StackPanel>
+                            <TextBlock Text="تسجيل الدخول" FontSize="30" FontWeight="Black" Foreground="{StaticResource TextPrimaryBrush}" />
+                            <TextBlock Text="ادخل بيانات حسابك للوصول إلى لوحة الإدارة" FontSize="13" Foreground="{StaticResource TextMutedBrush}" Margin="0,6,0,0" />
+                        </StackPanel>
+
+                        <Button x:Name="CloseButton"
+                                Click="CloseButton_Click"
+                                Width="36" Height="36"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Background="{StaticResource CardElevatedBrush}"
+                                BorderBrush="{StaticResource BorderDefaultBrush}"
+                                BorderThickness="1"
+                                Foreground="{StaticResource TextMutedBrush}"
+                                Cursor="Hand">
+                            <TextBlock Text="&#xE8BB;" FontFamily="Segoe MDL2 Assets" FontSize="12" />
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="B"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="10">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="B" Property="Background" Value="{StaticResource DangerGlassBrush}" />
+                                            <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+
+                    <StackPanel Grid.Row="1" VerticalAlignment="Center">
+                        <TextBlock Text="اسم المستخدم" Style="{StaticResource LoginFieldLabel}" />
+                        <TextBox x:Name="UsernameBox"
+                                 Style="{StaticResource LoginTextBox}"
+                                 Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" />
+
+                        <TextBlock Text="كلمة المرور" Style="{StaticResource LoginFieldLabel}" Margin="0,18,0,8" />
+                        <Grid>
+                            <PasswordBox x:Name="PasswordBox"
+                                         Style="{StaticResource LoginPasswordBox}"
+                                         PasswordChanged="PasswordBox_PasswordChanged"
+                                         Visibility="{Binding ShowPassword, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
+
+                            <TextBox x:Name="PasswordVisibleBox"
+                                     Style="{StaticResource LoginTextBox}"
+                                     Padding="14,12,46,12"
+                                     Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
+                                     Visibility="{Binding ShowPassword, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                            <ToggleButton IsChecked="{Binding ShowPassword}"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center"
+                                          Margin="10,0,0,0"
+                                          Width="32"
+                                          Height="32"
+                                          Background="Transparent"
+                                          BorderThickness="0"
+                                          Foreground="{StaticResource TextMutedBrush}"
+                                          Cursor="Hand">
+                                <TextBlock Text="&#xE890;" FontFamily="Segoe MDL2 Assets" FontSize="16" />
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border x:Name="B" CornerRadius="8" Background="{TemplateBinding Background}">
                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="B" Property="Background" Value="{StaticResource DangerGlassBrush}" />
-                                                <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
+                                                <Setter TargetName="B" Property="Background" Value="{StaticResource PrimaryCyanGlassBrush}" />
+                                            </Trigger>
+                                            <Trigger Property="IsChecked" Value="True">
+                                                <Setter Property="Foreground" Value="{StaticResource PrimaryCyanBrush}" />
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </Button.Style>
-                </Button>
-            </StackPanel>
-
-            <StackPanel VerticalAlignment="Center" Margin="40,0">
-
-                <!-- Logo & Branding -->
-                <StackPanel HorizontalAlignment="Center" Margin="0,0,0,8">
-                    <Grid Width="72" Height="72" HorizontalAlignment="Center" Margin="0,0,0,20">
-                        <Ellipse Fill="{StaticResource PrimaryIndigoGlassBrush}" />
-                        <Grid>
-                            <Rectangle Width="8" Height="32" Fill="{StaticResource PrimaryIndigoBrush}"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                                       RadiusX="2" RadiusY="2" />
-                            <Rectangle Width="32" Height="8" Fill="{StaticResource PrimaryIndigoBrush}"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                                       RadiusX="2" RadiusY="2" />
+                                </ToggleButton.Template>
+                            </ToggleButton>
                         </Grid>
-                    </Grid>
 
-                    <TextBlock Text="Al-Neda Warehouse"
-                               FontSize="32" FontWeight="Bold"
-                               Foreground="{StaticResource TextPrimaryBrush}"
-                               HorizontalAlignment="Center" />
-                    <TextBlock Text="Pharmaceutical Warehouse Management"
-                               FontSize="11" FontFamily="Segoe UI"
-                               Foreground="{StaticResource TextMutedBrush}"
-                               HorizontalAlignment="Center"
-                               Margin="0,4,0,0" />
-                </StackPanel>
+                        <TextBlock Text="الدور الوظيفي" Style="{StaticResource LoginFieldLabel}" Margin="0,18,0,8" />
+                        <ComboBox ItemsSource="{Binding Roles}"
+                                  SelectedItem="{Binding SelectedRole}"
+                                  Height="48"
+                                  FontSize="14"
+                                  Background="{StaticResource CardElevatedBrush}"
+                                  Foreground="{StaticResource TextPrimaryBrush}"
+                                  BorderBrush="{StaticResource BorderDefaultBrush}"
+                                  BorderThickness="1"
+                                  Padding="14,12"
+                                  Style="{StaticResource ModernComboBox}"
+                                  ItemContainerStyle="{StaticResource ModernComboBoxItem}" />
 
-                <!-- Welcome Text -->
-                <TextBlock Text="مرحباً بعودتك"
-                           FontSize="18" FontWeight="SemiBold"
-                           Foreground="{StaticResource TextPrimaryBrush}"
-                           HorizontalAlignment="Center"
-                           Margin="0,20,0,4" />
-                <TextBlock Text="سجل دخولك للمتابعة"
-                           FontSize="13"
-                           Foreground="{StaticResource TextMutedBrush}"
-                           HorizontalAlignment="Center"
-                           Margin="0,0,0,30" />
+                        <Border Background="{StaticResource DangerGlassBrush}"
+                                BorderBrush="{StaticResource DangerBrush}"
+                                BorderThickness="1"
+                                CornerRadius="12"
+                                Padding="14,10"
+                                Margin="0,18,0,0"
+                                Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}">
+                            <TextBlock Text="{Binding ErrorMessage}" FontSize="12" Foreground="{StaticResource DangerLightBrush}" TextWrapping="Wrap" />
+                        </Border>
 
-                <!-- Username -->
-                <TextBlock Text="اسم المستخدم" FontSize="12"
-                           Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,8" />
-                <TextBox x:Name="UsernameBox"
-                         Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
-                         Height="48" FontSize="14"
-                         Background="{StaticResource CardBgBrush}" Foreground="{StaticResource TextPrimaryBrush}"
-                         BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1"
-                         Padding="14,12" CaretBrush="#FF55D66B"
-                         VerticalContentAlignment="Center" />
+                        <Button Command="{Binding LoginCommand}"
+                                CommandParameter="{Binding ElementName=PasswordBox}"
+                                Height="52"
+                                Margin="0,24,0,0"
+                                Style="{StaticResource PrimaryButtonStyle}">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" FlowDirection="RightToLeft">
+                                <TextBlock Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets" FontSize="15" Margin="0,0,0,0" />
+                                <TextBlock Text="{Binding LoginButtonText, FallbackValue=تسجيل الدخول}" FontSize="15" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </Button>
 
-                <!-- Password -->
-                <TextBlock Text="كلمة المرور" FontSize="12"
-                           Foreground="{StaticResource TextMutedBrush}" Margin="0,16,0,8" />
-                <Grid>
-                    <PasswordBox x:Name="PasswordBox"
-                                 Height="48" FontSize="14"
-                                 Background="{StaticResource CardBgBrush}" Foreground="{StaticResource TextPrimaryBrush}"
-                                 BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1"
-                                 Padding="14,12,45,12" 
-                                 PasswordChanged="PasswordBox_PasswordChanged"
-                                 Visibility="{Binding ShowPassword, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
-                    
-                    <TextBox x:Name="PasswordVisibleBox"
-                             Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
-                             Height="48" FontSize="14"
-                             Background="{StaticResource CardBgBrush}" Foreground="{StaticResource TextPrimaryBrush}"
-                             BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1"
-                             Padding="14,12,45,12"
-                             Visibility="{Binding ShowPassword, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    
-                    <ToggleButton IsChecked="{Binding ShowPassword}"
-                                  HorizontalAlignment="Right" 
-                                  VerticalAlignment="Center" 
-                                  Margin="0,0,10,0"
-                                  Background="Transparent"
-                                  BorderThickness="0"
-                                  Foreground="{StaticResource TextMutedBrush}"
-                                  Cursor="Hand"
-                                  FontSize="16">
-                        <TextBlock Text="&#xE890;" FontFamily="Segoe MDL2 Assets" />
-                        <ToggleButton.Style>
-                            <Style TargetType="ToggleButton">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="ToggleButton">
-                                            <ContentPresenter />
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsChecked" Value="True">
-                                        <Setter Property="Foreground" Value="{StaticResource PrimaryIndigoBrush}" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ToggleButton.Style>
-                    </ToggleButton>
-                </Grid>
-
-                <!-- Role -->
-                <TextBlock Text="الدور الوظيفي" FontSize="12"
-                           Foreground="{StaticResource TextMutedBrush}" Margin="0,16,0,8" />
-                <ComboBox ItemsSource="{Binding Roles}"
-                          SelectedItem="{Binding SelectedRole}"
-                          Height="48" FontSize="14"
-                          Background="{StaticResource CardBgBrush}" Foreground="{StaticResource TextPrimaryBrush}"
-                          BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1"
-                          Padding="14,12" Style="{StaticResource ModernComboBox}" ItemContainerStyle="{StaticResource ModernComboBoxItem}" />
-
-                <!-- Error Message -->
-                <Border Background="{StaticResource DangerGlassBrush}" CornerRadius="10"
-                        Padding="14,10" Margin="0,16,0,0"
-                        Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}">
-                    <TextBlock Text="{Binding ErrorMessage}"
-                               FontSize="12"
-                               Foreground="{StaticResource DangerBrush}"
-                               TextWrapping="Wrap" />
-                </Border>
-
-                <!-- Login Button -->
-                <Button Command="{Binding LoginCommand}"
-                        CommandParameter="{Binding ElementName=PasswordBox}"
-                        Height="52" Margin="0,24,0,0"
-                        Style="{StaticResource PrimaryButtonStyle}">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="{Binding LoginButtonText, FallbackValue=تسجيل الدخول}"
-                                   FontSize="15" />
-                        <TextBlock Text=" ->" FontSize="15"
-                                   Visibility="{Binding IsLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
+                        <Button Command="{Binding SkipLoginCommand}"
+                                Height="34"
+                                Margin="0,12,0,0"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="{StaticResource TextMutedBrush}"
+                                FontSize="11"
+                                Cursor="Hand"
+                                Visibility="{Binding ShowDevSkip, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Text="تخطي تسجيل الدخول (وضع التطوير)" TextDecorations="Underline" />
+                        </Button>
                     </StackPanel>
-                </Button>
 
-                <!-- Dev Skip Button -->
-                <Button Command="{Binding SkipLoginCommand}"
-                        Height="32" Margin="0,12,0,0"
-                        Background="Transparent" BorderThickness="0"
-                        Foreground="{StaticResource TextMutedBrush}" FontSize="11"
-                        Cursor="Hand"
-                        Visibility="{Binding ShowDevSkip, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <TextBlock Text="تخطي تسجيل الدخول (وضع التطوير)" TextDecorations="Underline" />
-                </Button>
+                    <StackPanel Grid.Row="2">
+                        <Border Background="#1822363E"
+                                BorderBrush="{StaticResource AccentBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="14"
+                                Padding="14,10"
+                                Margin="0,0,0,12">
+                            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Center">
+                                <TextBlock Text="&#xE7EF;"
+                                           FontFamily="Segoe MDL2 Assets"
+                                           Foreground="{StaticResource PrimaryCyanLightBrush}"
+                                           FontSize="15"
+                                           VerticalAlignment="Center" />
+                                <StackPanel Margin="10,0,0,0">
+                                    <TextBlock Text="تم عمل هذا البرنامج بواسطة"
+                                               Foreground="{StaticResource TextMutedBrush}"
+                                               FontSize="11"
+                                               HorizontalAlignment="Center" />
+                                    <TextBlock Text="المهندس حسام السبعاوي"
+                                               Foreground="{StaticResource PrimaryCyanLightBrush}"
+                                               FontSize="14"
+                                               FontWeight="Black"
+                                               HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
 
-                <!-- Version -->
-                <TextBlock Text="Version 1.0.0 | Al-Neda Systems"
-                           FontSize="10"
-                           Foreground="#FF484F58"
-                           HorizontalAlignment="Center"
-                           Margin="0,30,0,0" />
-            </StackPanel>
+                        <Border Background="{StaticResource CardElevatedBrush}"
+                                BorderBrush="{StaticResource BorderDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="12"
+                                Padding="12,9">
+                            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Center">
+                                <Ellipse Width="8" Height="8" Fill="{StaticResource PrimaryIndigoBrush}" VerticalAlignment="Center" />
+                                <TextBlock Text="الإصدار 1.0.0 - Al-Neda Systems" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="8,0,0,0" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
         </Grid>
     </Border>
 </Window>

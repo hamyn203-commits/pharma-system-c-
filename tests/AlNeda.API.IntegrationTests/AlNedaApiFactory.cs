@@ -29,6 +29,8 @@ public sealed class AlNedaApiFactory : WebApplicationFactory<Program>
         Environment.SetEnvironmentVariable("ALNEDA_JWT_ISSUER", "AlNeda.API.Test");
         Environment.SetEnvironmentVariable("ALNEDA_JWT_AUDIENCE", "AlNeda.Test");
         Environment.SetEnvironmentVariable("ALNEDA_JWT_EXPIRE_MINUTES", "60");
+        Environment.SetEnvironmentVariable("Database__Provider", "Sqlite");
+        Environment.SetEnvironmentVariable("Database__ConnectionString", $"Data Source={_dbPath}");
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -63,7 +65,8 @@ public sealed class AlNedaApiFactory : WebApplicationFactory<Program>
             using var scope = Services.CreateScope();
             var dbFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>();
             using var db = dbFactory.CreateDbContext();
-            db.Database.Migrate();
+            db.Database.EnsureCreated();
+            try { db.Database.ExecuteSqlRaw("ALTER TABLE MarketingOffers ADD COLUMN AdditionalImageUrls TEXT NOT NULL DEFAULT ''"); } catch { }
 
             if (!db.Users.Any(u => u.Username == "admin"))
             {
@@ -146,7 +149,11 @@ public static class ApiTestAuth
             Content = new StringContent(body, Encoding.UTF8, "application/json")
         };
         var res = await client.SendAsync(req);
-        if (!res.IsSuccessStatusCode) return null;
+        if (!res.IsSuccessStatusCode)
+        {
+            var err = await res.Content.ReadAsStringAsync();
+            throw new Exception($"Login failed with status {res.StatusCode} and body {err}");
+        }
         var dto = await res.Content.ReadFromJsonAsync<LoginResponseDto>(JsonRead);
         return string.IsNullOrEmpty(dto?.Token) ? null : dto.Token;
     }

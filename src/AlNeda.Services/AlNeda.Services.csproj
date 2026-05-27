@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="FirebaseAdmin" Version="3.1.0" />
     <ProjectReference Include="..\AlNeda.Core\AlNeda.Core.csproj" />
     <ProjectReference Include="..\AlNeda.Data\AlNeda.Data.csproj" />
     <ProjectReference Include="..\AlNeda.DomainLogic\AlNeda.DomainLogic.fsproj" />

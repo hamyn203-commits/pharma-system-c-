@@ -8,7 +8,7 @@
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         WindowStartupLocation="CenterOwner">
 
-    <Border Background="#161B22" CornerRadius="16" BorderBrush="#30363D" BorderThickness="1">
+    <Border Background="{StaticResource CardBgBrush}" CornerRadius="16" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1">
         <Grid Margin="32">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -16,19 +16,19 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="بيانات المستخدم" FontSize="24" FontWeight="Bold" Foreground="White" Margin="0,0,0,24"/>
+            <TextBlock Text="بيانات المستخدم" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,24"/>
 
             <StackPanel Grid.Row="1">
-                <TextBlock Text="اسم المستخدم" Foreground="#8B949E" Margin="0,0,0,8"/>
+                <TextBlock Text="اسم المستخدم" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,8"/>
                 <TextBox Text="{Binding Username}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,16"/>
 
-                <TextBlock Text="الدور الوظيفي" Foreground="#8B949E" Margin="0,0,0,8"/>
+                <TextBlock Text="الدور الوظيفي" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,8"/>
                 <ComboBox ItemsSource="{Binding Roles}" SelectedItem="{Binding SelectedRole}" Margin="0,0,0,16"/>
 
-                <TextBlock Text="🔑 كلمة المرور الجديدة" Foreground="#8B949E" Margin="0,0,0,8"/>
+                <TextBlock Text="&#xE716; كلمة المرور الجديدة" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,8"/>
                 <TextBox Text="{Binding Password}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,16"/>
 
-                <TextBlock Text="تأكيد كلمة المرور" Foreground="#8B949E" Margin="0,0,0,8"/>
+                <TextBlock Text="تأكيد كلمة المرور" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,8"/>
                 <TextBox Text="{Binding ConfirmPassword}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,16"/>
             </StackPanel>
 
@@ -37,20 +37,8 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="إلغاء" Click="Cancel_Click" Background="#30363D" Foreground="White" Margin="0,0,8,0" Padding="0,12" BorderThickness="0">
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="8"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
-                <Button Grid.Column="1" Content="حفظ التغييرات" Command="{Binding SaveCommand}" Background="#238636" Foreground="White" Padding="0,12" BorderThickness="0">
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="8"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
+                <Button Grid.Column="0" Content="إلغاء" Click="Cancel_Click" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,0" Padding="0,12"/>
+                <Button Grid.Column="1" Content="حفظ التغييرات" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButtonStyle}" Padding="0,12"/>
             </Grid>
         </Grid>
     </Border>

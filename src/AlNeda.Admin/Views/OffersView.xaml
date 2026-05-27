@@ -1,60 +1,157 @@
 <UserControl x:Class="AlNeda.Admin.Views.OffersView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:AlNeda.Admin.Converters"
              FlowDirection="RightToLeft"
              Background="{StaticResource PageBgBrush}">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <conv:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+        <conv:StringEmptyToVisibilityConverter x:Key="StringEmptyToVisibilityConverter" />
+        <conv:InverseBoolConverter x:Key="InverseBoolConverter" />
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+        <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <conv:StatusToColorConverter x:Key="StatusToColorConverter" />
+        <conv:StatusToBgConverter x:Key="StatusToBgConverter" />
+        <conv:BoolToStatusBrushConverter x:Key="BoolToStatusBrushConverter" />
+        <conv:BoolToStatusTextConverter x:Key="BoolToStatusTextConverter" />
+        <conv:BalanceColorConverter x:Key="BalanceColorConverter" />
+        <conv:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
+        <conv:BoolToTextConverter x:Key="BoolToTextConverter" />
+        <conv:PositiveNegativeToBrushConverter x:Key="PositiveNegativeToBrushConverter" />
+        <conv:ProfitMarginToBrushConverter x:Key="ProfitMarginToBrushConverter" />
+        <conv:TrendToBrushConverter x:Key="TrendToBrushConverter" />
+        <conv:TrendToForegroundConverter x:Key="TrendToForegroundConverter" />
 
-        <Style x:Key="OffSurface" TargetType="Border" BasedOn="{StaticResource CardStyle}">
-            <Setter Property="Padding" Value="14" />
+        <Style x:Key="SectionCard" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBgBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Margin" Value="0,0,0,10" />
         </Style>
 
-        <Style x:Key="OffLabel" TargetType="TextBlock">
+        <Style x:Key="SectionTitle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0,0,0,10" />
+        </Style>
+
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
-            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="0,0,8,0" />
+            <Setter Property="MinWidth" Value="75" />
         </Style>
 
-        <Style x:Key="OffPill" TargetType="Border">
-            <Setter Property="CornerRadius" Value="10" />
-            <Setter Property="Padding" Value="8,4" />
+        <!-- Enhanced Input with Focus Glow -->
+        <Style x:Key="EnhancedTextBox" TargetType="TextBox" BasedOn="{StaticResource ModernTextBox}">
+            <Setter Property="Height" Value="36" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Padding" Value="10,0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="EnhancedComboBox" TargetType="ComboBox" BasedOn="{StaticResource ModernComboBox}">
+            <Setter Property="Height" Value="36" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+
+        <!-- Offer List Item -->
+        <Style x:Key="OfferListItem" TargetType="Border">
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="Margin" Value="0,0,0,6" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="#1A334155" />
+        </Style>
+
+        <!-- DataGrid Alternating Row -->
+        <Style x:Key="AltDataGridRow" TargetType="DataGridRow" BasedOn="{StaticResource ModernDataGridRow}">
+            <Setter Property="Background" Value="Transparent" />
+            <Style.Triggers>
+                <Trigger Property="AlternationIndex" Value="1">
+                    <Setter Property="Background" Value="#0A38BDF8" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource PrimaryCyanGlassBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="StatPill" TargetType="Border">
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="10,6" />
             <Setter Property="Background" Value="#1822363E" />
             <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
     </UserControl.Resources>
 
-    <Grid Margin="20,14,20,14">
+    <Grid Margin="14,10,14,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" MinHeight="400" />
+            <RowDefinition Height="*" MinHeight="380" />
         </Grid.RowDefinitions>
 
-        <!-- ═══ Row 0: Header ═══ -->
-        <Border Grid.Row="0" Style="{StaticResource CardStyle}" Padding="16" Margin="0,0,0,10">
+        <!-- ═══ ROW 0: HEADER + ICON BUTTONS ═══ -->
+        <Border Grid.Row="0" Style="{StaticResource SectionCard}" Padding="14,12">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <StackPanel>
-                    <TextBlock Text="إدارة العروض" Foreground="{StaticResource TextPrimaryBrush}" FontSize="22" FontWeight="Bold" />
-                    <TextBlock Text="إنشاء العروض ومراجعة ظهورها على تطبيق الصيدلي ومتابعة الأداء"
-                               Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,4,0,0" />
+                <StackPanel VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                        <TextBlock Text="&#xE7BF;" FontFamily="Segoe MDL2 Assets" FontSize="20"
+                                   Foreground="{StaticResource PrimaryCyanBrush}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <StackPanel>
+                            <TextBlock Text="إدارة العروض" Foreground="{StaticResource TextPrimaryBrush}"
+                                       FontSize="20" FontWeight="Bold" />
+                            <TextBlock Text="صمم عروضك، استهدف صيدلياتك، وتابع الأثر مباشرة"
+                                       Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,3,0,0" />
+                        </StackPanel>
+                    </StackPanel>
                 </StackPanel>
+
                 <WrapPanel Grid.Column="1" VerticalAlignment="Center" FlowDirection="RightToLeft">
-                    <Button Content="+ عرض جديد" Command="{Binding NewOfferCommand}" Style="{StaticResource PrimaryButtonStyle}" Height="36" Padding="18,0" Margin="6,0,0,0" />
-                    <Button Content="تحديث" Command="{Binding LoadCommand}" Style="{StaticResource SecondaryButtonStyle}" Height="36" Padding="14,0" Margin="6,0,0,0" />
-                    <Button Content="تصدير" Command="{Binding ExportReportCommand}" Style="{StaticResource SecondaryButtonStyle}" Height="36" Padding="14,0" />
+                    <Button Command="{Binding NewOfferCommand}"
+                            Style="{StaticResource PrimaryButtonStyle}" Height="38" Padding="16,0"
+                            Margin="0,0,6,0" FontSize="13" ToolTip="إنشاء عرض ترويجي جديد">
+                        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                            <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" FontSize="14" />
+                            <TextBlock Text="عرض جديد" Margin="6,0,0,0" />
+                        </StackPanel>
+                    </Button>
+                    <Button Command="{Binding LoadCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}" Height="38" Padding="14,0"
+                            Margin="0,0,6,0" FontSize="13" ToolTip="إعادة تحميل قائمة العروض">
+                        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                            <TextBlock Text="&#xE72D;" FontFamily="Segoe MDL2 Assets" FontSize="14" />
+                            <TextBlock Text="تحديث" Margin="6,0,0,0" />
+                        </StackPanel>
+                    </Button>
+                    <Button Command="{Binding ExportReportCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}" Height="38" Padding="14,0"
+                            FontSize="13" ToolTip="تصدير تقرير العروض إلى ملف CSV">
+                        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                            <TextBlock Text="&#xE7C3;" FontFamily="Segoe MDL2 Assets" FontSize="14" />
+                            <TextBlock Text="تصدير" Margin="6,0,0,0" />
+                        </StackPanel>
+                    </Button>
                 </WrapPanel>
             </Grid>
         </Border>
 
-        <!-- ═══ Row 1: Stat Cards ═══ -->
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding StatCards}" Margin="0,0,0,10">
+        <!-- ═══ ROW 1: STAT CARDS ═══ -->
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding StatCards}" Margin="0,0,0,8">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Columns="5" />
@@ -62,20 +159,22 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border Style="{StaticResource CardStyle}" Padding="12" Margin="0,0,8,0">
+                    <Border Style="{StaticResource SectionCard}" Padding="14" Margin="0,0,6,0">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="{Binding Value}" Foreground="{Binding Accent}" FontSize="22" FontWeight="Black" />
-                                <TextBlock Text="{Binding Title}" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,2,0,0" />
+                                <TextBlock Text="{Binding Value}" Foreground="{Binding Accent}"
+                                           FontSize="22" FontWeight="Black" />
+                                <TextBlock Text="{Binding Title}" Foreground="{StaticResource TextMutedBrush}"
+                                           FontSize="11" Margin="0,3,0,0" />
                             </StackPanel>
-                            <Border Grid.Column="1" Width="34" Height="34" CornerRadius="10"
+                            <Border Grid.Column="1" Width="34" Height="34" CornerRadius="9"
                                     Background="#1722363E" BorderBrush="{Binding Accent}" BorderThickness="1">
                                 <TextBlock Text="{Binding Icon}" FontFamily="Segoe MDL2 Assets"
-                                           Foreground="{Binding Accent}" FontSize="15"
+                                           Foreground="{Binding Accent}" FontSize="14"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Border>
                         </Grid>
@@ -84,16 +183,24 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <!-- ═══ Row 2: Three-column layout ═══ -->
-        <Grid Grid.Row="2">
+        <!-- ═══ ROW 2: 3-COLUMN LAYOUT ═══ -->
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+        <Grid MinWidth="760">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="280" MinWidth="220" />
-                <ColumnDefinition Width="*" MinWidth="420" />
-                <ColumnDefinition Width="300" MinWidth="240" />
+                <ColumnDefinition Width="270" MinWidth="200" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" MinWidth="320" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="290" MinWidth="220" MaxWidth="380" />
             </Grid.ColumnDefinitions>
 
-            <!-- ═══ Column 0: Offers List ═══ -->
-            <Border Grid.Column="0" Style="{StaticResource CardStyle}" Padding="12" Margin="0,0,10,0">
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Center"
+                          VerticalAlignment="Stretch" Background="Transparent" ShowsPreview="True" />
+            <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Center"
+                          VerticalAlignment="Stretch" Background="Transparent" ShowsPreview="True" />
+
+            <!-- ═══ COLUMN 0: OFFER LIST SIDEBAR ═══ -->
+            <Border Grid.Column="0" Style="{StaticResource SectionCard}" Padding="10">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -101,13 +208,16 @@
                         <RowDefinition Height="*" MinHeight="120" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="العروض الحالية" Foreground="{StaticResource TextPrimaryBrush}"
-                               FontSize="14" FontWeight="Bold" Margin="0,0,0,8" />
+                    <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,0,0,8">
+                        <TextBlock Text="&#xE8FD;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                   Foreground="{StaticResource PrimaryCyanBrush}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                        <TextBlock Text="العروض الحالية" Foreground="{StaticResource TextPrimaryBrush}"
+                                   FontSize="13" FontWeight="Bold" />
+                    </StackPanel>
 
-                    <StackPanel Grid.Row="1" Margin="0,0,0,10">
+                    <StackPanel Grid.Row="1" Margin="0,0,0,8">
                         <TextBox Text="{Binding OfferSearch, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBox}" Height="34"
-                                 Tag="ابحث عن عرض..." />
+                                 Style="{StaticResource EnhancedTextBox}" Tag="ابحث عن عرض..." />
                         <Grid Margin="0,6,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -115,9 +225,9 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <ComboBox ItemsSource="{Binding StatusFilters}" SelectedItem="{Binding StatusFilter}"
-                                      Style="{StaticResource ModernComboBox}" Height="32" />
+                                      Style="{StaticResource EnhancedComboBox}" />
                             <ComboBox Grid.Column="2" ItemsSource="{Binding DateFilters}" SelectedItem="{Binding DateFilter}"
-                                      Style="{StaticResource ModernComboBox}" Height="32" />
+                                      Style="{StaticResource EnhancedComboBox}" />
                         </Grid>
                     </StackPanel>
 
@@ -130,55 +240,125 @@
                                                 CommandParameter="{Binding}"
                                                 Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand"
                                                 Margin="0,0,0,8">
-                                            <Border Background="{Binding CardBackground}"
-                                                    BorderBrush="{Binding ActiveBorder}" BorderThickness="1"
-                                                    CornerRadius="12" Padding="10">
-                                                <StackPanel>
-                                                    <Grid>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                        </Grid.ColumnDefinitions>
-                                                        <TextBlock Text="{Binding Title}" Foreground="{StaticResource TextPrimaryBrush}"
-                                                                   FontWeight="Bold" FontSize="13" TextWrapping="Wrap" />
-                                                        <Border Grid.Column="1" Background="{Binding Accent}" CornerRadius="8" Padding="6,3" Margin="6,0,0,0">
-                                                            <TextBlock Text="{Binding Status}" Foreground="White" FontSize="10" FontWeight="Bold" />
-                                                        </Border>
+                                            <Border Style="{StaticResource OfferListItem}" Background="{Binding CardBackground}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="3" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Grid.Column="0" CornerRadius="1.5,0,0,1.5"
+                                                            Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" />
+                                                    <Grid Grid.Column="1" Margin="6,0,0,0">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+
+                                                        <!-- Title + Status badge -->
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="40" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Border Grid.Column="0" Width="36" Height="36" CornerRadius="8"
+                                                                    Background="#1822363E" BorderThickness="1"
+                                                                    BorderBrush="{Binding Accent}">
+                                                                <TextBlock Text="&#xE7BF;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                                                           Foreground="{Binding Accent}"
+                                                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                            </Border>
+                                                            <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                                                <TextBlock Text="{Binding Title}"
+                                                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                                                           FontWeight="Bold" FontSize="12"
+                                                                           TextTrimming="CharacterEllipsis" MaxWidth="140"
+                                                                           ToolTip="{Binding Title}" />
+                                                                <TextBlock Text="{Binding TypeLabel}"
+                                                                           Foreground="{StaticResource TextMutedBrush}"
+                                                                           FontSize="10" />
+                                                            </StackPanel>
+                                                            <Border Grid.Column="2" CornerRadius="6" Padding="6,2"
+                                                                    VerticalAlignment="Top">
+                                                                <Border.Style>
+                                                                    <Style TargetType="Border">
+                                                                        <Setter Property="Background" Value="#181E293B" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Status}" Value="منشور">
+                                                                                <Setter Property="Background" Value="{StaticResource SuccessGlassBrush}" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Border.Style>
+                                                                <TextBlock Text="{Binding Status}" FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{StaticResource TextSecondaryBrush}" />
+                                                            </Border>
+                                                        </Grid>
+
+                                                        <!-- Progress Bar -->
+                                                        <ProgressBar Grid.Row="1" Value="{Binding ProgressPercent}" Maximum="100"
+                                                                     Height="3" Margin="0,5,0,0"
+                                                                     BorderThickness="0" Background="#1A334155"
+                                                                     Foreground="{Binding ProgressColor}" />
+                                                        <TextBlock Grid.Row="1" Text="{Binding RemainingDaysLabel}"
+                                                                   FontSize="9" Foreground="{StaticResource TextMutedBrush}"
+                                                                   Margin="0,2,0,0" HorizontalAlignment="Left" />
+
+                                                        <!-- Stats mini-row -->
+                                                        <UniformGrid Grid.Row="2" Columns="3" Margin="0,3,0,0">
+                                                            <StackPanel>
+                                                                <TextBlock Text="{Binding Views}" FontWeight="Bold" FontSize="11"
+                                                                           Foreground="{StaticResource TextPrimaryBrush}" />
+                                                                <TextBlock Text="مشاهدات" FontSize="9"
+                                                                           Foreground="{StaticResource TextMutedBrush}" />
+                                                            </StackPanel>
+                                                            <StackPanel>
+                                                                <TextBlock Text="{Binding Orders}" FontWeight="Bold" FontSize="11"
+                                                                           Foreground="{StaticResource TextPrimaryBrush}" />
+                                                                <TextBlock Text="طلبات" FontSize="9"
+                                                                           Foreground="{StaticResource TextMutedBrush}" />
+                                                            </StackPanel>
+                                                            <StackPanel>
+                                                                <TextBlock Text="{Binding Conversion}" FontWeight="Bold" FontSize="11"
+                                                                           Foreground="{StaticResource SuccessBrush}" />
+                                                                <TextBlock Text="تحويل" FontSize="9"
+                                                                           Foreground="{StaticResource TextMutedBrush}" />
+                                                            </StackPanel>
+                                                        </UniformGrid>
                                                     </Grid>
-                                                    <TextBlock Text="{Binding TypeLabel}" Foreground="{StaticResource PrimaryCyanBrush}" FontSize="10" Margin="0,6,0,0" />
-                                                    <UniformGrid Columns="3" Margin="0,8,0,0">
-                                                        <StackPanel>
-                                                            <TextBlock Text="{Binding Views}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="Bold" FontSize="12" />
-                                                            <TextBlock Text="مشاهدات" Foreground="{StaticResource TextMutedBrush}" FontSize="9" />
-                                                        </StackPanel>
-                                                        <StackPanel>
-                                                            <TextBlock Text="{Binding Orders}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="Bold" FontSize="12" />
-                                                            <TextBlock Text="طلبات" Foreground="{StaticResource TextMutedBrush}" FontSize="9" />
-                                                        </StackPanel>
-                                                        <StackPanel>
-                                                            <TextBlock Text="{Binding Conversion}" Foreground="{StaticResource SuccessBrush}" FontWeight="Bold" FontSize="12" />
-                                                            <TextBlock Text="تحويل" Foreground="{StaticResource TextMutedBrush}" FontSize="9" />
-                                                        </StackPanel>
-                                                    </UniformGrid>
-                                                    <TextBlock Text="{Binding EndsAtLabel}" Foreground="{StaticResource TextMutedBrush}" FontSize="10" Margin="0,6,0,0" />
-                                                </StackPanel>
+                                                </Grid>
                                             </Border>
                                         </Button>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
 
-                            <!-- Empty state -->
-                            <TextBlock Text="&#xE7C1; لا توجد عروض" FontFamily="Segoe MDL2 Assets"
-                                       Foreground="{StaticResource TextMutedBrush}" FontSize="14"
-                                       HorizontalAlignment="Center" Margin="0,40,0,0" Opacity="0.5" />
+                            <!-- Empty State -->
+                            <StackPanel HorizontalAlignment="Center" Margin="0,40,0,0">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding FilteredOffers.Count}" Value="0">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                                <TextBlock Text="&#xE7C1;" FontFamily="Segoe MDL2 Assets"
+                                           Foreground="{StaticResource TextMutedBrush}" FontSize="28"
+                                           HorizontalAlignment="Center" Opacity="0.4" />
+                                <TextBlock Text="لا توجد عروض بعد" Foreground="{StaticResource TextMutedBrush}"
+                                           FontSize="12" HorizontalAlignment="Center" Margin="0,6,0,0" />
+                            </StackPanel>
                         </Grid>
                     </ScrollViewer>
                 </Grid>
             </Border>
 
-            <!-- ═══ Column 1: Editor (main content) ═══ -->
-            <Border Grid.Column="1" Style="{StaticResource CardStyle}" Padding="0" Margin="0,0,10,0">
+            <!-- ═══ COLUMN 2: EDITOR ═══ -->
+            <Border Grid.Column="2" Style="{StaticResource SectionCard}" Padding="0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -186,9 +366,10 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <!-- Editor steps header -->
-                    <Border Grid.Row="0" Background="{StaticResource GlassCardBrush}" BorderBrush="{StaticResource BorderDefaultBrush}"
-                            BorderThickness="0,0,0,1" Padding="12" CornerRadius="12,12,0,0">
+                    <!-- Editor Steps -->
+                    <Border Grid.Row="0" Background="{StaticResource GlassCardBrush}"
+                            BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="0,0,0,1"
+                            Padding="12,8" CornerRadius="14,14,0,0">
                         <ItemsControl ItemsSource="{Binding EditorSteps}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -198,10 +379,13 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Border Background="{Binding Background}" BorderBrush="{Binding Accent}"
-                                            BorderThickness="1" CornerRadius="10" Padding="8,5" Margin="3,0">
-                                        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Center">
-                                            <TextBlock Text="{Binding Number}" Foreground="{Binding Accent}" FontWeight="Black" FontSize="12" />
-                                            <TextBlock Text="{Binding Title}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="11" FontWeight="SemiBold" Margin="5,0,0,0" />
+                                            BorderThickness="1" CornerRadius="8" Padding="6,4" Margin="2,0">
+                                        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft"
+                                                    HorizontalAlignment="Center">
+                                            <TextBlock Text="{Binding Number}" Foreground="{Binding Accent}"
+                                                       FontWeight="Black" FontSize="11" />
+                                            <TextBlock Text="{Binding Title}" Foreground="{StaticResource TextPrimaryBrush}"
+                                                       FontSize="10" FontWeight="SemiBold" Margin="4,0,0,0" />
                                         </StackPanel>
                                     </Border>
                                 </DataTemplate>
@@ -209,106 +393,128 @@
                         </ItemsControl>
                     </Border>
 
-                    <!-- Scrollable editor body -->
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="12">
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="14,10">
                         <StackPanel>
-                            <!-- Section: Basic Info (compact 2-col) -->
-                            <Border Style="{StaticResource CardStyle}" Padding="12" Margin="0,0,0,8">
+                            <!-- Section: Offer Data -->
+                            <Border Style="{StaticResource SectionCard}" Padding="14">
                                 <StackPanel>
-                                    <TextBlock Text="بيانات العرض" Foreground="{StaticResource TextPrimaryBrush}"
-                                               FontSize="14" FontWeight="Bold" Margin="0,0,0,10" />
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
+                                    <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,0,0,10">
+                                        <TextBlock Text="&#xE8C2;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                                   Foreground="{StaticResource PrimaryCyanBrush}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                        <TextBlock Text="بيانات العرض" Style="{StaticResource SectionTitle}" Margin="0" />
+                                    </StackPanel>
+
+                                    <Grid Margin="0,0,0,10">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="100" />
+                                            <ColumnDefinition Width="80" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="12" />
-                                            <ColumnDefinition Width="100" />
+                                            <ColumnDefinition Width="75" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="12" />
-                                            <ColumnDefinition Width="90" />
+                                            <ColumnDefinition Width="65" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="العنوان" Style="{StaticResource FieldLabel}" />
+                                        <TextBox Grid.Column="1" Text="{Binding OfferTitle, UpdateSourceTrigger=PropertyChanged}"
+                                                 Style="{StaticResource EnhancedTextBox}" Tag="اكتب عنوان العرض هنا" />
+                                        <TextBlock Grid.Column="3" Text="النوع" Style="{StaticResource FieldLabel}" />
+                                        <ComboBox Grid.Column="4" ItemsSource="{Binding OfferTypes}" SelectedItem="{Binding OfferType}"
+                                                  Style="{StaticResource EnhancedComboBox}" />
+                                        <TextBlock Grid.Column="6" Text="الحالة" Style="{StaticResource FieldLabel}" />
+                                        <ComboBox Grid.Column="7" ItemsSource="{Binding OfferStates}" SelectedItem="{Binding OfferState}"
+                                                  Style="{StaticResource EnhancedComboBox}" />
+                                    </Grid>
 
-                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="عنوان العرض" Style="{StaticResource OffLabel}" />
-                                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding OfferTitle, UpdateSourceTrigger=PropertyChanged}"
-                                                 Style="{StaticResource ModernTextBox}" Height="34" Margin="0,0,0,6" />
-
-                                        <TextBlock Grid.Row="0" Grid.Column="3" Text="نوع العرض" Style="{StaticResource OffLabel}" />
-                                        <ComboBox Grid.Row="0" Grid.Column="4" ItemsSource="{Binding OfferTypes}" SelectedItem="{Binding OfferType}"
-                                                  Style="{StaticResource ModernComboBox}" Height="34" Margin="0,0,0,6" />
-
-                                        <TextBlock Grid.Row="0" Grid.Column="6" Text="الحالة" Style="{StaticResource OffLabel}" />
-                                        <ComboBox Grid.Row="0" Grid.Column="7" ItemsSource="{Binding OfferStates}" SelectedItem="{Binding OfferState}"
-                                                  Style="{StaticResource ModernComboBox}" Height="34" Margin="0,0,0,6" />
-
-                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="السطر المختصر" Style="{StaticResource OffLabel}" />
-                                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding OfferSubtitle, UpdateSourceTrigger=PropertyChanged}"
-                                                 Style="{StaticResource ModernTextBox}" Height="34" />
-
-                                        <TextBlock Grid.Row="1" Grid.Column="3" Text="تاريخ البداية" Style="{StaticResource OffLabel}" />
-                                        <DatePicker Grid.Row="1" Grid.Column="4" SelectedDate="{Binding StartsAt}" Height="34" />
-
-                                        <TextBlock Grid.Row="1" Grid.Column="6" Text="تاريخ النهاية" Style="{StaticResource OffLabel}" />
-                                        <DatePicker Grid.Row="1" Grid.Column="7" SelectedDate="{Binding EndsAt}" Height="34" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="80" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="12" />
+                                            <ColumnDefinition Width="75" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="12" />
+                                            <ColumnDefinition Width="75" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="أختصار" Style="{StaticResource FieldLabel}" />
+                                        <TextBox Grid.Column="1" Text="{Binding OfferSubtitle, UpdateSourceTrigger=PropertyChanged}"
+                                                 Style="{StaticResource EnhancedTextBox}" Tag="سطر مختصر يظهر تحت العنوان" />
+                                        <TextBlock Grid.Column="3" Text="البداية" Style="{StaticResource FieldLabel}" />
+                                        <DatePicker Grid.Column="4" SelectedDate="{Binding StartsAt}" Height="36" FontSize="12" />
+                                        <TextBlock Grid.Column="6" Text="النهاية" Style="{StaticResource FieldLabel}" />
+                                        <DatePicker Grid.Column="7" SelectedDate="{Binding EndsAt}" Height="36" FontSize="12" />
                                     </Grid>
                                 </StackPanel>
                             </Border>
 
-                            <!-- Section: Products (compact DataGrid) -->
-                            <Border Style="{StaticResource CardStyle}" Padding="12" Margin="0,0,0,8">
+                            <!-- Section: Products -->
+                            <Border Style="{StaticResource SectionCard}" Padding="14">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <DockPanel>
-                                        <TextBlock Text="المنتجات المرتبطة" Foreground="{StaticResource TextPrimaryBrush}"
-                                                   FontSize="14" FontWeight="Bold" DockPanel.Dock="Right" />
-                                        <Button Content="+ إضافة منتج" Command="{Binding AddOfferProductCommand}"
-                                                Style="{StaticResource SecondaryButtonStyle}" Width="100" Height="30" HorizontalAlignment="Left" FontSize="11" />
-                                    </DockPanel>
-                                    <DataGrid Grid.Row="1"
-                                              ItemsSource="{Binding OfferProducts}"
-                                              AutoGenerateColumns="False"
-                                              CanUserAddRows="False"
+                                    <Grid Margin="0,0,0,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                                            <TextBlock Text="&#xE719;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                                       Foreground="{StaticResource PrimaryCyanBrush}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                            <TextBlock Text="المنتجات المرتبطة" Style="{StaticResource SectionTitle}" Margin="0" />
+                                        </StackPanel>
+                                        <Button Grid.Column="1" Content="+ إضافة منتج" Command="{Binding AddOfferProductCommand}"
+                                                Style="{StaticResource SecondaryButtonStyle}" Width="110" Height="30"
+                                                FontSize="11" Padding="8,0" ToolTip="إضافة منتج من المخزون إلى العرض" />
+                                    </Grid>
+                                    <DataGrid Grid.Row="1" ItemsSource="{Binding OfferProducts}"
+                                              AutoGenerateColumns="False" CanUserAddRows="False"
                                               HeadersVisibility="Column"
-                                              MinHeight="120" MaxHeight="200"
+                                              MinHeight="80" MaxHeight="200"
+                                              AlternationCount="2"
                                               Style="{StaticResource ModernDataGrid}"
                                               CellStyle="{StaticResource ModernDataGridCell}"
-                                              RowStyle="{StaticResource ModernDataGridRow}"
+                                              RowStyle="{StaticResource AltDataGridRow}"
                                               ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}"
-                                              GridLinesVisibility="None"
-                                              Margin="0,8,0,0">
+                                              GridLinesVisibility="None">
                                         <DataGrid.Columns>
-                                            <DataGridTemplateColumn Header="المنتج" Width="1.5*" MinWidth="120">
+                                            <DataGridTemplateColumn Header="المنتج" Width="1.5*" MinWidth="100">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <ComboBox ItemsSource="{Binding DataContext.ProductNames, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                   SelectedItem="{Binding ProductName, UpdateSourceTrigger=PropertyChanged}"
-                                                                  Style="{StaticResource ModernComboBox}" Height="30" />
+                                                                  Style="{StaticResource EnhancedComboBox}" Height="30" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
-                                            <DataGridTextColumn Header="كمية العرض" Binding="{Binding OfferQuantity, UpdateSourceTrigger=PropertyChanged}" Width="0.6*" MinWidth="60" />
-                                            <DataGridTextColumn Header="قبل الخصم" Binding="{Binding OldPrice, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}" Width="0.6*" MinWidth="60" />
-                                            <DataGridTextColumn Header="بعد الخصم" Binding="{Binding NewPrice, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}" Width="0.6*" MinWidth="60" />
-                                            <DataGridTextColumn Header="الخصم" Binding="{Binding DiscountLabel}" Width="0.5*" MinWidth="50" IsReadOnly="True" />
-                                            <DataGridTextColumn Header="حد أدنى" Binding="{Binding MinimumOrder, UpdateSourceTrigger=PropertyChanged}" Width="0.6*" MinWidth="50" />
-                                            <DataGridTextColumn Header="هدية" Binding="{Binding GiftProduct, UpdateSourceTrigger=PropertyChanged}" Width="0.6*" MinWidth="50" />
-                                            <DataGridTemplateColumn Header="" Width="48" MinWidth="44">
+                                            <DataGridTemplateColumn Header="السعر" Width="*" MinWidth="80">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                                                            <TextBlock Text="{Binding NewPrice, StringFormat=N0}"
+                                                                       Foreground="{StaticResource SuccessBrush}"
+                                                                       FontWeight="Bold" FontSize="11" />
+                                                            <TextBlock Text="{Binding OldPrice, StringFormat=' (N0)'}"
+                                                                       Foreground="{StaticResource TextMutedBrush}"
+                                                                       FontSize="10" Margin="4,0,0,0"
+                                                                       TextDecorations="Strikethrough" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTextColumn Header="خصم" Binding="{Binding DiscountLabel}" Width="50" IsReadOnly="True" FontSize="11" />
+                                            <DataGridTextColumn Header="كمية" Binding="{Binding OfferQuantity, UpdateSourceTrigger=PropertyChanged}" Width="45" FontSize="11" />
+                                            <DataGridTemplateColumn Header="" Width="36">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <Button Content="&#xE74D;"
                                                                 Command="{Binding DataContext.RemoveOfferProductCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                 CommandParameter="{Binding}"
                                                                 Style="{StaticResource ActionButtonStyle}"
-                                                                Width="30" Height="26"
-                                                                FontFamily="Segoe MDL2 Assets" FontSize="11"
-                                                                Foreground="{StaticResource DangerBrush}" />
+                                                                Width="26" Height="24" FontFamily="Segoe MDL2 Assets" FontSize="11"
+                                                                Foreground="{StaticResource DangerBrush}" ToolTip="إزالة المنتج" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -317,103 +523,116 @@
                                 </Grid>
                             </Border>
 
-                            <!-- Section: Targeting + Readiness (side by side) -->
-                            <Grid Margin="0,0,0,8">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="10" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Border Style="{StaticResource CardStyle}" Padding="12">
-                                    <StackPanel>
-                                        <TextBlock Text="الاستهداف" Foreground="{StaticResource TextPrimaryBrush}"
-                                                   FontSize="14" FontWeight="Bold" Margin="0,0,0,8" />
-                                        <ItemsControl ItemsSource="{Binding TargetRules}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <WrapPanel />
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <RadioButton Content="{Binding Label}"
-                                                                 GroupName="TargetRules"
-                                                                 IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                                                                 Foreground="{StaticResource TextSecondaryBrush}"
-                                                                 Margin="0,0,10,6" FontSize="12" />
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                        <Border Style="{StaticResource OffPill}" Margin="0,6,0,0" HorizontalAlignment="Right">
-                                            <TextBlock Text="{Binding TargetedPharmaciesLabel}" Foreground="{StaticResource SuccessBrush}" FontWeight="Bold" FontSize="11" />
-                                        </Border>
-                                    </StackPanel>
-                                </Border>
-                                <Border Grid.Column="2" Style="{StaticResource CardStyle}" Padding="12">
-                                    <StackPanel>
-                                        <TextBlock Text="فحص جاهزية النشر" Foreground="{StaticResource TextPrimaryBrush}"
-                                                   FontSize="14" FontWeight="Bold" Margin="0,0,0,8" />
-                                        <ItemsControl ItemsSource="{Binding ReadinessChecks}">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,0,0,4">
-                                                        <TextBlock Text="{Binding Icon}" FontFamily="Segoe MDL2 Assets"
-                                                                   Foreground="{Binding Accent}" FontSize="12" Width="20" />
-                                                        <TextBlock Text="{Binding Message}" Foreground="{StaticResource TextSecondaryBrush}"
-                                                                   FontSize="11" TextWrapping="Wrap" />
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </StackPanel>
-                                </Border>
-                            </Grid>
-
-                            <!-- Section: Image + Description (compact) -->
-                            <Border Style="{StaticResource CardStyle}" Padding="12" Margin="0,0,0,8">
+                            <!-- Section: Targeting -->
+                            <Border Style="{StaticResource SectionCard}" Padding="14">
                                 <StackPanel>
-                                    <DockPanel>
-                                        <TextBlock Text="الصورة والوصف" Foreground="{StaticResource TextPrimaryBrush}"
-                                                   FontSize="14" FontWeight="Bold" DockPanel.Dock="Right" />
-                                        <Button Content="رفع صورة" Command="{Binding ChooseImageCommand}"
-                                                Style="{StaticResource SecondaryButtonStyle}" Height="30" Width="100" FontSize="11" />
-                                    </DockPanel>
-                                    <TextBlock Text="{Binding ImageShortLabel}" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,4,0,0" />
-                                    <TextBlock Text="مقاسات: Banner 1920x700 | Card 1080x1350 | Thumbnail 600x600"
-                                               Foreground="{StaticResource WarningBrush}" FontSize="10" Margin="0,4,0,10" />
-                                    <Grid>
+                                    <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,0,0,8">
+                                        <TextBlock Text="&#xE716;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                                   Foreground="{StaticResource PrimaryCyanBrush}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                        <TextBlock Text="الاستهداف" Style="{StaticResource SectionTitle}" Margin="0" />
+                                    </StackPanel>
+                                    <ItemsControl ItemsSource="{Binding TargetRules}" Margin="0,0,0,6">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <RadioButton Content="{Binding Label}" GroupName="TargetRules"
+                                                             IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                             Foreground="{StaticResource TextSecondaryBrush}"
+                                                             Margin="0,0,12,5" FontSize="12" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <Border Style="{StaticResource StatPill}" HorizontalAlignment="Right">
+                                        <TextBlock Text="{Binding TargetedPharmaciesLabel}"
+                                                   Foreground="{StaticResource SuccessBrush}" FontWeight="Bold" FontSize="11" />
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Section: Readiness -->
+                            <Border Style="{StaticResource SectionCard}" Padding="14">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,0,0,8">
+                                        <TextBlock Text="&#xE930;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                                   Foreground="{StaticResource SuccessBrush}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                        <TextBlock Text="فحص جاهزية النشر" Style="{StaticResource SectionTitle}" Margin="0" />
+                                    </StackPanel>
+                                    <ItemsControl ItemsSource="{Binding ReadinessChecks}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,0,0,4">
+                                                    <TextBlock Text="{Binding Icon}" FontFamily="Segoe MDL2 Assets"
+                                                               Foreground="{Binding Accent}" FontSize="13" Width="22" />
+                                                    <TextBlock Text="{Binding Message}" Foreground="{StaticResource TextSecondaryBrush}"
+                                                               FontSize="12" TextWrapping="Wrap" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Section: Image & Description -->
+                            <Border Style="{StaticResource SectionCard}" Padding="14">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,8">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                                            <TextBlock Text="&#xE722;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                                       Foreground="{StaticResource PrimaryCyanBrush}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                            <TextBlock Text="الصورة والوصف" Style="{StaticResource SectionTitle}" Margin="0" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                        <Button Grid.Column="1" Content="تغيير الصورة" Command="{Binding ChooseImageCommand}"
+                                                Style="{StaticResource SecondaryButtonStyle}" Height="28"
+                                                FontSize="11" Padding="10,0" ToolTip="اختر صورة للعرض من جهازك" />
+                                    </Grid>
+                                    <TextBlock Text="{Binding ImageShortLabel}" Foreground="{StaticResource TextMutedBrush}"
+                                               FontSize="11" Margin="0,0,0,6" TextWrapping="Wrap" />
+                                    <Grid Margin="0,0,0,8">
+                                        <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="10" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
                                         <StackPanel>
-                                            <TextBlock Text="وصف العرض" Style="{StaticResource OffLabel}" Margin="0,0,0,4" />
+                                            <TextBlock Text="الوصف" Style="{StaticResource FieldLabel}" Margin="0,0,0,5" />
                                             <TextBox Text="{Binding OfferDescription, UpdateSourceTrigger=PropertyChanged}"
-                                                     Style="{StaticResource ModernTextBox}" MinHeight="56" TextWrapping="Wrap" AcceptsReturn="True" FontSize="11" />
+                                                     Style="{StaticResource EnhancedTextBox}" Height="65"
+                                                     TextWrapping="Wrap" AcceptsReturn="True"
+                                                     VerticalContentAlignment="Top" Tag="وصف تفصيلي للعرض" />
                                         </StackPanel>
                                         <StackPanel Grid.Column="2">
-                                            <TextBlock Text="شروط العرض" Style="{StaticResource OffLabel}" Margin="0,0,0,4" />
+                                            <TextBlock Text="الشروط" Style="{StaticResource FieldLabel}" Margin="0,0,0,5" />
                                             <TextBox Text="{Binding OfferTerms, UpdateSourceTrigger=PropertyChanged}"
-                                                     Style="{StaticResource ModernTextBox}" MinHeight="56" TextWrapping="Wrap" AcceptsReturn="True" FontSize="11" />
-                                        </StackPanel>
-                                        <StackPanel Grid.Column="4">
-                                            <TextBlock Text="ملاحظات داخلية" Style="{StaticResource OffLabel}" Margin="0,0,0,4" />
-                                            <TextBox Text="{Binding InternalNotes, UpdateSourceTrigger=PropertyChanged}"
-                                                     Style="{StaticResource ModernTextBox}" MinHeight="56" TextWrapping="Wrap" AcceptsReturn="True" FontSize="11" />
+                                                     Style="{StaticResource EnhancedTextBox}" Height="65"
+                                                     TextWrapping="Wrap" AcceptsReturn="True"
+                                                     VerticalContentAlignment="Top" Tag="شروط وأحكام العرض" />
                                         </StackPanel>
                                     </Grid>
+                                    <TextBox Text="{Binding InternalNotes, UpdateSourceTrigger=PropertyChanged}"
+                                             Style="{StaticResource EnhancedTextBox}" Height="55"
+                                             TextWrapping="Wrap" AcceptsReturn="True"
+                                             VerticalContentAlignment="Top"
+                                             Tag="ملاحظات داخلية (لا تظهر للصيدليات)" />
                                 </StackPanel>
                             </Border>
 
                             <!-- Section: Analytics -->
-                            <Border Style="{StaticResource CardStyle}" Padding="12">
+                            <Border Style="{StaticResource SectionCard}" Padding="14">
                                 <StackPanel>
-                                    <TextBlock Text="تحليلات العرض" Foreground="{StaticResource TextPrimaryBrush}"
-                                               FontSize="14" FontWeight="Bold" Margin="0,0,0,8" />
-                                    <ItemsControl ItemsSource="{Binding AnalyticsCards}">
+                                    <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,0,0,8">
+                                        <TextBlock Text="&#xE9D2;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                                   Foreground="{StaticResource PrimaryCyanBrush}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                        <TextBlock Text="تحليلات العرض" Style="{StaticResource SectionTitle}" Margin="0" />
+                                    </StackPanel>
+                                    <ItemsControl ItemsSource="{Binding AnalyticsCards}" Margin="0,0,0,6">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <UniformGrid Columns="4" />
@@ -421,38 +640,43 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border Background="#121E293B" BorderBrush="{Binding Accent}" BorderThickness="1"
-                                                        CornerRadius="10" Padding="8" Margin="0,0,6,6">
+                                                <Border Background="#121E293B" BorderBrush="{Binding Accent}"
+                                                        BorderThickness="1" CornerRadius="10" Padding="8"
+                                                        Margin="0,0,6,6">
                                                     <StackPanel>
-                                                        <TextBlock Text="{Binding Value}" Foreground="{Binding Accent}" FontSize="16" FontWeight="Black" />
-                                                        <TextBlock Text="{Binding Title}" Foreground="{StaticResource TextMutedBrush}" FontSize="10" />
+                                                        <TextBlock Text="{Binding Value}" Foreground="{Binding Accent}"
+                                                                   FontSize="16" FontWeight="Black" />
+                                                        <TextBlock Text="{Binding Title}" Foreground="{StaticResource TextMutedBrush}"
+                                                                   FontSize="10" />
                                                     </StackPanel>
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
 
-                                    <TextBlock Text="تفاعل الصيدليات" Foreground="{StaticResource TextPrimaryBrush}"
-                                               FontSize="13" FontWeight="Bold" Margin="0,6,0,6" />
-                                    <DataGrid ItemsSource="{Binding PharmacyInteractions}"
-                                              AutoGenerateColumns="False"
-                                              IsReadOnly="True"
-                                              CanUserAddRows="False"
-                                              MinHeight="80" MaxHeight="160"
+                                    <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,4,0,6">
+                                        <TextBlock Text="&#xE7EF;" FontFamily="Segoe MDL2 Assets" FontSize="13"
+                                                   Foreground="{StaticResource PrimaryCyanBrush}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                        <TextBlock Text="تفاعل الصيدليات" Foreground="{StaticResource TextPrimaryBrush}"
+                                                   FontSize="12" FontWeight="Bold" />
+                                    </StackPanel>
+                                    <DataGrid ItemsSource="{Binding PharmacyInteractions}" AutoGenerateColumns="False"
+                                              IsReadOnly="True" CanUserAddRows="False" MinHeight="80" MaxHeight="220"
+                                              AlternationCount="2"
                                               Style="{StaticResource ModernDataGrid}"
                                               CellStyle="{StaticResource ModernDataGridCell}"
-                                              RowStyle="{StaticResource ModernDataGridRow}"
+                                              RowStyle="{StaticResource AltDataGridRow}"
                                               ColumnHeaderStyle="{StaticResource ModernDataGridColumnHeader}"
-                                              GridLinesVisibility="None">
+                                              GridLinesVisibility="None" FontSize="11">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="الصيدلية" Binding="{Binding PharmacyName}" Width="1.5*" MinWidth="100" />
-                                            <DataGridTextColumn Header="الهاتف" Binding="{Binding Phone}" Width="0.6*" MinWidth="70" />
-                                            <DataGridTextColumn Header="المشاهدة" Binding="{Binding ViewedAt}" Width="0.6*" MinWidth="70" />
-                                            <DataGridCheckBoxColumn Header="ضغطت" Binding="{Binding Clicked}" Width="54" MinWidth="44" />
-                                            <DataGridCheckBoxColumn Header="أضافت" Binding="{Binding AddedToCart}" Width="54" MinWidth="44" />
-                                            <DataGridCheckBoxColumn Header="طلبت" Binding="{Binding Ordered}" Width="54" MinWidth="44" />
-                                            <DataGridTextColumn Header="آخر طلب" Binding="{Binding LastOrder}" Width="0.6*" MinWidth="70" />
-                                            <DataGridTextColumn Header="القيمة" Binding="{Binding OrderValue}" Width="0.6*" MinWidth="70" />
+                                            <DataGridTextColumn Header="الصيدلية" Binding="{Binding PharmacyName}" Width="1.5*" MinWidth="80" />
+                                            <DataGridTextColumn Header="الهاتف" Binding="{Binding Phone}" Width="0.7*" MinWidth="55" />
+                                            <DataGridTextColumn Header="المشاهدة" Binding="{Binding ViewedAt}" Width="0.7*" MinWidth="55" />
+                                            <DataGridCheckBoxColumn Header="ضغط" Binding="{Binding Clicked}" Width="44" />
+                                            <DataGridCheckBoxColumn Header="أضاف" Binding="{Binding AddedToCart}" Width="44" />
+                                            <DataGridCheckBoxColumn Header="طلب" Binding="{Binding Ordered}" Width="44" />
+                                            <DataGridTextColumn Header="آخر طلب" Binding="{Binding LastOrder}" Width="0.6*" MinWidth="55" />
+                                            <DataGridTextColumn Header="القيمة" Binding="{Binding OrderValue}" Width="0.6*" MinWidth="55" />
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </StackPanel>
@@ -460,108 +684,168 @@
                         </StackPanel>
                     </ScrollViewer>
 
-                    <!-- Bottom action bar -->
-                    <Border Grid.Row="2" Background="{StaticResource GlassCardBrush}" BorderBrush="{StaticResource BorderDefaultBrush}"
-                            BorderThickness="0,1,0,0" Padding="10" CornerRadius="0,0,12,12">
-                        <WrapPanel FlowDirection="RightToLeft">
-                            <Button Content="نشر" Command="{Binding PublishCommand}"
-                                    Style="{StaticResource PrimaryButtonStyle}" Height="34" Padding="18,0" Margin="0,0,6,0" FontSize="12" />
-                            <Button Content="مسودة" Command="{Binding SaveDraftCommand}"
-                                    Style="{StaticResource SecondaryButtonStyle}" Height="34" Padding="14,0" Margin="0,0,6,0" FontSize="12" />
-                            <Button Content="مراجعة" Command="{Binding SubmitReviewCommand}"
-                                    Style="{StaticResource SecondaryButtonStyle}" Height="34" Padding="14,0" Margin="0,0,6,0" FontSize="12" />
-                            <Button Content="إيقاف" Command="{Binding PauseCommand}"
-                                    Style="{StaticResource SecondaryButtonStyle}" Height="34" Padding="14,0" Margin="0,0,6,0" FontSize="12" />
-                            <Button Content="اختبار" Command="{Binding SendTestCommand}"
-                                    Style="{StaticResource SecondaryButtonStyle}" Height="34" Padding="14,0" Margin="0,0,6,0" FontSize="12" />
-                            <Button Content="نسخ" Command="{Binding DuplicateCommand}"
-                                    Style="{StaticResource SecondaryButtonStyle}" Height="34" Padding="14,0" Margin="0,0,6,0" FontSize="12" />
-                            <Button Content="حذف" Command="{Binding DeleteOfferCommand}"
-                                    Style="{StaticResource SecondaryButtonStyle}" Height="34" Padding="14,0" FontSize="12" />
-                        </WrapPanel>
+                    <!-- Action Buttons Bar -->
+                    <Border Grid.Row="2" Background="{StaticResource GlassCardBrush}"
+                            BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="0,1,0,0"
+                            Padding="10,8" CornerRadius="0,0,14,14">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                                <Button Content="نشر" Command="{Binding PublishCommand}"
+                                        Style="{StaticResource PrimaryButtonStyle}" Height="34" Padding="18,0"
+                                        Margin="0,0,6,0" FontSize="12" ToolTip="نشر العرض للصيدليات" />
+                                <Button Content="مسودة" Command="{Binding SaveDraftCommand}"
+                                        Style="{StaticResource SecondaryButtonStyle}" Height="34" Padding="14,0"
+                                        Margin="0,0,6,0" FontSize="12" ToolTip="حفظ العرض كمسودة" />
+                                <Button Content="مراجعة" Command="{Binding SubmitReviewCommand}"
+                                        Style="{StaticResource SecondaryButtonStyle}" Height="34" Padding="14,0"
+                                        Margin="0,0,6,0" FontSize="12" ToolTip="إرسال العرض للمراجعة" />
+                                <Button Content="إيقاف" Command="{Binding PauseCommand}"
+                                        Style="{StaticResource SecondaryButtonStyle}" Height="34" Padding="14,0"
+                                        Margin="0,0,6,0" FontSize="12" ToolTip="إيقاف العرض مؤقتاً" />
+                                <Button Content="اختبار" Command="{Binding SendTestCommand}"
+                                        Style="{StaticResource SecondaryButtonStyle}" Height="34" Padding="14,0"
+                                        Margin="0,0,6,0" FontSize="12" ToolTip="إرسال تجربة العرض لصيدلية محددة" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" FlowDirection="RightToLeft">
+                                <Button Content="نسخ" Command="{Binding DuplicateCommand}"
+                                        Style="{StaticResource SecondaryButtonStyle}" Height="34" Padding="14,0"
+                                        Margin="0,0,6,0" FontSize="12" ToolTip="نسخ العرض الحالي" />
+                                <Button Content="حذف" Command="{Binding DeleteOfferCommand}"
+                                        Style="{StaticResource SecondaryButtonStyle}" Height="34" Padding="14,0"
+                                        FontSize="12" ToolTip="حذف العرض نهائياً" />
+                            </StackPanel>
+                        </Grid>
                     </Border>
                 </Grid>
             </Border>
 
-            <!-- ═══ Column 2: Preview ═══ -->
-            <Border Grid.Column="2" Style="{StaticResource CardStyle}" Padding="12">
+            <!-- ═══ COLUMN 4: PHONE PREVIEW ═══ -->
+            <Border Grid.Column="4" Style="{StaticResource SectionCard}" Padding="14">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" MinHeight="300" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="معاينة التطبيق" Foreground="{StaticResource TextPrimaryBrush}"
-                               FontSize="14" FontWeight="Bold" Margin="0,0,0,8" />
-
-                    <ComboBox Grid.Row="1" ItemsSource="{Binding PreviewModes}" SelectedItem="{Binding PreviewMode}"
-                              Style="{StaticResource ModernComboBox}" Height="34" Margin="0,0,0,10" />
-
-                    <!-- Phone mockup -->
-                    <Border Grid.Row="2" Background="{StaticResource DarkBgBrush}" BorderBrush="{StaticResource BorderDefaultBrush}"
-                            BorderThickness="1" CornerRadius="24" Padding="10"
-                            HorizontalAlignment="Center" VerticalAlignment="Top" MaxWidth="260">
-                        <Border Background="{StaticResource CardBgBrush}" CornerRadius="18" Padding="12">
-                            <StackPanel>
-                                <!-- Pharmacy header -->
-                                <Border Background="#141E293B" CornerRadius="12" Padding="10" Margin="0,0,0,8">
-                                    <StackPanel>
-                                        <TextBlock Text="صيدلية الندى" Foreground="White" FontSize="12" FontWeight="Bold" />
-                                        <TextBlock Text="{Binding PreviewMode}" Foreground="{StaticResource TextMutedBrush}" FontSize="9" />
-                                    </StackPanel>
-                                </Border>
-
-                                <!-- Image area with fallback -->
-                                <Border Height="110" CornerRadius="14" Background="#1822363E" ClipToBounds="True">
-                                    <Grid>
-                                        <Image Source="{Binding PreviewImagePath}" Stretch="UniformToFill"
-                                               Visibility="{Binding OfferImagePath, Converter={StaticResource StringToVisibilityConverter}, FallbackValue=Collapsed}" />
-                                        <Border Background="#55111E32" />
-                                        <TextBlock Text="{Binding PreviewDiscountLabel}"
-                                                   Foreground="{StaticResource PrimaryIndigoDarkBrush}" FontWeight="Black"
-                                                   Background="{StaticResource PrimaryIndigoBrush}" Padding="8,3"
-                                                   HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10"
-                                                   FontSize="13" />
-                                        <TextBlock Text="&#xE722;" FontFamily="Segoe MDL2 Assets"
-                                                   Foreground="{StaticResource TextMutedBrush}" FontSize="28"
-                                                   HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.4"
-                                                   Visibility="{Binding OfferImagePath, Converter={StaticResource StringEmptyToVisibilityConverter}}" />
-                                    </Grid>
-                                </Border>
-
-                                <TextBlock Text="{Binding OfferTitle}" Foreground="{StaticResource TextPrimaryBrush}"
-                                           FontSize="16" FontWeight="Black" TextWrapping="Wrap" Margin="0,10,0,0" />
-                                <TextBlock Text="{Binding OfferSubtitle}" Foreground="{StaticResource TextMutedBrush}"
-                                           FontSize="10" TextWrapping="Wrap" Margin="0,3,0,8" />
-
-                                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                                    <TextBlock Text="{Binding PreviewPriceLabel}" Foreground="{StaticResource SuccessBrush}"
-                                               FontSize="16" FontWeight="Black" />
-                                    <TextBlock Text="{Binding PreviewOldPriceLabel}" Foreground="{StaticResource TextMutedBrush}"
-                                               FontSize="10" TextDecorations="Strikethrough" Margin="8,4,0,0" />
-                                </StackPanel>
-
-                                <TextBlock Text="{Binding ProductPreviewSummary}" Foreground="{StaticResource TextSecondaryBrush}"
-                                           FontSize="10" TextWrapping="Wrap" Margin="0,8,0,0" />
-
-                                <TextBlock Text="{Binding PreviewExpiryLabel}" Foreground="{StaticResource WarningBrush}"
-                                           FontSize="10" Margin="0,6,0,0" />
-
-                                <Button Content="أضف للطلب"
-                                        Command="{Binding PreviewAddToOrderCommand}"
-                                        Style="{StaticResource PrimaryButtonStyle}" Height="34" Margin="0,10,0,0"
-                                        IsEnabled="True" />
+                    <Border Grid.Row="0" Margin="0,0,0,10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                                <TextBlock Text="&#xE8B9;" FontFamily="Segoe MDL2 Assets"
+                                           Foreground="{StaticResource PrimaryCyanBrush}" FontSize="15"
+                                           VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <TextBlock Text="معاينة العرض" Foreground="{StaticResource TextPrimaryBrush}"
+                                           FontSize="13" FontWeight="Bold" />
                             </StackPanel>
-                        </Border>
+                            <ComboBox Grid.Row="1" ItemsSource="{Binding PreviewModes}"
+                                      SelectedItem="{Binding PreviewMode}"
+                                      Style="{StaticResource EnhancedComboBox}" Margin="0,6,0,0" />
+                        </Grid>
                     </Border>
 
-                    <!-- Status message -->
-                    <TextBlock Grid.Row="3" Text="{Binding StatusMessage}" Foreground="{StaticResource WarningBrush}"
-                               FontSize="11" TextWrapping="Wrap" Margin="0,10,0,0" />
+                    <!-- Phone Mockup -->
+                    <Border Grid.Row="1" CornerRadius="36" Padding="8"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            MaxWidth="260" MinWidth="220">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="#FF0D1117" />
+                                <Setter Property="BorderBrush" Value="#FF21262D" />
+                                <Setter Property="BorderThickness" Value="2" />
+                            </Style>
+                        </Border.Style>
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="24" ShadowDepth="6" Color="#FF020617" Opacity="0.4" />
+                        </Border.Effect>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Notch / Dynamic Island -->
+                            <Border Grid.Row="0" Width="90" Height="24" CornerRadius="12"
+                                    Background="#FF020617" HorizontalAlignment="Center" Margin="0,6,0,0" />
+
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,6,0,0">
+                            <Border Background="{StaticResource CardBgBrush}" CornerRadius="24" Padding="10">
+                                <StackPanel>
+                                    <!-- App Header -->
+                                    <Border Background="#141E293B" CornerRadius="12" Padding="8" Margin="0,0,0,6">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding PreviewPharmacyName, FallbackValue='تطبيق الصيدلي'}"
+                                                       Foreground="White" FontSize="12" FontWeight="Bold" />
+                                            <TextBlock Text="معاينة العرض" Foreground="{StaticResource TextMutedBrush}"
+                                                       FontSize="9" Margin="0,1,0,0" />
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Image Area -->
+                                    <Border Height="90" CornerRadius="12" Background="#1822363E" ClipToBounds="True">
+                                        <Grid>
+                                            <Image Source="{Binding PreviewImagePath}" Stretch="UniformToFill"
+                                                   Visibility="{Binding OfferImagePath, Converter={StaticResource StringToVisibilityConverter}, FallbackValue=Collapsed}" />
+                                            <Border Background="#44111E32" />
+                                            <TextBlock Text="{Binding PreviewDiscountLabel}"
+                                                       Foreground="{StaticResource PrimaryIndigoDarkBrush}"
+                                                       FontWeight="Black" Background="{StaticResource PrimaryIndigoBrush}"
+                                                       Padding="6,2" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                                       Margin="6" FontSize="11" />
+                                            <TextBlock Text="&#xE722;" FontFamily="Segoe MDL2 Assets"
+                                                       Foreground="{StaticResource TextMutedBrush}" FontSize="22"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                       Opacity="0.4"
+                                                       Visibility="{Binding OfferImagePath, Converter={StaticResource StringEmptyToVisibilityConverter}}" />
+                                        </Grid>
+                                    </Border>
+
+                                    <TextBlock Text="{Binding OfferTitle}" Foreground="{StaticResource TextPrimaryBrush}"
+                                               FontSize="14" FontWeight="Black" TextWrapping="Wrap" Margin="0,6,0,0"
+                                               ToolTip="{Binding OfferTitle}" />
+                                    <TextBlock Text="{Binding OfferSubtitle}" Foreground="{StaticResource TextMutedBrush}"
+                                               FontSize="10" TextWrapping="Wrap" Margin="0,2,0,5" />
+
+                                    <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                                        <TextBlock Text="{Binding PreviewPriceLabel}"
+                                                   Foreground="{StaticResource SuccessBrush}"
+                                                   FontSize="15" FontWeight="Black" />
+                                        <TextBlock Text="{Binding PreviewOldPriceLabel}"
+                                                   Foreground="{StaticResource TextMutedBrush}"
+                                                   FontSize="10" TextDecorations="Strikethrough" Margin="5,2,0,0" />
+                                    </StackPanel>
+
+                                    <TextBlock Text="{Binding ProductPreviewSummary}"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               FontSize="9" TextWrapping="Wrap" Margin="0,5,0,0" />
+                                    <TextBlock Text="{Binding PreviewExpiryLabel}"
+                                               Foreground="{StaticResource WarningBrush}"
+                                               FontSize="9" Margin="0,3,0,0" />
+
+                                    <Button Content="أضف للطلب"
+                                            Command="{Binding PreviewAddToOrderCommand}"
+                                            Style="{StaticResource PrimaryButtonStyle}" Height="32"
+                                            Margin="0,6,0,0" FontSize="11" />
+                                </StackPanel>
+                            </Border>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Grid.Row="2" Text="هذه معاينة تقريبية — المظهر النهائي قد يختلف قليلاً"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               FontSize="10" TextWrapping="Wrap" Margin="0,8,0,0" Opacity="0.5" />
                 </Grid>
             </Border>
         </Grid>
+        </ScrollViewer>
     </Grid>
 </UserControl>

@@ -5,7 +5,7 @@
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True" WindowStyle="None" Background="Transparent">
 
-    <Border Background="{StaticResource PageBackgroundBrush}" CornerRadius="24" BorderThickness="1.5" BorderBrush="{StaticResource BorderDefaultBrush}">
+    <Border Background="{StaticResource PageBgBrush}" CornerRadius="24" BorderThickness="1.5" BorderBrush="{StaticResource BorderDefaultBrush}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" /> <!-- Header -->
@@ -24,7 +24,7 @@
                         </StackPanel>
                     </StackPanel>
                     <Button HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource TransparentButtonStyle}" Command="{Binding CloseCommand}">
-                        <TextBlock Text="✕" FontSize="18" Foreground="{StaticResource TextMutedBrush}"/>
+                        <TextBlock Text="&#xE8BB;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="{StaticResource TextMutedBrush}"/>
                     </Button>
                 </Grid>
             </Border>

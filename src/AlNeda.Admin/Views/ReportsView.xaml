@@ -168,7 +168,7 @@
                         <ComboBox ItemsSource="{Binding PeriodTypes}" SelectedItem="{Binding SelectedPeriodType}"
                                   Style="{StaticResource ModernComboBox}" Height="36" FontSize="12" Width="100" Margin="0,0,16,0" />
                         <!-- Apply -->
-                        <Button Content="🔄 تحديث" Command="{Binding RefreshCommand}"
+                        <Button Content="&#xE72D; تحديث" Command="{Binding RefreshCommand}"
                                 Style="{StaticResource PrimaryButtonStyle}" Height="36" FontSize="12" Padding="16,0" />
                         <!-- Toggle Filters -->
                         <Button Content="{Binding ShowFilters, Converter={StaticResource BoolToTextConverter}}" 
@@ -230,7 +230,7 @@
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Border Width="36" Height="36" CornerRadius="10" Background="{StaticResource StatCardAmberGradient}">
-                                    <TextBlock Text="📉" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    <TextBlock Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Border>
                                 <StackPanel VerticalAlignment="Center" Margin="12,0,0,0">
                                     <TextBlock Text="إجمالي المصروفات" FontSize="10" Foreground="{StaticResource TextMutedBrush}" />
@@ -272,7 +272,7 @@
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Border Width="36" Height="36" CornerRadius="10" Background="{StaticResource StatCardGreenGradient}">
-                                    <TextBlock Text="📊" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    <TextBlock Text="&#xE9E9;" FontFamily="Segoe MDL2 Assets" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Border>
                                 <StackPanel VerticalAlignment="Center" Margin="12,0,0,0">
                                     <TextBlock Text="متوسط الطلب" FontSize="10" Foreground="{StaticResource TextMutedBrush}" />
@@ -375,15 +375,15 @@
                     <!-- ─── Toolbar ─── -->
                     <Border Grid.Row="1" Padding="16,12,16,0">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                            <Button Content="📋 جدول" Command="{Binding ToggleGridViewCommand}"
+                            <Button Content="&#xE8C7; جدول" Command="{Binding ToggleGridViewCommand}"
                                     Style="{StaticResource TransparentButtonStyle}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" Margin="0,0,16,0" />
-                            <Button Content="📄 CSV" Command="{Binding ExportToCsvCommand}"
+                            <Button Content="&#xE7C3; CSV" Command="{Binding ExportToCsvCommand}"
                                     Style="{StaticResource TransparentButtonStyle}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" Margin="0,0,16,0" />
-                            <Button Content="📕 PDF" Command="{Binding ExportToPdfCommand}"
+                            <Button Content="&#xE7A4; PDF" Command="{Binding ExportToPdfCommand}"
                                     Style="{StaticResource TransparentButtonStyle}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" Margin="0,0,16,0" />
-                            <Button Content="🖨️ طباعة" Command="{Binding PrintReportCommand}"
+                            <Button Content="&#xE749; طباعة" Command="{Binding PrintReportCommand}"
                                     Style="{StaticResource TransparentButtonStyle}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" Margin="0,0,16,0" />
-                            <Button Content="📋 نسخ" Command="{Binding CopyToClipboardCommand}"
+                            <Button Content="&#xE8C8; نسخ" Command="{Binding CopyToClipboardCommand}"
                                     Style="{StaticResource TransparentButtonStyle}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" />
                         </StackPanel>
                     </Border>
@@ -605,7 +605,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Grid.Column="0" Orientation="Horizontal">
                                                     <Border Width="36" Height="36" CornerRadius="8" Background="{StaticResource StatCardAmberGradient}" Margin="0,0,12,0">
-                                                        <TextBlock Text="📉" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    <TextBlock Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                     </Border>
                                                     <StackPanel VerticalAlignment="Center">
                                                         <TextBlock Text="{Binding Category}" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />

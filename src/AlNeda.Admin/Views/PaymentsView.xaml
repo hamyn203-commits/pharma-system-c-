@@ -34,8 +34,8 @@
                 <StackPanel>
                     <TextBlock Text="تحصيلات اليوم" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
-                        <TextBlock Text="12,500" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
-                        <TextBlock Text="💵" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                        <TextBlock Text="{Binding TodayCollections, StringFormat={}{0:N0}}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
+                        <TextBlock Text="&#xE9D2;" FontFamily="Segoe MDL2 Assets" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
                     </Grid>
                 </StackPanel>
             </Border>
@@ -44,7 +44,7 @@
                 <StackPanel>
                     <TextBlock Text="تحصيلات الشهر" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
-                        <TextBlock Text="285,400" FontSize="28" FontWeight="Bold" Foreground="{StaticResource SuccessBrush}" />
+                        <TextBlock Text="{Binding MonthCollections, StringFormat={}{0:N0}}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource SuccessBrush}" />
                         <TextBlock Text="&#xE9D2;" FontFamily="Segoe MDL2 Assets" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
                     </Grid>
                 </StackPanel>
@@ -54,7 +54,7 @@
                 <StackPanel>
                     <TextBlock Text="إجمالي النقدية" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
-                        <TextBlock Text="1,240,000" FontSize="28" FontWeight="Bold" Foreground="{StaticResource WarningBrush}" />
+                        <TextBlock Text="{Binding TotalCash, StringFormat={}{0:N0}}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource WarningBrush}" />
                         <TextBlock Text="&#xE8C7;" FontFamily="Segoe MDL2 Assets" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
                     </Grid>
                 </StackPanel>

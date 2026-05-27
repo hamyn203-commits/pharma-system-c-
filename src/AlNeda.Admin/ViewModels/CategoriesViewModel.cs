@@ -21,10 +21,14 @@ public partial class CategoriesViewModel : ObservableObject
     [ObservableProperty] private string _filterCount = "الكل";
     [ObservableProperty] private string _sortBy = "الاسم";
     [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] private string _statusMessage = "";
 
     [ObservableProperty] private int _totalActive;
     [ObservableProperty] private int _totalProducts;
     [ObservableProperty] private string _topCategory = "-";
+
+    public string[] CountFilters { get; } = ["الكل", "> 10", "> 50", "< 10"];
+    public string[] SortOptions { get; } = ["الاسم", "العدد", "ID"];
 
     public CategoriesViewModel(IAlNedaApiClient apiClient, IDialogService dialog)
     {
@@ -48,18 +52,24 @@ public partial class CategoriesViewModel : ObservableObject
     private async Task LoadAsync()
     {
         IsLoading = true;
+        StatusMessage = "جاري تحميل التصنيفات...";
         try
         {
             _allCategories = await _apiClient.GetCategoriesAsync();
             CalculateStats();
             await ApplyFiltersAsync();
+            StatusMessage = $"تم تحميل {_allCategories.Count} تصنيف";
         }
         catch (ApiException ex)
         {
+            StatusMessage = "خطأ في تحميل التصنيفات";
             _dialog.ShowError(ex.Message, "خطأ");
         }
         IsLoading = false;
     }
+
+    [RelayCommand]
+    private async Task RefreshAsync() => await LoadAsync();
 
     private void CalculateStats()
     {
@@ -102,6 +112,7 @@ public partial class CategoriesViewModel : ObservableObject
                 Categories = new ObservableCollection<CategoryDto>(result);
             });
         }
+        StatusMessage = $"تم عرض {Categories.Count} من أصل {_allCategories.Count} تصنيف";
     }
 
     [RelayCommand]

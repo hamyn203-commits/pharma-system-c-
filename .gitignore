@@ -30,6 +30,19 @@ packages/
 project.lock.json
 project.fragment.lock.json
 
+## Flutter / Dart ##
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+
+## Python ##
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
 ## Test results ##
 TestResults/
 [Tt]est[Rr]esult*/
@@ -67,8 +80,15 @@ secrets.json
 ## Scratch / temp ##
 scratch/
 
+## Azure deployment output ##
+deploy_output/
+
+## Large binary directories ##
+"برنامج الصيدلي/"
+
 ## Rider ##
 .idea/
+*.iml
 
 ## VS Code ##
 .vscode/

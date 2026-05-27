@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Net.Http;
 using AlNeda.Admin.Services;
 using AlNeda.Admin.Services.ApiClient;
@@ -13,6 +14,7 @@ public partial class ProductsViewModel : ObservableObject
 {
     private readonly IAlNedaApiClient _apiClient;
     private readonly IDialogService _dialog;
+    private List<ProductDto> _allProducts = [];
 
     [ObservableProperty] private ObservableCollection<ProductDto> _products = [];
     [ObservableProperty] private ObservableCollection<CategoryDto> _categories = [];
@@ -27,6 +29,10 @@ public partial class ProductsViewModel : ObservableObject
     [ObservableProperty] private int _activeProducts;
     [ObservableProperty] private int _lowStockProducts;
     [ObservableProperty] private decimal _inventoryValue;
+    [ObservableProperty] private string _statusMessage = "";
+    [ObservableProperty] private string _categoryFilter = "";
+
+    public string[] CategoryFilters { get; set; } = [];
 
     public ProductsViewModel(IAlNedaApiClient apiClient, IDialogService dialog)
     {
@@ -34,19 +40,27 @@ public partial class ProductsViewModel : ObservableObject
         _dialog = dialog;
     }
 
+    partial void OnSearchTextChanged(string value) => ApplyFilter();
+    partial void OnCategoryFilterChanged(string value) => ApplyFilter();
+
     [RelayCommand]
     private async Task LoadAsync()
     {
         IsLoading = true;
+        StatusMessage = "جاري تحميل المنتجات...";
         try
         {
-            Products = new ObservableCollection<ProductDto>(await _apiClient.GetProductsAsync(SearchText));
+            _allProducts = await _apiClient.GetProductsAsync();
             var cats = await _apiClient.GetCategoriesAsync();
             Categories = new ObservableCollection<CategoryDto>(cats);
-            UpdateStats();
+            var names = cats.Select(c => c.Name).Where(n => !string.IsNullOrEmpty(n)).Cast<string>().Distinct().ToList();
+            CategoryFilters = ["الكل", .. names];
+            OnPropertyChanged(nameof(CategoryFilters));
+            ApplyFilter();
         }
         catch (ApiException ex)
         {
+            StatusMessage = "خطأ في تحميل المنتجات";
             _dialog.ShowError(ex.Message, "خطأ");
         }
         IsLoading = false;
@@ -54,6 +68,35 @@ public partial class ProductsViewModel : ObservableObject
 
     [RelayCommand]
     private async Task SearchAsync() => await LoadAsync();
+
+    [RelayCommand]
+    private async Task RefreshAsync() => await LoadAsync();
+
+    private void ApplyFilter()
+    {
+        if (_allProducts.Count == 0) return;
+        var filtered = _allProducts.AsEnumerable();
+
+        if (!string.IsNullOrWhiteSpace(SearchText))
+        {
+            var q = SearchText.Trim();
+            filtered = filtered.Where(p =>
+                (p.Name?.Contains(q, StringComparison.OrdinalIgnoreCase) == true) ||
+                (p.Barcode?.Contains(q, StringComparison.OrdinalIgnoreCase) == true) ||
+                (p.Company?.Contains(q, StringComparison.OrdinalIgnoreCase) == true));
+        }
+
+        if (!string.IsNullOrEmpty(CategoryFilter) && CategoryFilter != "الكل")
+        {
+            filtered = filtered.Where(p =>
+                p.CategoryName?.Equals(CategoryFilter, StringComparison.OrdinalIgnoreCase) == true ||
+                p.Category?.Equals(CategoryFilter, StringComparison.OrdinalIgnoreCase) == true);
+        }
+
+        Products = new ObservableCollection<ProductDto>(filtered.ToList());
+        UpdateStats();
+        StatusMessage = $"تم عرض {Products.Count} من أصل {_allProducts.Count} منتج";
+    }
 
     private void UpdateStats()
     {
@@ -67,11 +110,17 @@ public partial class ProductsViewModel : ObservableObject
     private async Task SearchByBarcodeAsync()
     {
         if (string.IsNullOrWhiteSpace(BarcodeSearch)) return;
-        IsLoading = true;
-        var allProducts = await _apiClient.GetProductsAsync();
-        var found = allProducts.Where(p => p.Barcode == BarcodeSearch.Trim()).ToList();
+        StatusMessage = "جاري البحث بالباركود...";
+        if (_allProducts.Count == 0)
+        {
+            IsLoading = true;
+            _allProducts = await _apiClient.GetProductsAsync();
+            IsLoading = false;
+        }
+        var found = _allProducts.Where(p => p.Barcode == BarcodeSearch.Trim()).ToList();
         Products = new ObservableCollection<ProductDto>(found);
-        IsLoading = false;
+        UpdateStats();
+        StatusMessage = found.Count > 0 ? $"تم العثور على {found.Count} منتج" : "لم يتم العثور على منتج";
 
         if (found.Count == 1)
         {
@@ -217,5 +266,28 @@ public partial class ProductsViewModel : ObservableObject
         {
             _dialog.ShowError(ex.Message, "خطأ");
         }
+    }
+
+    [RelayCommand]
+    private async Task ExportCsvAsync()
+    {
+        try
+        {
+            var dialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Title = "تصدير المنتجات CSV",
+                Filter = "CSV Files (*.csv)|*.csv",
+                FileName = $"Products_{DateTime.Today:yyyy-MM-dd}.csv"
+            };
+            if (dialog.ShowDialog() != true) return;
+            using var writer = new StreamWriter(dialog.FileName, false, System.Text.Encoding.UTF8);
+            await writer.WriteLineAsync("ID,اسم المنتج,الباركود,التصنيف,الشركة,الكمية,السعر,تاريخ الصلاحية");
+            foreach (var p in Products)
+            {
+                await writer.WriteLineAsync($"{p.Id},\"{p.Name}\",\"{p.Barcode}\",\"{p.CategoryName ?? p.Category}\",\"{p.Company}\",{p.Quantity},{p.UnitPrice},\"{p.ExpiryDate}\"");
+            }
+            StatusMessage = $"تم تصدير {Products.Count} منتج إلى {Path.GetFileName(dialog.FileName)}";
+        }
+        catch (Exception ex) { StatusMessage = $"خطأ: {ex.Message}"; }
     }
 }

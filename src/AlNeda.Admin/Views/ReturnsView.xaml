@@ -34,8 +34,8 @@
                 <StackPanel>
                     <TextBlock Text="مرتجعات اليوم" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
-                        <TextBlock Text="5" FontSize="28" FontWeight="Bold" Foreground="White" />
-                        <TextBlock Text="🔄" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                        <TextBlock Text="{Binding TodayReturns}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
+                        <TextBlock Text="&#xE72D;" FontFamily="Segoe MDL2 Assets" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
                     </Grid>
                 </StackPanel>
             </Border>
@@ -44,8 +44,8 @@
                 <StackPanel>
                     <TextBlock Text="إجمالي مبالغ المرتجعات" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
-                        <TextBlock Text="4,200" FontSize="28" FontWeight="Bold" Foreground="{StaticResource DangerBrush}" />
-                        <TextBlock Text="💵" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                        <TextBlock Text="{Binding TotalReturnsAmount, StringFormat={}{0:N0}}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource DangerBrush}" />
+                        <TextBlock Text="&#xE9D2;" FontFamily="Segoe MDL2 Assets" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
                     </Grid>
                 </StackPanel>
             </Border>
@@ -54,8 +54,8 @@
                 <StackPanel>
                     <TextBlock Text="طلبات معلقة" Foreground="{StaticResource TextMutedBrush}" FontSize="13" />
                     <Grid Margin="0,8,0,0">
-                        <TextBlock Text="2" FontSize="28" FontWeight="Bold" Foreground="{StaticResource WarningBrush}" />
-                        <TextBlock Text="⏳" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
+                        <TextBlock Text="{Binding PendingReturns}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource WarningBrush}" />
+                        <TextBlock Text="&#xE7B8;" FontFamily="Segoe MDL2 Assets" FontSize="24" HorizontalAlignment="Left" Opacity="0.5" />
                     </Grid>
                 </StackPanel>
             </Border>
@@ -180,7 +180,7 @@
                                 <DataGridTemplateColumn Width="40">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Button Content="🗑️" Command="{Binding DataContext.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            <Button Content="&#xE74D;" Command="{Binding DataContext.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding}" Background="Transparent" BorderThickness="0" Cursor="Hand" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>

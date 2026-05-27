@@ -21,6 +21,7 @@ public partial class OffersDashboardViewModel : ObservableObject
     [ObservableProperty] private bool _hasDeviceFallbackEvents;
     [ObservableProperty] private string _statusMessage = "جاهز لتحميل مؤشرات العروض";
     [ObservableProperty] private bool _isBusy;
+    [ObservableProperty] private bool _isLoading;
 
     public int TotalOffers => Offers.Count;
     public int ReviewOffers => Offers.Count(IsReviewOffer);
@@ -47,6 +48,7 @@ public partial class OffersDashboardViewModel : ObservableObject
     {
         if (IsBusy) return;
         IsBusy = true;
+        IsLoading = true;
         try
         {
             var analytics = await _api.GetOffersAnalyticsAsync();
@@ -64,8 +66,11 @@ public partial class OffersDashboardViewModel : ObservableObject
             OrdersFromOffers = analytics.OrdersFromOffers;
             ConversionRate = analytics.ConversionRate;
             HasDeviceFallbackEvents = analytics.HasDeviceFallbackEvents;
-            Offers = new ObservableCollection<OfferAnalyticsDto>(analytics.Offers);
-            StatusMessage = "تم تحديث لوحة العروض من API";
+            Offers = new ObservableCollection<OfferAnalyticsDto>(
+                analytics.Offers.OrderByDescending(o => o.ConversionRate));
+            StatusMessage = Offers.Count == 0
+                ? "لا توجد عروض بعد. أنشئ أول عرض من صفحة إدارة العروض."
+                : $"تم تحميل {Offers.Count:N0} عرض من API — {ActiveOffers} نشط حالياً";
             OnPropertyChanged(nameof(ConversionRateText));
             OnPropertyChanged(nameof(DeviceFallbackWarning));
         }
@@ -76,6 +81,8 @@ public partial class OffersDashboardViewModel : ObservableObject
         finally
         {
             IsBusy = false;
+            IsLoading = false;
+            RefreshOfferBreakdowns();
         }
     }
 

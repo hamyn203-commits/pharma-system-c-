@@ -11,14 +11,25 @@
              d:DesignHeight="1000" d:DesignWidth="1200">
 
     <UserControl.Resources>
-        <!-- Card Hover Animations -->
+        <LinearGradientBrush x:Key="DashboardHeroPremiumBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FF102238" Offset="0" />
+            <GradientStop Color="#FF123B35" Offset="0.55" />
+            <GradientStop Color="#FF0F172A" Offset="1" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="DashboardCardPremiumBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FF1E293B" Offset="0" />
+            <GradientStop Color="#FF172033" Offset="1" />
+        </LinearGradientBrush>
+
+        <!-- Premium flat cards: elevation comes from color, borders, and subtle transform only. -->
         <Style x:Key="DashboardCardStyle" TargetType="Border">
-            <Setter Property="Background" Value="{StaticResource WarmSurfaceBrush}" />
+            <Setter Property="Background" Value="{StaticResource DashboardCardPremiumBrush}" />
             <Setter Property="CornerRadius" Value="18" />
-            <Setter Property="Padding" Value="20" />
+            <Setter Property="Padding" Value="22" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
-            <Setter Property="Effect" Value="{StaticResource DashboardCardShadow3D}" />
+            <Setter Property="MinHeight" Value="164" />
             <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
             <Setter Property="RenderTransform">
                 <Setter.Value>
@@ -29,12 +40,16 @@
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource HoverBgBrush}" />
+                    <Setter Property="BorderBrush" Value="{StaticResource AccentBorderBrush}" />
+                </Trigger>
                 <EventTrigger RoutedEvent="MouseEnter">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" To="1.018" Duration="0:0:0.18" />
-                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" To="1.018" Duration="0:0:0.18" />
-                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.Y)" To="-6" Duration="0:0:0.18" />
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" To="1.006" Duration="0:0:0.16" />
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" To="1.006" Duration="0:0:0.16" />
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.Y)" To="-2" Duration="0:0:0.16" />
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
@@ -55,11 +70,35 @@
             <Setter Property="ClipToBounds" Value="False" />
         </Style>
 
-        <!-- Metric Text Styles -->
         <Style x:Key="MetricLabel" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
             <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+
+        <Style x:Key="MetricIconTextStyle" TargetType="TextBlock" BasedOn="{StaticResource IconTextBlockStyle}">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="DashboardListItemStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardElevatedBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="14" />
+            <Setter Property="Margin" Value="0,0,0,10" />
+        </Style>
+
+        <Style x:Key="AnalyticsTileStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardElevatedBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="14" />
         </Style>
     </UserControl.Resources>
 
@@ -82,36 +121,97 @@
             <!-- ═══════════════════════════════════════════════════════════ -->
             <!-- HEADER                                                      -->
             <!-- ═══════════════════════════════════════════════════════════ -->
-            <Border Grid.Row="0" Background="{StaticResource DashboardHeroGradient}" CornerRadius="22" Padding="26" Margin="0,0,0,24">
+            <Border Grid.Row="0"
+                    Background="{StaticResource DashboardHeroPremiumBrush}"
+                    BorderBrush="{StaticResource AccentBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="24"
+                    Padding="30"
+                    Margin="0,0,0,24">
                 <Border.Effect>
-                    <DropShadowEffect BlurRadius="34" ShadowDepth="6" Color="{StaticResource PrimaryIndigoDark}" Opacity="0.28" />
+                    <DropShadowEffect BlurRadius="34" ShadowDepth="0" Color="#FF020617" Opacity="0.34" />
                 </Border.Effect>
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Text="لوحة التحكم" FontSize="30" FontWeight="Bold" Foreground="White" />
-                        <TextBlock Text="{Binding CurrentDate}" Foreground="#E9FFFFFF" FontSize="13" Margin="0,6,0,0" />
-                        <StackPanel Orientation="Horizontal" Margin="0,18,0,0">
-                            <Border Background="#2EFFFFFF" CornerRadius="12" Padding="12,7" Margin="0,0,10,0">
-                                <TextBlock Text="إدارة المخزن لحظة بلحظة" Foreground="White" FontSize="12" FontWeight="SemiBold" />
-                            </Border>
-                            <Border Background="#22FFFFFF" CornerRadius="12" Padding="12,7">
-                                <TextBlock Text="مؤشرات المبيعات والمخزون" Foreground="White" FontSize="12" FontWeight="SemiBold" />
-                            </Border>
-                        </StackPanel>
-                    </StackPanel>
-                    <Border Grid.Column="1" Background="#2AFFFFFF" CornerRadius="18" Padding="18,14" VerticalAlignment="Center">
-                        <StackPanel>
-                            <TextBlock Text="آخر نسخة احتياطية" Foreground="#E9FFFFFF" FontSize="12" />
-                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                <TextBlock Text="&#xE83D;" FontFamily="Segoe MDL2 Assets" Foreground="White" FontSize="18" Margin="0,0,8,0"/>
-                                <TextBlock Text="{Binding LastBackup}" Foreground="White" FontSize="14" FontWeight="Bold"/>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0">
+                        <Border Background="{StaticResource PrimaryCyanGlassBrush}"
+                                BorderBrush="{StaticResource AccentBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="10"
+                                Padding="12,7"
+                                HorizontalAlignment="Right"
+                                Margin="0,0,0,16">
+                            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                                <TextBlock Text="&#xE9D2;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource PrimaryCyanLightBrush}" FontSize="13" VerticalAlignment="Center" />
+                                <TextBlock Text="مركز عمليات المخزن" Foreground="{StaticResource PrimaryCyanLightBrush}" FontSize="12" FontWeight="Bold" Margin="8,0,0,0" />
                             </StackPanel>
+                        </Border>
+
+                        <TextBlock Text="لوحة تحكم تشغيلية جديدة"
+                                   FontSize="34"
+                                   FontWeight="Black"
+                                   Foreground="{StaticResource TextPrimaryBrush}" />
+                        <TextBlock Text="مبيعات، مخزون، طلبات وتنبيهات في عرض واحد قابل للمتابعة اليومية"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="14"
+                                   Margin="0,8,0,0" />
+                    </StackPanel>
+
+                    <Border Grid.Row="0"
+                            Grid.Column="1"
+                            Background="#241E293B"
+                            BorderBrush="{StaticResource BorderDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="18"
+                            Padding="18,14"
+                            VerticalAlignment="Top"
+                            MinWidth="260">
+                        <StackPanel>
+                            <TextBlock Text="آخر نسخة احتياطية" Foreground="{StaticResource TextMutedBrush}" FontSize="12" />
+                            <TextBlock Text="{Binding LastBackup}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="18" FontWeight="Black" Margin="0,7,0,0"/>
+                            <Border Background="{StaticResource PrimaryIndigoGlassBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" CornerRadius="10" Padding="10,6" Margin="0,14,0,0">
+                                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                                    <Ellipse Width="8" Height="8" Fill="{StaticResource PrimaryIndigoBrush}" VerticalAlignment="Center" />
+                                    <TextBlock Text="النظام جاهز للطلبات" Foreground="{StaticResource PrimaryIndigoLightBrush}" FontSize="12" FontWeight="Bold" Margin="8,0,0,0"/>
+                                </StackPanel>
+                            </Border>
                         </StackPanel>
                     </Border>
+
+                    <UniformGrid Grid.Row="1" Grid.ColumnSpan="2" Columns="4" Margin="0,28,0,0">
+                        <Border Background="#2422D3EE" BorderBrush="#4422D3EE" BorderThickness="1" CornerRadius="16" Padding="16" Margin="0,0,10,0">
+                            <StackPanel>
+                                <TextBlock Text="مبيعات اليوم" Foreground="{StaticResource TextMutedBrush}" FontSize="12" />
+                                <TextBlock Text="{Binding Stats.DailySales, StringFormat={}{0:N0} ج.م}" Foreground="{StaticResource PrimaryCyanLightBrush}" FontSize="22" FontWeight="Black" Margin="0,8,0,0" />
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#2434D399" BorderBrush="#4434D399" BorderThickness="1" CornerRadius="16" Padding="16" Margin="5,0,5,0">
+                            <StackPanel>
+                                <TextBlock Text="طلبات نشطة" Foreground="{StaticResource TextMutedBrush}" FontSize="12" />
+                                <TextBlock Text="{Binding Stats.ActiveOrders}" Foreground="{StaticResource PrimaryIndigoLightBrush}" FontSize="22" FontWeight="Black" Margin="0,8,0,0" />
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#24FBBF24" BorderBrush="#44FBBF24" BorderThickness="1" CornerRadius="16" Padding="16" Margin="5,0,5,0">
+                            <StackPanel>
+                                <TextBlock Text="تنبيهات المخزون" Foreground="{StaticResource TextMutedBrush}" FontSize="12" />
+                                <TextBlock Text="{Binding AlertSummary, FallbackValue=لا توجد تنبيهات}" Foreground="{StaticResource WarningLightBrush}" FontSize="15" FontWeight="Bold" Margin="0,10,0,0" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#24818CF8" BorderBrush="#44818CF8" BorderThickness="1" CornerRadius="16" Padding="16" Margin="10,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="تاريخ اليوم" Foreground="{StaticResource TextMutedBrush}" FontSize="12" />
+                                <TextBlock Text="{Binding CurrentDate}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="15" FontWeight="Bold" Margin="0,10,0,0" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                    </UniformGrid>
                 </Grid>
             </Border>
             <!-- ═══════════════════════════════════════════════════════════ -->
@@ -140,8 +240,8 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Width="42" Height="42" CornerRadius="14" Background="{StaticResource DangerGlassBrush}" Margin="0,0,12,0">
-                                        <TextBlock Text="&#xE8C7;" FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource DangerBrush}"/>
+                                    <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="{StaticResource DangerGlassBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,12,0">
+                                        <TextBlock Text="EGP" Style="{StaticResource MetricIconTextStyle}" Foreground="{StaticResource DangerBrush}"/>
                                     </Border>
                                     <TextBlock Text="إجمالي المستحقات" Style="{StaticResource MetricLabel}" Grid.Column="1" />
                                 </Grid>
@@ -164,8 +264,8 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Width="42" Height="42" CornerRadius="14" Background="{StaticResource WarningGlassBrush}" Margin="0,0,12,0">
-                                        <TextBlock Text="&#xE7B8;" FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource WarningBrush}"/>
+                                    <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="{StaticResource WarningGlassBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,12,0">
+                                        <TextBlock Text="#" Style="{StaticResource MetricIconTextStyle}" Foreground="{StaticResource WarningBrush}"/>
                                     </Border>
                                     <TextBlock Text="الطلبات النشطة" Style="{StaticResource MetricLabel}" Grid.Column="1" />
                                 </Grid>
@@ -188,12 +288,12 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Width="42" Height="42" CornerRadius="14" Background="{StaticResource PrimaryIndigoGlassBrush}" Margin="0,0,12,0">
-                                        <TextBlock Text="&#xE821;" FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource PrimaryIndigoDarkBrush}"/>
+                                    <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="{StaticResource PrimaryIndigoGlassBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,12,0">
+                                        <TextBlock Text="+" Style="{StaticResource MetricIconTextStyle}" Foreground="{StaticResource PrimaryIndigoBrush}"/>
                                     </Border>
                                     <TextBlock Text="الصيدليات المسجلة" Style="{StaticResource MetricLabel}" Grid.Column="1" />
                                 </Grid>
-                                <TextBlock FontSize="36" FontWeight="Bold" Foreground="{StaticResource PrimaryIndigoDarkBrush}" HorizontalAlignment="Right">
+                                <TextBlock FontSize="36" FontWeight="Bold" Foreground="{StaticResource PrimaryIndigoBrush}" HorizontalAlignment="Right">
                                     <i:Interaction.Behaviors>
                                         <behaviors:AnimatedNumberBehavior TargetNumber="{Binding Stats.TotalPharmacies}" />
                                     </i:Interaction.Behaviors>
@@ -212,8 +312,8 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Width="42" Height="42" CornerRadius="14" Background="{StaticResource AccentPurpleLightBrush}" Margin="0,0,12,0">
-                                        <TextBlock Text="&#xE719;" FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource AccentPurpleBrush}"/>
+                                    <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="{StaticResource AccentPurpleLightBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,12,0">
+                                        <TextBlock Text="Rx" Style="{StaticResource MetricIconTextStyle}" Foreground="{StaticResource AccentPurpleBrush}"/>
                                     </Border>
                                     <TextBlock Text="إجمالي المنتجات" Style="{StaticResource MetricLabel}" Grid.Column="1" />
                                 </Grid>
@@ -236,12 +336,12 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Width="42" Height="42" CornerRadius="14" Background="{StaticResource PrimaryCyanGlassBrush}" Margin="0,0,12,0">
-                                        <TextBlock Text="&#xE9D2;" FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource PrimaryCyanDarkBrush}"/>
+                                    <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="{StaticResource PrimaryCyanGlassBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,12,0">
+                                        <TextBlock Text="24" Style="{StaticResource MetricIconTextStyle}" Foreground="{StaticResource PrimaryCyanBrush}"/>
                                     </Border>
                                     <TextBlock Text="مبيعات اليوم" Style="{StaticResource MetricLabel}" Grid.Column="1" />
                                 </Grid>
-                                <TextBlock FontSize="36" FontWeight="Bold" Foreground="{StaticResource PrimaryCyanDarkBrush}" HorizontalAlignment="Right">
+                                <TextBlock FontSize="36" FontWeight="Bold" Foreground="{StaticResource PrimaryCyanBrush}" HorizontalAlignment="Right">
                                     <i:Interaction.Behaviors>
                                         <behaviors:AnimatedNumberBehavior TargetNumber="{Binding Stats.DailySales}" />
                                     </i:Interaction.Behaviors>
@@ -260,12 +360,12 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Width="42" Height="42" CornerRadius="14" Background="{StaticResource PrimaryIndigoGlassBrush}" Margin="0,0,12,0">
-                                        <TextBlock Text="&#xE8F1;" FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource PrimaryIndigoDarkBrush}"/>
+                                    <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="{StaticResource PrimaryIndigoGlassBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" Margin="0,0,12,0">
+                                        <TextBlock Text="30" Style="{StaticResource MetricIconTextStyle}" Foreground="{StaticResource PrimaryIndigoBrush}"/>
                                     </Border>
                                     <TextBlock Text="مبيعات الشهر" Style="{StaticResource MetricLabel}" Grid.Column="1" />
                                 </Grid>
-                                <TextBlock FontSize="36" FontWeight="Bold" Foreground="{StaticResource PrimaryIndigoDarkBrush}" HorizontalAlignment="Right">
+                                <TextBlock FontSize="36" FontWeight="Bold" Foreground="{StaticResource PrimaryIndigoBrush}" HorizontalAlignment="Right">
                                     <i:Interaction.Behaviors>
                                         <behaviors:AnimatedNumberBehavior TargetNumber="{Binding Stats.MonthlySales}" />
                                     </i:Interaction.Behaviors>
@@ -297,7 +397,7 @@
                                 <TextBlock Text="تحليل احترافي لحركة المبيعات" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
                                 <TextBlock Text="{Binding Analytics.SalesMovement.TrendLabel}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" Margin="0,6,0,0" />
                             </StackPanel>
-                            <Border Grid.Column="1" Background="{StaticResource SuccessGlassBrush}" BorderBrush="{StaticResource SuccessBrush}" BorderThickness="1" CornerRadius="16" Padding="16,10" VerticalAlignment="Center">
+                            <Border Grid.Column="1" Background="{StaticResource SuccessGlassBrush}" BorderBrush="{StaticResource AccentBorderBrush}" BorderThickness="1" CornerRadius="8" Padding="16,10" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding SalesGrowthPrefix}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                     <TextBlock Text="{Binding SalesGrowthText}" Foreground="{StaticResource SuccessBrush}" FontSize="20" FontWeight="Bold"/>
@@ -319,25 +419,25 @@
                                 </Grid.RowDefinitions>
 
                                 <UniformGrid Grid.Row="0" Columns="4" Margin="0,0,0,18">
-                                    <Border Background="#1822363E" BorderBrush="#3347556B" BorderThickness="1" CornerRadius="16" Padding="14" Margin="0,0,10,0">
+                                    <Border Style="{StaticResource AnalyticsTileStyle}" Margin="0,0,10,0">
                                         <StackPanel>
                                             <TextBlock Text="مبيعات 30 يوم" Foreground="{StaticResource TextMutedBrush}" FontSize="12" />
                                             <TextBlock Text="{Binding Analytics.SalesMovement.CurrentPeriodSales, StringFormat={}{0:N0} ج.م}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="20" FontWeight="Bold" Margin="0,8,0,0"/>
                                         </StackPanel>
                                     </Border>
-                                    <Border Background="#18133022" BorderBrush="#3334D399" BorderThickness="1" CornerRadius="16" Padding="14" Margin="0,0,10,0">
+                                    <Border Style="{StaticResource AnalyticsTileStyle}" BorderBrush="{StaticResource PrimaryIndigoGlassBrush}" Margin="0,0,10,0">
                                         <StackPanel>
                                             <TextBlock Text="عدد الطلبات" Foreground="{StaticResource TextMutedBrush}" FontSize="12" />
                                             <TextBlock Text="{Binding Analytics.SalesMovement.OrdersCount}" Foreground="{StaticResource SuccessBrush}" FontSize="20" FontWeight="Bold" Margin="0,8,0,0"/>
                                         </StackPanel>
                                     </Border>
-                                    <Border Background="#181E3A5F" BorderBrush="#3338BDF8" BorderThickness="1" CornerRadius="16" Padding="14" Margin="0,0,10,0">
+                                    <Border Style="{StaticResource AnalyticsTileStyle}" BorderBrush="{StaticResource PrimaryCyanGlassBrush}" Margin="0,0,10,0">
                                         <StackPanel>
                                             <TextBlock Text="متوسط الطلب" Foreground="{StaticResource TextMutedBrush}" FontSize="12" />
                                             <TextBlock Text="{Binding Analytics.SalesMovement.AverageOrderValue, StringFormat={}{0:N0} ج.م}" Foreground="{StaticResource PrimaryCyanBrush}" FontSize="20" FontWeight="Bold" Margin="0,8,0,0"/>
                                         </StackPanel>
                                     </Border>
-                                    <Border Background="#181F1634" BorderBrush="#33F59E0B" BorderThickness="1" CornerRadius="16" Padding="14">
+                                    <Border Style="{StaticResource AnalyticsTileStyle}" BorderBrush="{StaticResource WarningGlassBrush}">
                                         <StackPanel>
                                             <TextBlock Text="أقوى يوم" Foreground="{StaticResource TextMutedBrush}" FontSize="12" />
                                             <TextBlock Text="{Binding Analytics.SalesMovement.BestSalesDay}" Foreground="{StaticResource WarningBrush}" FontSize="20" FontWeight="Bold" Margin="0,8,0,0"/>
@@ -345,7 +445,7 @@
                                     </Border>
                                 </UniformGrid>
 
-                                <Border Grid.Row="1" Background="#10172433" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" CornerRadius="18" Padding="14">
+                                <Border Grid.Row="1" Background="{StaticResource CardElevatedBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="14">
                                     <lvc:CartesianChart Series="{Binding SalesSeries}" 
                                                         XAxes="{Binding XAxes}" 
                                                         YAxes="{Binding YAxes}"
@@ -356,11 +456,11 @@
                             </Grid>
 
                             <StackPanel Grid.Column="2">
-                                <Border Background="#19213346" BorderBrush="#3347556B" BorderThickness="1" CornerRadius="20" Padding="18" Margin="0,0,0,16">
+                                <Border Background="{StaticResource CardElevatedBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="18" Margin="0,0,0,16">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,12">
                                             <TextBlock Text="أكثر منتج مبيعًا" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" />
-                                            <TextBlock Text="&#xE719;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource PrimaryCyanBrush}" FontSize="20" HorizontalAlignment="Left"/>
+                                            <TextBlock Text="Rx" Style="{StaticResource MetricIconTextStyle}" Foreground="{StaticResource PrimaryCyanBrush}" HorizontalAlignment="Left"/>
                                         </Grid>
                                         <TextBlock Text="{Binding Analytics.TopProduct.ProductName}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="22" FontWeight="Bold" TextWrapping="Wrap" />
                                         <TextBlock Text="{Binding Analytics.TopProduct.Category}" Foreground="{StaticResource TextMutedBrush}" Margin="0,6,0,16" />
@@ -377,11 +477,11 @@
                                     </StackPanel>
                                 </Border>
 
-                                <Border Background="#1915253A" BorderBrush="#338B5CF6" BorderThickness="1" CornerRadius="20" Padding="18" Margin="0,0,0,16">
+                                <Border Background="{StaticResource CardElevatedBrush}" BorderBrush="{StaticResource PrimaryCyanGlassBrush}" BorderThickness="1" CornerRadius="8" Padding="18" Margin="0,0,0,16">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,12">
                                             <TextBlock Text="أكثر صيدلية اشترت" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" />
-                                            <TextBlock Text="&#xE821;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource PrimaryIndigoBrush}" FontSize="20" HorizontalAlignment="Left"/>
+                                            <TextBlock Text="+" Style="{StaticResource MetricIconTextStyle}" Foreground="{StaticResource PrimaryIndigoBrush}" HorizontalAlignment="Left"/>
                                         </Grid>
                                         <TextBlock Text="{Binding Analytics.TopPharmacy.PharmacyName}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="22" FontWeight="Bold" TextWrapping="Wrap" />
                                         <TextBlock Text="{Binding Analytics.TopPharmacy.Phone}" Foreground="{StaticResource TextMutedBrush}" Margin="0,6,0,16" />
@@ -398,11 +498,11 @@
                                     </StackPanel>
                                 </Border>
 
-                                <Border Background="#18133022" BorderBrush="#3334D399" BorderThickness="1" CornerRadius="20" Padding="18">
+                                <Border Background="{StaticResource CardElevatedBrush}" BorderBrush="{StaticResource PrimaryIndigoGlassBrush}" BorderThickness="1" CornerRadius="8" Padding="18">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,12">
                                             <TextBlock Text="نشاط العملاء" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" />
-                                            <TextBlock Text="&#xE716;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource SuccessBrush}" FontSize="20" HorizontalAlignment="Left"/>
+                                            <TextBlock Text="ON" Style="{StaticResource MetricIconTextStyle}" Foreground="{StaticResource SuccessBrush}" HorizontalAlignment="Left"/>
                                         </Grid>
                                         <UniformGrid Columns="2">
                                             <StackPanel>
@@ -443,13 +543,13 @@
                                 <TextBlock Text="أفضل 5 منتجات في البيع" Style="{StaticResource SectionHeader}" />
                                 <TextBlock Text="حسب الكمية ثم إجمالي قيمة البيع خلال آخر 30 يوم" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,6,0,0"/>
                             </StackPanel>
-                            <TextBlock Text="&#xE8CB;" FontFamily="Segoe MDL2 Assets" FontSize="22" HorizontalAlignment="Left" Foreground="{StaticResource SuccessBrush}"/>
+                            <TextBlock Text="Rx" Style="{StaticResource MetricIconTextStyle}" FontSize="18" HorizontalAlignment="Left" Foreground="{StaticResource SuccessBrush}"/>
                         </Grid>
 
                         <ItemsControl Grid.Row="1" ItemsSource="{Binding Analytics.TopProducts}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="#141B2A" BorderBrush="#263246" BorderThickness="1" CornerRadius="14" Padding="14" Margin="0,0,0,10">
+                                    <Border Style="{StaticResource DashboardListItemStyle}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
@@ -460,10 +560,10 @@
                                                 <TextBlock Text="{Binding Category}" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,5,0,0"/>
                                             </StackPanel>
                                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
-                                                <Border Background="{StaticResource SuccessGlassBrush}" CornerRadius="12" Padding="10,7" Margin="0,0,8,0">
+                                                <Border Background="{StaticResource SuccessGlassBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="10,7" Margin="0,0,8,0">
                                                     <TextBlock Text="{Binding QuantitySold, StringFormat={}{0:N0} وحدة}" Foreground="{StaticResource SuccessBrush}" FontWeight="Bold" FontSize="12"/>
                                                 </Border>
-                                                <Border Background="#1822363E" CornerRadius="12" Padding="10,7">
+                                                <Border Background="{StaticResource HoverBgBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="10,7">
                                                     <TextBlock Text="{Binding Revenue, StringFormat={}{0:N0} ج.م}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="Bold" FontSize="12"/>
                                                 </Border>
                                             </StackPanel>
@@ -486,13 +586,13 @@
                                 <TextBlock Text="أفضل 5 صيدليات شراءً" Style="{StaticResource SectionHeader}" />
                                 <TextBlock Text="ترتيب العملاء الأعلى قيمة خلال آخر 30 يوم" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,6,0,0"/>
                             </StackPanel>
-                            <TextBlock Text="&#xE902;" FontFamily="Segoe MDL2 Assets" FontSize="22" HorizontalAlignment="Left" Foreground="{StaticResource PrimaryIndigoBrush}"/>
+                            <TextBlock Text="+" Style="{StaticResource MetricIconTextStyle}" FontSize="18" HorizontalAlignment="Left" Foreground="{StaticResource PrimaryIndigoBrush}"/>
                         </Grid>
 
                         <ItemsControl Grid.Row="1" ItemsSource="{Binding Analytics.TopPharmacies}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="#141B2A" BorderBrush="#263246" BorderThickness="1" CornerRadius="14" Padding="14" Margin="0,0,0,10">
+                                    <Border Style="{StaticResource DashboardListItemStyle}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
@@ -503,10 +603,10 @@
                                                 <TextBlock Text="{Binding Phone}" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,5,0,0"/>
                                             </StackPanel>
                                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
-                                                <Border Background="{StaticResource PrimaryIndigoGlassBrush}" CornerRadius="12" Padding="10,7" Margin="0,0,8,0">
+                                                <Border Background="{StaticResource PrimaryIndigoGlassBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="10,7" Margin="0,0,8,0">
                                                     <TextBlock Text="{Binding TotalPurchases, StringFormat={}{0:N0} ج.م}" Foreground="{StaticResource PrimaryIndigoBrush}" FontWeight="Bold" FontSize="12"/>
                                                 </Border>
-                                                <Border Background="#1822363E" CornerRadius="12" Padding="10,7">
+                                                <Border Background="{StaticResource HoverBgBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="10,7">
                                                     <TextBlock Text="{Binding OrdersCount, StringFormat={}{0} طلب}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="Bold" FontSize="12"/>
                                                 </Border>
                                             </StackPanel>
@@ -540,10 +640,10 @@
                         
                         <StackPanel Grid.Row="1">
                             <Button Command="{Binding ShowLowStockProductsCommand}" Style="{StaticResource TransparentButtonStyle}" Margin="0,0,0,8">
-                                <Border Background="{DynamicResource WarningGlassBrush}" CornerRadius="12" Padding="16,12">
+                                <Border Background="{DynamicResource WarningGlassBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="16,12">
                                     <Grid>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="18" Margin="0,0,12,0"/>
+                                            <TextBlock Text="!" Style="{StaticResource MetricIconTextStyle}" Foreground="{StaticResource WarningBrush}" Margin="0,0,12,0"/>
                                             <TextBlock Text="منتجات مخزونها منخفض" Foreground="{StaticResource WarningBrush}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <TextBlock Text="{Binding LowStockCount}" Foreground="{StaticResource WarningBrush}" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -551,14 +651,26 @@
                                 </Border>
                             </Button>
                             
-                            <Button Command="{Binding ShowExpiringProductsCommand}" Style="{StaticResource TransparentButtonStyle}">
-                                <Border Background="{DynamicResource DangerGlassBrush}" CornerRadius="12" Padding="16,12">
+                            <Button Command="{Binding ShowExpiringProductsCommand}" Style="{StaticResource TransparentButtonStyle}" Margin="0,0,0,8">
+                                <Border Background="{DynamicResource DangerGlassBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="16,12">
                                     <Grid>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="&#xE916;" FontFamily="Segoe MDL2 Assets" FontSize="18" Margin="0,0,12,0"/>
+                                            <TextBlock Text="EXP" Style="{StaticResource MetricIconTextStyle}" Foreground="{StaticResource DangerBrush}" FontSize="12" Margin="0,0,12,0"/>
                                             <TextBlock Text="منتجات تنتهي صلاحيتها قريباً" Foreground="{StaticResource DangerBrush}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <TextBlock Text="{Binding ExpiringCount}" Foreground="{StaticResource DangerBrush}" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                            </Button>
+
+                            <Button Command="{Binding ShowExpiredProductsCommand}" Style="{StaticResource TransparentButtonStyle}">
+                                <Border Background="{DynamicResource DangerGlassBrush}" BorderBrush="{StaticResource AccentBorderBrush}" BorderThickness="1" CornerRadius="8" Padding="16,12">
+                                    <Grid>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource DangerLightBrush}" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="منتجات منتهية الصلاحية" Foreground="{StaticResource DangerLightBrush}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding ExpiredCount}" Foreground="{StaticResource DangerLightBrush}" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                     </Grid>
                                 </Border>
                             </Button>
@@ -579,13 +691,13 @@
                                 <TextBlock Text="صيدليات تحتاج متابعة" Style="{StaticResource SectionHeader}" />
                                 <TextBlock Text="لم تشتر منذ 30 يوم أو أكثر مع آخر صنف تم طلبه" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,6,0,0"/>
                             </StackPanel>
-                            <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="22" HorizontalAlignment="Left" Foreground="{StaticResource WarningBrush}"/>
+                            <TextBlock Text="!" Style="{StaticResource MetricIconTextStyle}" FontSize="18" HorizontalAlignment="Left" Foreground="{StaticResource WarningBrush}"/>
                         </Grid>
 
                         <ItemsControl Grid.Row="1" ItemsSource="{Binding Analytics.InactivePharmacies}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="#141B2A" BorderBrush="#263246" BorderThickness="1" CornerRadius="14" Padding="14" Margin="0,0,0,10">
+                                    <Border Style="{StaticResource DashboardListItemStyle}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
@@ -601,7 +713,7 @@
                                                 <TextBlock Text="{Binding LastOrderValue, StringFormat=آخر طلب: {0:N0} ج.م}" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,4,0,0"/>
                                             </StackPanel>
 
-                                            <Border Grid.Column="1" Background="{StaticResource DangerGlassBrush}" CornerRadius="12" Padding="10,7" VerticalAlignment="Center" Margin="12,0,0,0">
+                                            <Border Grid.Column="1" Background="{StaticResource DangerGlassBrush}" BorderBrush="{StaticResource BorderDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="10,7" VerticalAlignment="Center" Margin="12,0,0,0">
                                                 <StackPanel HorizontalAlignment="Center">
                                                     <TextBlock Text="{Binding InactivityLabel}" Foreground="{StaticResource DangerBrush}" FontWeight="Bold" FontSize="15" HorizontalAlignment="Center"/>
                                                     <TextBlock Text="بدون شراء" Foreground="{StaticResource TextMutedBrush}" FontSize="11" HorizontalAlignment="Center"/>

@@ -22,4 +22,8 @@
     <ProjectReference Include="..\AlNeda.Services\AlNeda.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\..\pharmacy.db" Link="pharmacy.db" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

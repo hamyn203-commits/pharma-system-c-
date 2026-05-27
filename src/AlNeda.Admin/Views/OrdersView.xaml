@@ -87,7 +87,7 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Border Width="36" Height="36" CornerRadius="10" Background="{StaticResource StatCardGreenGradient}">
-                            <TextBlock Text="📝" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <TextBlock Text="&#xE8C7;" FontFamily="Segoe MDL2 Assets" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <StackPanel VerticalAlignment="Center" Margin="12,0,0,0">
                             <TextBlock Text="طلبات اليوم" FontSize="10" Foreground="{StaticResource TextMutedBrush}" />
@@ -101,7 +101,7 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Border Width="36" Height="36" CornerRadius="10" Background="{StaticResource StatCardAmberGradient}">
-                            <TextBlock Text="⏳" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <TextBlock Text="&#xE7B8;" FontFamily="Segoe MDL2 Assets" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <StackPanel VerticalAlignment="Center" Margin="12,0,0,0">
                             <TextBlock Text="قيد التنفيذ" FontSize="10" Foreground="{StaticResource TextMutedBrush}" />
@@ -174,14 +174,14 @@
                             <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="10,0,0,0" IsHitTestVisible="False" />
                         </Grid>
                     </Border>
-                    <Button Content="🔄 تحديث" Command="{Binding RefreshCommand}"
+                    <Button Content="&#xE72D; تحديث" Command="{Binding RefreshCommand}"
                             Style="{StaticResource PrimaryButtonStyle}" Height="40" FontSize="12" Padding="16,0" Margin="10,0,0,0" />
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <Button Content="+ طلب جديد" Command="{Binding NewOrderCommand}"
                             Style="{StaticResource PrimaryButtonStyle}" Height="40" Padding="20,0" FontSize="13" Margin="0,0,10,0" />
-                    <Button Content="📄 CSV" Command="{Binding ExportCsvCommand}"
+                    <Button Content="&#xE7C3; CSV" Command="{Binding ExportCsvCommand}"
                             Style="{StaticResource TransparentButtonStyle}" Foreground="{StaticResource TextSecondaryBrush}" Height="40" Padding="12,0" FontSize="12" />
                 </StackPanel>
             </Grid>
@@ -373,9 +373,9 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Button Content="👁️" Command="{Binding DataContext.ViewDetailCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    <Button Content="&#xE8AF;" Command="{Binding DataContext.ViewDetailCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             CommandParameter="{Binding}" Style="{StaticResource PrimaryButtonStyle}" Width="32" Height="32" FontSize="12" Padding="0" ToolTip="عرض التفاصيل" />
-                                    <Button Content="🖨️" Command="{Binding DataContext.PrintGridOrderCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    <Button Content="&#xE749;" Command="{Binding DataContext.PrintGridOrderCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             CommandParameter="{Binding}" Style="{StaticResource SecondaryButtonStyle}" Width="32" Height="32" FontSize="12" Padding="0" ToolTip="طباعة" Margin="6,0,0,0" />
                                 </StackPanel>
                             </DataTemplate>
@@ -443,9 +443,9 @@
                                 <TextBlock Text="تفاصيل الطلب" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,4,0,0" />
                             </StackPanel>
                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                <Button Content="🖨️ طباعة" Command="{Binding PrintDetailOrderCommand}"
+                                <Button Content="&#xE749; طباعة" Command="{Binding PrintDetailOrderCommand}"
                                         Style="{StaticResource PrimaryButtonStyle}" Height="36" Padding="14,0" FontSize="12" />
-                                <Button Content="📄 HTML" Command="{Binding ExportHtmlCommand}"
+                                <Button Content="&#xE7C3; HTML" Command="{Binding ExportHtmlCommand}"
                                         Style="{StaticResource SecondaryButtonStyle}" Height="36" Padding="14,0" FontSize="12" Margin="8,0,0,0" />
                                 <Button Content="✕" Command="{Binding CloseDetailCommand}"
                                         Style="{StaticResource CloseButtonStyle}" Width="36" Height="36" Margin="8,0,0,0" />

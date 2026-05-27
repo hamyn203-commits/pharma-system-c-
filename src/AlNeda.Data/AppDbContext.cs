@@ -28,6 +28,12 @@ public class AppDbContext : DbContext
     public DbSet<OfferEvent> OfferEvents => Set<OfferEvent>();
     public DbSet<MarketingOfferPharmacyTarget> MarketingOfferPharmacyTargets => Set<MarketingOfferPharmacyTarget>();
 
+    // ─── الإضافات الجديدة: الكوبونات، BOGO، الإشعارات ─────────────
+    public DbSet<Coupon> Coupons => Set<Coupon>();
+    public DbSet<BogoOfferRule> BogoOfferRules => Set<BogoOfferRule>();
+    public DbSet<NotificationDevice> NotificationDevices => Set<NotificationDevice>();
+    public DbSet<NotificationLog> NotificationLogs => Set<NotificationLog>();
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -144,6 +150,42 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Product>(e =>
         {
             e.HasIndex(p => p.Barcode).IsUnique();
+        });
+
+        // ─── تكوينات الكوبونات ────────────────────────────────────
+        modelBuilder.Entity<Coupon>(e =>
+        {
+            e.HasIndex(c => c.Code).IsUnique();
+            e.Property(c => c.DiscountValue).HasPrecision(18, 2);
+            e.Property(c => c.MinOrderAmount).HasPrecision(18, 2);
+            e.Property(c => c.MaxDiscountAmount).HasPrecision(18, 2);
+            e.HasOne(c => c.TargetPharmacy).WithMany().HasForeignKey(c => c.TargetPharmacyId).OnDelete(DeleteBehavior.SetNull);
+            e.HasOne(c => c.TargetOffer).WithMany().HasForeignKey(c => c.TargetOfferId).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // ─── تكوينات BOGO ─────────────────────────────────────────
+        modelBuilder.Entity<BogoOfferRule>(e =>
+        {
+            e.HasOne(b => b.Offer).WithMany().HasForeignKey(b => b.MarketingOfferId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(b => b.TargetProduct).WithMany().HasForeignKey(b => b.TargetProductId).OnDelete(DeleteBehavior.SetNull);
+            e.HasIndex(b => b.MarketingOfferId).IsUnique();
+        });
+
+        // ─── تكوينات أجهزة الإشعارات ──────────────────────────────
+        modelBuilder.Entity<NotificationDevice>(e =>
+        {
+            e.HasIndex(d => d.DeviceToken).IsUnique();
+            e.HasOne(d => d.User).WithMany().HasForeignKey(d => d.UserId).OnDelete(DeleteBehavior.SetNull);
+            e.HasOne(d => d.Pharmacy).WithMany().HasForeignKey(d => d.PharmacyId).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // ─── تكوينات سجلات الإشعارات ──────────────────────────────
+        modelBuilder.Entity<NotificationLog>(e =>
+        {
+            e.HasOne(n => n.RelatedOffer).WithMany().HasForeignKey(n => n.RelatedOfferId).OnDelete(DeleteBehavior.SetNull);
+            e.HasOne(n => n.RelatedCoupon).WithMany().HasForeignKey(n => n.RelatedCouponId).OnDelete(DeleteBehavior.SetNull);
+            e.HasIndex(n => n.SentAt);
+            e.HasIndex(n => n.NotificationType);
         });
 
     }

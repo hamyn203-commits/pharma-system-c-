@@ -8,7 +8,7 @@
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True" WindowStyle="None" Background="Transparent">
 
-    <Border Background="{StaticResource PageBackgroundBrush}" CornerRadius="24" BorderThickness="1.5" BorderBrush="{StaticResource BorderDefaultBrush}">
+    <Border Background="{StaticResource PageBgBrush}" CornerRadius="24" BorderThickness="1.5" BorderBrush="{StaticResource BorderDefaultBrush}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" /> <!-- Header -->
@@ -19,7 +19,7 @@
             <!-- Header -->
             <Border Grid.Row="0" Background="{StaticResource HeaderBgBrush}" CornerRadius="24,24,0,0" Padding="32,24">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="📂" FontSize="24" Margin="0,0,16,0"/>
+                    <TextBlock Text="&#xE838;" FontFamily="Segoe MDL2 Assets" FontSize="24" Margin="0,0,16,0"/>
                     <TextBlock Text="{Binding Title}" FontSize="20" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
                 </StackPanel>
             </Border>

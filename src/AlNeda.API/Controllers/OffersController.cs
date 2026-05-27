@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
+using static AlNeda.Core.Models.MarketingOfferMapper;
 
 namespace AlNeda.API.Controllers;
 
@@ -343,46 +344,6 @@ public class OffersController : ControllerBase
         return Ok(ToDto(offer, DateTime.Now));
     }
 
-    private static MarketingOfferDto ToDto(MarketingOffer offer, DateTime now) => new()
-    {
-        Id = offer.Id,
-        Title = offer.Title,
-        Subtitle = offer.Subtitle,
-        Description = offer.Description,
-        ImageUrl = offer.ImageUrl,
-        ImageUrls = OfferImageUrls(offer).ToList(),
-        OfferType = offer.OfferType,
-        AudienceRule = offer.AudienceRule,
-        StartsAt = offer.StartsAt,
-        EndsAt = offer.EndsAt,
-        Status = offer.Status,
-        QuantityLimit = offer.QuantityLimit,
-        RemainingQuantity = offer.RemainingQuantity,
-        OldPrice = offer.OldPrice,
-        NewPrice = offer.NewPrice,
-        DiscountPercent = offer.DiscountPercent,
-        UpdatedAt = offer.UpdatedAt,
-        IsActive = MarketingOfferRules.IsActive(offer, now),
-        TargetPharmacyIds = offer.PharmacyTargets.Select(t => t.PharmacyId).ToList(),
-        OfferProducts = offer.OfferProducts.OrderBy(p => p.Id).Select(ToProductDto).ToList(),
-        AudienceLabel = offer.AudienceRule == "selected_pharmacies"
-            ? $"صيدليات محددة ({offer.PharmacyTargets.Count})"
-            : "كل الصيدليات"
-    };
-
-    private static MarketingOfferProductDto ToProductDto(MarketingOfferProduct offerProduct) => new()
-    {
-        Id = offerProduct.Id,
-        ProductId = offerProduct.ProductId,
-        ProductName = offerProduct.Product?.Name ?? string.Empty,
-        AvailableQuantity = offerProduct.Product?.Quantity ?? 0,
-        OfferQuantity = offerProduct.OfferQuantity,
-        MinimumOrder = offerProduct.MinimumOrder,
-        OldPrice = offerProduct.OldPrice,
-        NewPrice = offerProduct.NewPrice,
-        GiftProduct = offerProduct.GiftProduct
-    };
-
     private static string NormalizeOfferType(string value) => MarketingOfferRules.NormalizeOfferType(value);
 
     private static string NormalizeAudienceRule(string value) => MarketingOfferRules.NormalizeAudienceRule(value);
@@ -405,7 +366,7 @@ public class OffersController : ControllerBase
         return string.Join('\n', images);
     }
 
-    private static IEnumerable<string> OfferImageUrls(MarketingOffer offer)
+    public static IEnumerable<string> OfferImageUrls(MarketingOffer offer)
     {
         if (!string.IsNullOrWhiteSpace(offer.ImageUrl))
             yield return offer.ImageUrl;

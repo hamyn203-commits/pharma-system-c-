@@ -4,11 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:conv="clr-namespace:AlNeda.Admin.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1100">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <conv:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
     </UserControl.Resources>
 
     <i:Interaction.Triggers>
@@ -23,18 +25,17 @@
                 <RowDefinition Height="Auto" /> <!-- Header -->
                 <RowDefinition Height="Auto" /> <!-- Toolbar -->
                 <RowDefinition Height="*" />    <!-- DataGrid -->
+                <RowDefinition Height="Auto" /> <!-- Status Bar -->
             </Grid.RowDefinitions>
 
-            <!-- ═══════════════════════════════════════════════════════════ -->
-            <!-- HEADER                                                      -->
-            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- HEADER -->
             <Grid Grid.Row="0" Margin="0,0,0,32">
                 <StackPanel>
                     <TextBlock Text="إدارة التصنيفات" Style="{StaticResource PageTitle}" />
                     <TextBlock Text="تنظيم المنتجات حسب المجموعات الدوائية" Foreground="{StaticResource TextMutedBrush}" Margin="0,4,0,0" />
                 </StackPanel>
 
-                <Border HorizontalAlignment="Left" Background="{StaticResource CardBgBrush}" CornerRadius="16" Padding="20,12" BorderBrush="{StaticResource BorderMutedBrush}" BorderThickness="1">
+                <Border HorizontalAlignment="Left" Background="{StaticResource CardBgBrush}" CornerRadius="16" Padding="20,12" BorderBrush="{StaticResource BorderMutedBrush}" BorderThickness="1" Effect="{StaticResource CardShadow}">
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Margin="0,0,32,0">
                             <TextBlock Text="إجمالي النشط" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,0,0,4"/>
@@ -52,10 +53,8 @@
                 </Border>
             </Grid>
 
-            <!-- ═══════════════════════════════════════════════════════════ -->
-            <!-- TOOLBAR & FILTERS                                           -->
-            <!-- ═══════════════════════════════════════════════════════════ -->
-            <Border Grid.Row="1" Background="{StaticResource CardBgBrush}" CornerRadius="16" Padding="20,16" Margin="0,0,0,16" BorderBrush="{StaticResource BorderMutedBrush}" BorderThickness="1">
+            <!-- TOOLBAR & FILTERS -->
+            <Border Grid.Row="1" Background="{StaticResource CardBgBrush}" CornerRadius="16" Padding="20,16" Margin="0,0,0,16" BorderBrush="{StaticResource BorderMutedBrush}" BorderThickness="1" Effect="{StaticResource CardShadow}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -64,16 +63,34 @@
 
                     <StackPanel Grid.Column="0" Orientation="Horizontal">
                         <!-- Search -->
-                        <Grid Width="350" Margin="0,0,16,0">
+                        <Grid Width="280" Margin="0,0,12,0">
                             <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                                     Style="{StaticResource ModernTextBox}" Height="40" VerticalContentAlignment="Center" Padding="35,0,12,0" />
+                                     Style="{StaticResource ModernTextBox}" Height="40" VerticalContentAlignment="Center" Padding="35,0,12,0" FontSize="12"/>
                             <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="12,0" Opacity="0.5" IsHitTestVisible="False"/>
-                            <TextBlock Text="بحث سريع بالاسم أو الوصف..." Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="38,0" IsHitTestVisible="False"
-                                       Visibility="{Binding SearchText, Converter={StaticResource StringToVisibilityConverter}, ConverterParameter=Inverse}"/>
+                            <TextBlock Text="بحث بالاسم أو الوصف..." Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="38,0" IsHitTestVisible="False" FontSize="11"
+                                       Visibility="{Binding SearchText, Converter={StaticResource StringToVisibilityConverter}}"/>
                         </Grid>
+
+                        <!-- Filter by count -->
+                        <ComboBox ItemsSource="{Binding CountFilters}" SelectedItem="{Binding FilterCount}"
+                                  Style="{StaticResource ModernComboBox}" MinWidth="100" Height="40" FontSize="12" Margin="0,0,12,0" />
+
+                        <!-- Sort by -->
+                        <ComboBox ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SortBy}"
+                                  Style="{StaticResource ModernComboBox}" MinWidth="90" Height="40" FontSize="12" Margin="0,0,12,0" />
+
+                        <!-- Refresh -->
+                        <Button Content="&#xE72D; تحديث" Command="{Binding RefreshCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}" Height="40" FontSize="12" Padding="16,0" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button Command="{Binding ExportExcelCommand}" Style="{StaticResource TransparentButtonStyle}" Height="40" Padding="12,0" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,10,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE7C3;" FontFamily="Segoe MDL2 Assets" Margin="0,0,6,0" />
+                                <TextBlock Text="Excel" />
+                            </StackPanel>
+                        </Button>
                         <Button Command="{Binding AddNewCommand}" Style="{StaticResource PrimaryButtonStyle}" Padding="20,0" Height="40" FontWeight="Bold">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" Margin="0,0,8,0" />
@@ -84,9 +101,7 @@
                 </Grid>
             </Border>
 
-            <!-- ═══════════════════════════════════════════════════════════ -->
-            <!-- DATAGRID                                                    -->
-            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- DATAGRID -->
             <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="0" ClipToBounds="True">
                 <Grid>
                     <DataGrid ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"
@@ -178,79 +193,49 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
+                    <!-- Empty State -->
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Categories.Count}" Value="0">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <TextBlock Text="&#xE71D;" FontFamily="Segoe MDL2 Assets" FontSize="48" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" />
+                        <TextBlock Text="لا توجد تصنيفات" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,12,0,4" />
+                        <TextBlock Text="أضف تصنيفاً جديداً من زر التصنيف الجديد" FontSize="13" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" />
+                    </StackPanel>
+
                     <!-- Loading Overlay -->
                     <Border Background="{StaticResource OverlayBgBrush}" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <StackPanel VerticalAlignment="Center">
                             <ProgressBar IsIndeterminate="True" Width="200" Height="4" Foreground="{StaticResource PrimaryGreenBrush}" Style="{StaticResource ModernProgressBar}"/>
-                            <TextBlock Text="جاري التحديث..." Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,12"/>
+                            <TextBlock Text="{Binding StatusMessage, FallbackValue='جاري التحديث...'}" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,12"/>
                         </StackPanel>
                     </Border>
                 </Grid>
             </Border>
-        </Grid>
 
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <!-- INLINE EDITOR / OVERLAY DIALOG                              -->
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <Border Background="{StaticResource OverlayBgBrush}" Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Border Background="{StaticResource PageBgBrush}" Width="450" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="16" Padding="32">
-                <Border.Effect>
-                    <DropShadowEffect Color="Black" BlurRadius="40" Opacity="0.5" ShadowDepth="10"/>
-                </Border.Effect>
-                
-                <StackPanel>
-                    <!-- Header -->
-                    <Grid Margin="0,0,0,24">
-                        <TextBlock Text="{Binding DialogTitle}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
-                        <Button Command="{Binding CancelEditCommand}" Style="{StaticResource WindowButtonStyle}" HorizontalAlignment="Left">
-                            <TextBlock Text="&#xE8BB;" FontFamily="Segoe MDL2 Assets" />
-                        </Button>
-                    </Grid>
-
-                    <!-- Form -->
-                    <StackPanel>
-                        <!-- Name -->
-                        <TextBlock Text="اسم التصنيف *" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8" />
-                        <TextBox Text="{Binding EditCategory.Name, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="45" Margin="0,0,0,16" />
-
-                        <!-- Description -->
-                        <TextBlock Text="الوصف" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8" />
-                        <TextBox Text="{Binding EditCategory.Description, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="80" TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top" Padding="12" Margin="0,0,0,16" />
-
-                        <!-- Icon & Order -->
-                        <Grid Margin="0,0,0,24">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="16" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="الأيقونة" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8" />
-                                <TextBox Text="{Binding EditCategory.Icon, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="45" />
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="2">
-                                <TextBlock Text="ترتيب العرض" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8" />
-                                <TextBox Text="{Binding EditCategory.DisplayOrder, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Height="45" />
-                            </StackPanel>
-                        </Grid>
-
-                        <CheckBox IsChecked="{Binding EditCategory.IsActive}" Content="نشط ومتاح للاستخدام" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,32"/>
+            <!-- Status Bar -->
+            <Border Grid.Row="3" Background="{StaticResource CardBgBrush}" CornerRadius="14" Padding="16,12"
+                    BorderBrush="{StaticResource BorderMutedBrush}" BorderThickness="1" Margin="0,16,0,0">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="8" Height="8" CornerRadius="4" Background="{StaticResource PrimaryGreenBrush}" Margin="0,0,10,0" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" VerticalAlignment="Center" />
                     </StackPanel>
-
-                    <!-- Actions -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Content="إلغاء" Command="{Binding CancelEditCommand}" Style="{StaticResource SecondaryButtonStyle}" Height="45" />
-                        <Button Grid.Column="2" Content="حفظ التصنيف" Command="{Binding SaveCategoryCommand}" Style="{StaticResource PrimaryButtonStyle}" Height="45" FontWeight="Bold" />
-                    </Grid>
-                </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <TextBlock Text="{Binding Categories.Count, StringFormat='{}{0} تصنيف معروض'}" Foreground="{StaticResource TextMutedBrush}" FontSize="11" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Grid>
             </Border>
-        </Border>
+        </Grid>
     </Grid>
 </UserControl>

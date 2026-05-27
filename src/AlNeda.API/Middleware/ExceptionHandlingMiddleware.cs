@@ -60,9 +60,9 @@ public class ExceptionHandlingMiddleware
             _logger.LogWarning(ex, "Resource not found");
             await WriteErrorResponse(context, HttpStatusCode.NotFound, "المورد المطلوب غير موجود", "ORDER_NOT_FOUND");
         }
-        catch (TaskCanceledException)
+        catch (TaskCanceledException ex)
         {
-            await WriteErrorResponse(context, HttpStatusCode.RequestTimeout, "انتهت مهلة الطلب", "SERVER_ERROR");
+            await WriteErrorResponse(context, HttpStatusCode.RequestTimeout, "انتهت مهلة الطلب", ex.ToString());
         }
         catch (OperationCanceledException)
         {
@@ -71,7 +71,7 @@ public class ExceptionHandlingMiddleware
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unhandled exception: {Message}", ex.Message);
-            await WriteErrorResponse(context, HttpStatusCode.InternalServerError, "حدث خطأ في الخادم", "SERVER_ERROR");
+            await WriteErrorResponse(context, HttpStatusCode.InternalServerError, ex.ToString(), "SERVER_ERROR");
         }
     }
 
